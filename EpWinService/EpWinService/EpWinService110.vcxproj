@@ -1,0 +1,205 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{CA65E84A-E256-4B56-93EE-F728951B606E}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>EpWinService110</RootNamespace>
+    <ProjectName>EpWinService</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)Bin\$(Configuration)\</OutDir>
+    <IntDir>Intermediate\VS110\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)_D110</TargetName>
+    <IncludePath>$(WindowsSdkDir)include\shared;$(WindowsSdkDir)include\um;$(WindowsSdkDir)include\winrt;C:\Program Files\Codejock Software\MFC\Xtreme ToolkitPro v15.1.3.0908\Source;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;C:\Program Files\BCGSoft\BCGControlBarPro\BCGCBPro</IncludePath>
+    <LibraryPath>$(WindowsSdkDir)Lib\win8\um\x86;C:\Program Files\Codejock Software\MFC\Xtreme ToolkitPro v15.1.3.0908\Lib\vc100;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib;C:\Program Files\BCGSoft\BCGControlBarPro\bin</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)Bin\$(Configuration)\</OutDir>
+    <IntDir>Intermediate\VS110\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)110</TargetName>
+    <IncludePath>$(WindowsSdkDir)include\shared;$(WindowsSdkDir)include\um;$(WindowsSdkDir)include\winrt;C:\Program Files\Codejock Software\MFC\Xtreme ToolkitPro v15.1.3.0908\Source;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;C:\Program Files\BCGSoft\BCGControlBarPro\BCGCBPro</IncludePath>
+    <LibraryPath>$(WindowsSdkDir)Lib\win8\um\x86;C:\Program Files\Codejock Software\MFC\Xtreme ToolkitPro v15.1.3.0908\Lib\vc100;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib;C:\Program Files\BCGSoft\BCGControlBarPro\bin</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.;.\EpLibraryHeaders;.\Core;.\EpServerEngineHeaders;.\AdminServer</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>.\Libs</AdditionalLibraryDirectories>
+      <AdditionalDependencies>EpServerEngineU_D110.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(ProjectName)_D110.exe</OutputFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.;.\EpLibraryHeaders;.\Core;.\EpServerEngineHeaders;.\AdminServer</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>.\Libs</AdditionalLibraryDirectories>
+      <AdditionalDependencies>EpServerEngineU110.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(ProjectName)110.exe</OutputFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="AdminServer\epAdminServer.cpp" />
+    <ClCompile Include="AdminServer\epAdminServerPacketParser.cpp" />
+    <ClCompile Include="AdminServer\epAdminServerProcessor.cpp" />
+    <ClCompile Include="AdminServer\epAdminServerWorker.cpp" />
+    <ClCompile Include="Core\epLogWriter.cpp" />
+    <ClCompile Include="Core\epProcessHandler.cpp" />
+    <ClCompile Include="Core\epProcessObject.cpp" />
+    <ClCompile Include="Core\epServiceManager.cpp" />
+    <ClCompile Include="Core\epServiceProperties.cpp" />
+    <ClCompile Include="EpWinService.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AdminServer\epAdminServer.h" />
+    <ClInclude Include="AdminServer\epAdminServerPacketInfo.h" />
+    <ClInclude Include="AdminServer\epAdminServerPacketParser.h" />
+    <ClInclude Include="AdminServer\epAdminServerProcessor.h" />
+    <ClInclude Include="AdminServer\epAdminServerWorker.h" />
+    <ClInclude Include="Core\epLogWriter.h" />
+    <ClInclude Include="Core\epProcessHandler.h" />
+    <ClInclude Include="Core\epProcessObject.h" />
+    <ClInclude Include="Core\epServiceManager.h" />
+    <ClInclude Include="Core\epServiceProperties.h" />
+    <ClInclude Include="EpLibraryHeaders\epAlgorithm.h" />
+    <ClInclude Include="EpLibraryHeaders\epAssert.h" />
+    <ClInclude Include="EpLibraryHeaders\epBaseFile.h" />
+    <ClInclude Include="EpLibraryHeaders\epBaseJob.h" />
+    <ClInclude Include="EpLibraryHeaders\epBaseJobProcessor.h" />
+    <ClInclude Include="EpLibraryHeaders\epBaseLock.h" />
+    <ClInclude Include="EpLibraryHeaders\epBaseOutputter.h" />
+    <ClInclude Include="EpLibraryHeaders\epBaseWorkerThread.h" />
+    <ClInclude Include="EpLibraryHeaders\epBinarySearch.h" />
+    <ClInclude Include="EpLibraryHeaders\epConsoleHelper.h" />
+    <ClInclude Include="EpLibraryHeaders\epCriticalSectionEx.h" />
+    <ClInclude Include="EpLibraryHeaders\epCStringEx.h" />
+    <ClInclude Include="EpLibraryHeaders\epDateTimeHelper.h" />
+    <ClInclude Include="EpLibraryHeaders\epDelegate.h" />
+    <ClInclude Include="EpLibraryHeaders\epDynamicArray.h" />
+    <ClInclude Include="EpLibraryHeaders\epEndian.h" />
+    <ClInclude Include="EpLibraryHeaders\epException.h" />
+    <ClInclude Include="EpLibraryHeaders\epFastLog.h" />
+    <ClInclude Include="EpLibraryHeaders\epFastSqrt.h" />
+    <ClInclude Include="EpLibraryHeaders\epFileStream.h" />
+    <ClInclude Include="EpLibraryHeaders\epFolderHelper.h" />
+    <ClInclude Include="EpLibraryHeaders\epInsertionSort.h" />
+    <ClInclude Include="EpLibraryHeaders\epInterlockedEx.h" />
+    <ClInclude Include="EpLibraryHeaders\epJobScheduleQueue.h" />
+    <ClInclude Include="EpLibraryHeaders\epKAryHeap.h" />
+    <ClInclude Include="EpLibraryHeaders\epl.h" />
+    <ClInclude Include="EpLibraryHeaders\epLib.h" />
+    <ClInclude Include="EpLibraryHeaders\epLocale.h" />
+    <ClInclude Include="EpLibraryHeaders\epMemory.h" />
+    <ClInclude Include="EpLibraryHeaders\epMergeSort.h" />
+    <ClInclude Include="EpLibraryHeaders\epMutex.h" />
+    <ClInclude Include="EpLibraryHeaders\epNetworkStream.h" />
+    <ClInclude Include="EpLibraryHeaders\epNoLock.h" />
+    <ClInclude Include="EpLibraryHeaders\epPatriciaTrie.h" />
+    <ClInclude Include="EpLibraryHeaders\epPlatform.h" />
+    <ClInclude Include="EpLibraryHeaders\epPrimeNum.h" />
+    <ClInclude Include="EpLibraryHeaders\epProfiler.h" />
+    <ClInclude Include="EpLibraryHeaders\epPropertiesFile.h" />
+    <ClInclude Include="EpLibraryHeaders\epQuickSort.h" />
+    <ClInclude Include="EpLibraryHeaders\epRandom.h" />
+    <ClInclude Include="EpLibraryHeaders\epRegistryHelper.h" />
+    <ClInclude Include="EpLibraryHeaders\epSemaphore.h" />
+    <ClInclude Include="EpLibraryHeaders\epSimpleLogger.h" />
+    <ClInclude Include="EpLibraryHeaders\epSingletonHolder.h" />
+    <ClInclude Include="EpLibraryHeaders\epSmartObject.h" />
+    <ClInclude Include="EpLibraryHeaders\epStream.h" />
+    <ClInclude Include="EpLibraryHeaders\epSystem.h" />
+    <ClInclude Include="EpLibraryHeaders\epTaskbarNotifier.h" />
+    <ClInclude Include="EpLibraryHeaders\epTextFile.h" />
+    <ClInclude Include="EpLibraryHeaders\epThread.h" />
+    <ClInclude Include="EpLibraryHeaders\epThreadSafeClass.h" />
+    <ClInclude Include="EpLibraryHeaders\epThreadSafePQueue.h" />
+    <ClInclude Include="EpLibraryHeaders\epThreadSafeQueue.h" />
+    <ClInclude Include="EpLibraryHeaders\epTinyObject.h" />
+    <ClInclude Include="EpLibraryHeaders\epWinProcessHelper.h" />
+    <ClInclude Include="EpLibraryHeaders\epWorkerThreadDelegate.h" />
+    <ClInclude Include="EpLibraryHeaders\epWorkerThreadFactory.h" />
+    <ClInclude Include="EpLibraryHeaders\epWorkerThreadInfinite.h" />
+    <ClInclude Include="EpLibraryHeaders\epWorkerThreadSingle.h" />
+    <ClInclude Include="EpLibraryHeaders\epXMLFile.h" />
+    <ClInclude Include="EpLibraryHeaders\epXMLite.h" />
+    <ClInclude Include="EpServerEngineHeaders\epBaseClient.h" />
+    <ClInclude Include="EpServerEngineHeaders\epBaseClientUDP.h" />
+    <ClInclude Include="EpServerEngineHeaders\epBasePacketParser.h" />
+    <ClInclude Include="EpServerEngineHeaders\epBaseServer.h" />
+    <ClInclude Include="EpServerEngineHeaders\epBaseServerObject.h" />
+    <ClInclude Include="EpServerEngineHeaders\epBaseServerSendObject.h" />
+    <ClInclude Include="EpServerEngineHeaders\epBaseServerUDP.h" />
+    <ClInclude Include="EpServerEngineHeaders\epBaseServerWorker.h" />
+    <ClInclude Include="EpServerEngineHeaders\epBaseServerWorkerUDP.h" />
+    <ClInclude Include="EpServerEngineHeaders\epPacket.h" />
+    <ClInclude Include="EpServerEngineHeaders\epPacketContainer.h" />
+    <ClInclude Include="EpServerEngineHeaders\epse.h" />
+    <ClInclude Include="EpServerEngineHeaders\epServerConf.h" />
+    <ClInclude Include="EpServerEngineHeaders\epServerEngine.h" />
+    <ClInclude Include="EpServerEngineHeaders\epServerObjectList.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

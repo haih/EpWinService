@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EpWinService90", "EpWinService\EpWinService90.vcproj", "{160A3C78-94F8-493D-B94E-6E11E65955CC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{160A3C78-94F8-493D-B94E-6E11E65955CC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{160A3C78-94F8-493D-B94E-6E11E65955CC}.Debug|Win32.Build.0 = Debug|Win32
+		{160A3C78-94F8-493D-B94E-6E11E65955CC}.Release|Win32.ActiveCfg = Release|Win32
+		{160A3C78-94F8-493D-B94E-6E11E65955CC}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
