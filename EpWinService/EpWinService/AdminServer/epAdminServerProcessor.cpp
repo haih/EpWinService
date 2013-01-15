@@ -45,7 +45,7 @@ void AdminServerProcessor::Process(AdminServerPacketParser *curClient,const Pack
 
 		}
 	}
-	//sendPacketContainer.SetArray(outStream.GetBuffer(),outStream.GetStreamSize());
+	sendPacketContainer.SetArray(reinterpret_cast<const char *>(outStream.GetBuffer()),outStream.GetStreamSize());
 	Packet sendPacket=Packet(reinterpret_cast<const void*>(sendPacketContainer.GetPacketPtr()),sendPacketContainer.GetPacketByteSize(),false);
 	curClient->Send(sendPacket);
 }
