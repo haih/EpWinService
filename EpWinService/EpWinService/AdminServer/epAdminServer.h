@@ -41,8 +41,6 @@ using namespace epse;
 /*! 
 @class AdminServer epAdminServer.h
 @brief This is a class for Admin Server Class
-
-Implements the Folder Processing Functions.
 */
 class AdminServer : public BaseServer
 {
