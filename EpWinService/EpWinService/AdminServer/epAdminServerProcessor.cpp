@@ -28,19 +28,19 @@ void AdminServerProcessor::Process(AdminServerPacketParser *curClient,const Pack
 		switch(packetType)
 		{
 		case RECEIVE_PACKET_TYPE_COMMAND:
-			CommandProcess(stream,outStream,subPacketType);
+			commandProcess(subPacketType,stream,outStream);
 			break;
 		case RECEIVE_PACKET_TYPE_SERVICE_GET:
-			GetServiceInfo(stream,outStream,subPacketType);
+			getServiceInfo(subPacketType,stream,outStream);
 			break;
 		case RECEIVE_PACKET_TYPE_SERVICE_SET:
-			SetServiceInfo(stream,outStream,subPacketType);
+			setServiceInfo(subPacketType,stream,outStream);
 			break;
 		case RECEIVE_PACKET_TYPE_PROCESS_GET:
-			GetProcessInfo(stream,outStream,subPacketType);
+			getProcessInfo(subPacketType,stream,outStream);
 			break;
 		case RECEIVE_PACKET_TYPE_PROCESS_SET:
-			SetProcessInfo(stream,outStream,subPacketType);
+			setProcessInfo(subPacketType,stream,outStream);
 			break;
 
 		}
@@ -49,7 +49,7 @@ void AdminServerProcessor::Process(AdminServerPacketParser *curClient,const Pack
 	Packet sendPacket=Packet(reinterpret_cast<const void*>(sendPacketContainer.GetPacketPtr()),sendPacketContainer.GetPacketByteSize(),false);
 	curClient->Send(sendPacket);
 }
-void AdminServerProcessor::CommandProcess(Stream &stream,Stream &retOutStream,unsigned int subPacketType)
+void AdminServerProcessor::commandProcess(unsigned int subPacketType,Stream &stream,Stream &retOutStream)
 {
 	int procIdx;
 	if(!stream.ReadInt(procIdx))
@@ -113,7 +113,7 @@ void AdminServerProcessor::CommandProcess(Stream &stream,Stream &retOutStream,un
 	retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
 
 }
-void AdminServerProcessor::GetServiceInfo(Stream &stream,Stream &retOutStream,unsigned int subPacketType)
+void AdminServerProcessor::getServiceInfo(unsigned int subPacketType,Stream &stream,Stream &retOutStream)
 {
 	unsigned int strLen=0;
 	
@@ -160,7 +160,7 @@ void AdminServerProcessor::GetServiceInfo(Stream &stream,Stream &retOutStream,un
 		break;
 	}
 }
-void AdminServerProcessor::SetServiceInfo(Stream &stream,Stream &retOutStream,unsigned int subPacketType)
+void AdminServerProcessor::setServiceInfo(unsigned int subPacketType,Stream &stream,Stream &retOutStream)
 {
 
 	unsigned int interval;
@@ -173,7 +173,7 @@ void AdminServerProcessor::SetServiceInfo(Stream &stream,Stream &retOutStream,un
 	SERVICE_PROPERTIES_INSTANCE.SetCheckProcessInterval(interval);
 }
 
-void AdminServerProcessor::GetProcessInfo(Stream &stream,Stream &retOutStream,unsigned int subPacketType)
+void AdminServerProcessor::getProcessInfo(unsigned int subPacketType,Stream &stream,Stream &retOutStream)
 {
 	unsigned int procIdx;
 	if(!stream.ReadUInt(procIdx))
@@ -265,7 +265,7 @@ bool GetString(Stream &stream, CString &retString)
 }
 
 
-void AdminServerProcessor::SetProcessInfo(Stream &stream,Stream &retOutStream,unsigned int subPacketType)
+void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &stream,Stream &retOutStream)
 {
 	unsigned int procIdx;
 	if(!stream.ReadUInt(procIdx))

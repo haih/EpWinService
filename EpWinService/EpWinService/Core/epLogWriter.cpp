@@ -2,7 +2,18 @@
 #include "epLogWriter.h"
 
 
+LogWriter::LogWriter()
+{
+	CString logMutexName=FolderHelper::GetModuleFileName().c_str();
+	logMutexName.Replace(_T(".exe"),_T("Mutex"));
+	m_mux=new Mutex(logMutexName.GetString());
+}
 
+LogWriter::~LogWriter()
+{
+	if(m_mux)
+		delete m_mux;
+}
 
 void LogWriter::WriteLog(const  TCHAR* pMsg)
 {
