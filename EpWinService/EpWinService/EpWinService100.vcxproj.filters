@@ -327,4 +327,9 @@
       <Filter>EpServerEngineHeaders</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
 </Project>
