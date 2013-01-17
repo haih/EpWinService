@@ -105,7 +105,7 @@ void AdminServerProcessor::commandProcess(unsigned int subPacketType,Stream &str
 		}
 		else
 		{
-			retOutStream.WriteUInt(PROCESS_STATUS_TYPE_PROCESS_IDX_OUT_OF_RANCE);
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_PROCESS_IDX_OUT_OF_RANCE);
 			return;
 		}
 	}
@@ -247,7 +247,7 @@ void AdminServerProcessor::getProcessInfo(unsigned int subPacketType,Stream &str
 	}
 	else
 	{
-		retOutStream.WriteUInt(PROCESS_STATUS_TYPE_PROCESS_IDX_OUT_OF_RANCE);
+		retOutStream.WriteUInt(PACKET_PROCESS_STATUS_PROCESS_IDX_OUT_OF_RANCE);
 		return;
 	}
 }
@@ -538,7 +538,7 @@ void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &str
 	}
 	else
 	{
-		retOutStream.WriteUInt(PROCESS_STATUS_TYPE_PROCESS_IDX_OUT_OF_RANCE);
+		retOutStream.WriteUInt(PACKET_PROCESS_STATUS_PROCESS_IDX_OUT_OF_RANCE);
 		return;
 	}
 }
