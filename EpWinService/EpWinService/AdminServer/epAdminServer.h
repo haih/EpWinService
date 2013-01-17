@@ -33,7 +33,7 @@ An Interface for the Admin Server.
 
 #include "epse.h"
 #include "epAdminServerWorker.h"
-
+#include "epAdminServerPacketInfo.h"
 
 using namespace epl;
 using namespace epse;
@@ -51,7 +51,7 @@ public:
 	Initializes the Server
 	@param[in] port the port string
 	*/
-	AdminServer(const TCHAR * port=_T("8988"));
+	AdminServer(const TCHAR * port=DEFAULT_ADMIN_SERVER_PORT);
 
 	/*!
 	Default Copy Constructor

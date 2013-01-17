@@ -31,6 +31,14 @@ An Interface for Admin Server Packet Information.
 #ifndef __EP_ADMIN_SERVER_PACKET_INFO_H__
 #define __EP_ADMIN_SERVER_PACKET_INFO_H__
 
+/*!
+@def DEFAULT_ADMIN_SERVER_PORT
+@brief Default Admin Server Port
+
+Macro for the Default Admin Server Port.
+*/
+#define DEFAULT_ADMIN_SERVER_PORT _T("8988")
+
 /// Packet Type
 typedef enum _packetType{
 /// Command Type
