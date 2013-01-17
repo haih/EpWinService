@@ -57,10 +57,11 @@ void AdminServerProcessor::commandProcess(unsigned int subPacketType,Stream &str
 		retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
 		return;
 	}
+	
+
 	int processCount=(int)PROCESS_HANDLER_INSTANCE.GetNumberOfProcesses();
 	if(procIdx==-1)
 	{
-
 		for(int procTrav=0;procTrav<processCount;procTrav++)
 		{
 			switch(subPacketType)
@@ -105,12 +106,13 @@ void AdminServerProcessor::commandProcess(unsigned int subPacketType,Stream &str
 		}
 		else
 		{
-			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_PROCESS_IDX_OUT_OF_RANCE);
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_PROCESS_IDX_OUT_OF_RANCE);
+			retOutStream.WriteInt(procIdx);
 			return;
 		}
 	}
-
 	retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+	retOutStream.WriteInt(procIdx);
 
 }
 void AdminServerProcessor::getServiceInfo(unsigned int subPacketType,Stream &stream,Stream &retOutStream)
@@ -185,6 +187,7 @@ void AdminServerProcessor::getProcessInfo(unsigned int subPacketType,Stream &str
 	if(procIdx>=0 && procIdx<PROCESS_HANDLER_INSTANCE.GetNumberOfProcesses())
 	{
 		retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+		retOutStream.WriteInt(procIdx);
 		switch(subPacketType)
 		{
 		case PROCESS_GET_PACKET_TYPE_ALL:
@@ -247,7 +250,8 @@ void AdminServerProcessor::getProcessInfo(unsigned int subPacketType,Stream &str
 	}
 	else
 	{
-		retOutStream.WriteUInt(PACKET_PROCESS_STATUS_PROCESS_IDX_OUT_OF_RANCE);
+		retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_PROCESS_IDX_OUT_OF_RANCE);
+		retOutStream.WriteInt(procIdx);
 		return;
 	}
 }
@@ -285,10 +289,12 @@ void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &str
 			{
 				PROCESS_HANDLER_INSTANCE.At(procIdx)->SetCommandLine(retString);
 				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+				retOutStream.WriteInt(procIdx);
 			}
 			else
 			{
-				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+				retOutStream.WriteInt(procIdx);
 			}
 
 			break;
@@ -297,10 +303,13 @@ void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &str
 			{
 				PROCESS_HANDLER_INSTANCE.At(procIdx)->SetPreProcessCommandLine(retString);
 				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+				retOutStream.WriteInt(procIdx);
 			}
 			else
 			{
-				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+				retOutStream.WriteInt(procIdx);
+				return;
 			}
 			break;
 		case PROCESS_SET_PACKET_TYPE_POSTPROCESS_COMMANDLINE:
@@ -308,10 +317,13 @@ void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &str
 			{
 				PROCESS_HANDLER_INSTANCE.At(procIdx)->SetPostProcessCommandLine(retString);
 				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+				retOutStream.WriteInt(procIdx);
 			}
 			else
 			{
-				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+				retOutStream.WriteInt(procIdx);
+				return;
 			}
 			break;
 		case PROCESS_SET_PACKET_TYPE_CUSTOMPROCESS_COMMANDLINE:
@@ -319,10 +331,13 @@ void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &str
 			{
 				PROCESS_HANDLER_INSTANCE.At(procIdx)->SetCustomProcessCommandLine(retString);
 				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+				retOutStream.WriteInt(procIdx);
 			}
 			else
 			{
-				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+				retOutStream.WriteInt(procIdx);
+				return;
 			}	
 			break;
 		case PROCESS_SET_PACKET_TYPE_DOMAINNAME:
@@ -330,32 +345,41 @@ void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &str
 			{
 				PROCESS_HANDLER_INSTANCE.At(procIdx)->SetDomainName(retString);
 				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+				retOutStream.WriteInt(procIdx);
 			}
 			else
 			{
-				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
-			}	
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+				retOutStream.WriteInt(procIdx);
+				return;
+			}
 			break;
 		case PROCESS_SET_PACKET_TYPE_USERNAME:
 			if(GetString(stream,retString))
 			{
 				PROCESS_HANDLER_INSTANCE.At(procIdx)->SetUserName(retString);
 				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+				retOutStream.WriteInt(procIdx);
 			}
 			else
 			{
-				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
-			}		
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+				retOutStream.WriteInt(procIdx);
+				return;
+			}
 			break;
 		case PROCESS_SET_PACKET_TYPE_USERPASSWORD:
 			if(GetString(stream,retString))
 			{
 				PROCESS_HANDLER_INSTANCE.At(procIdx)->SetUserPassword(retString);
 				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+				retOutStream.WriteInt(procIdx);
 			}
 			else
 			{
-				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+				retOutStream.WriteInt(procIdx);
+				return;
 			}	
 			break;
 
@@ -365,18 +389,28 @@ void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &str
 			{
 				PROCESS_HANDLER_INSTANCE.At(procIdx)->SetDelayStartTime(val);
 				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+				retOutStream.WriteInt(procIdx);
 			}
 			else
-				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
+			{
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+				retOutStream.WriteInt(procIdx);
+				return;
+			}
 			break;
 		case PROCESS_SET_PACKET_TYPE_DELAY_PAUSE_END_TIME:
 			if(stream.ReadUInt(val))
 			{
 				PROCESS_HANDLER_INSTANCE.At(procIdx)->SetDelayPauseEndTime(val);
 				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+				retOutStream.WriteInt(procIdx);
 			}
 			else
-				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
+			{
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+				retOutStream.WriteInt(procIdx);
+				return;
+			}
 			break;
 		case PROCESS_SET_PACKET_TYPE_IS_PROCESS_RESTART:
 			if(stream.ReadUInt(val))
@@ -386,9 +420,14 @@ void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &str
 				else
 					PROCESS_HANDLER_INSTANCE.At(procIdx)->SetIsProcessRestart(false);
 				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+				retOutStream.WriteInt(procIdx);
 			}
 			else
-				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
+			{
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+				retOutStream.WriteInt(procIdx);
+				return;
+			}
 			break;
 		case PROCESS_SET_PACKET_TYPE_IS_IMPERSONATE:
 			if(stream.ReadUInt(val))
@@ -398,9 +437,14 @@ void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &str
 				else
 					PROCESS_HANDLER_INSTANCE.At(procIdx)->SetIsImpersonate(false);
 				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+				retOutStream.WriteInt(procIdx);
 			}
 			else
-				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
+			{
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+				retOutStream.WriteInt(procIdx);
+				return;
+			}
 			break;
 		case PROCESS_SET_PACKET_TYPE_IS_USER_INTERFACE:
 			if(stream.ReadUInt(val))
@@ -410,9 +454,14 @@ void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &str
 				else
 					PROCESS_HANDLER_INSTANCE.At(procIdx)->SetIsUserInterface(false);
 				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+				retOutStream.WriteInt(procIdx);
 			}
 			else
-				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
+			{
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+				retOutStream.WriteInt(procIdx);
+				return;
+			}
 			break;
 		case PROCESS_SET_PACKET_TYPE_ALL:
 			if(GetString(stream,retString))
@@ -421,7 +470,8 @@ void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &str
 			}
 			else
 			{
-				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+				retOutStream.WriteInt(procIdx);
 				return;
 			}
 			if(GetString(stream,retString))
@@ -430,7 +480,8 @@ void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &str
 			}
 			else
 			{
-				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+				retOutStream.WriteInt(procIdx);
 				return;
 			}
 			if(GetString(stream,retString))
@@ -439,7 +490,8 @@ void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &str
 			}
 			else
 			{
-				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+				retOutStream.WriteInt(procIdx);
 				return;
 			}
 			if(GetString(stream,retString))
@@ -448,7 +500,8 @@ void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &str
 			}
 			else
 			{
-				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+				retOutStream.WriteInt(procIdx);
 				return;
 			}	
 			if(GetString(stream,retString))
@@ -457,7 +510,8 @@ void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &str
 			}
 			else
 			{
-				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+				retOutStream.WriteInt(procIdx);
 				return;
 			}	
 			if(GetString(stream,retString))
@@ -466,7 +520,8 @@ void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &str
 			}
 			else
 			{
-				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+				retOutStream.WriteInt(procIdx);
 				return;
 			}		
 			if(GetString(stream,retString))
@@ -475,7 +530,8 @@ void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &str
 			}
 			else
 			{
-				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+				retOutStream.WriteInt(procIdx);
 				return;
 			}	
 			if(stream.ReadUInt(val))
@@ -484,7 +540,8 @@ void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &str
 			}
 			else
 			{
-				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+				retOutStream.WriteInt(procIdx);
 				return;
 			}
 			if(stream.ReadUInt(val))
@@ -493,7 +550,8 @@ void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &str
 			}
 			else
 			{
-				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+				retOutStream.WriteInt(procIdx);
 				return;
 			}
 			if(stream.ReadUInt(val))
@@ -505,7 +563,8 @@ void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &str
 			}
 			else
 			{
-				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+				retOutStream.WriteInt(procIdx);
 				return;
 			}
 			if(stream.ReadUInt(val))
@@ -517,7 +576,8 @@ void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &str
 			}
 			else
 			{
-				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+				retOutStream.WriteInt(procIdx);
 				return;
 			}
 			if(stream.ReadUInt(val))
@@ -529,16 +589,19 @@ void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &str
 			}
 			else
 			{
-				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+				retOutStream.WriteInt(procIdx);
 				return;
 			}
 			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+			retOutStream.WriteInt(procIdx);
 			break;
 		}
 	}
 	else
 	{
-		retOutStream.WriteUInt(PACKET_PROCESS_STATUS_PROCESS_IDX_OUT_OF_RANCE);
+		retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_PROCESS_IDX_OUT_OF_RANCE);
+		retOutStream.WriteInt(procIdx);
 		return;
 	}
 }
