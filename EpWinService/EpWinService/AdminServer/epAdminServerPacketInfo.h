@@ -42,15 +42,15 @@ Macro for the Default Admin Server Port.
 /// Packet Type
 typedef enum _packetType{
 /// Command Type
-RECEIVE_PACKET_TYPE_COMMAND=0,
+PACKET_TYPE_COMMAND=0,
 /// Get Service Info Type
-RECEIVE_PACKET_TYPE_SERVICE_GET,
+PACKET_TYPE_SERVICE_GET,
 /// Set Service Info Type
-RECEIVE_PACKET_TYPE_SERVICE_SET,
+PACKET_TYPE_SERVICE_SET,
 /// Get Process Info type
-RECEIVE_PACKET_TYPE_PROCESS_GET,
+PACKET_TYPE_PROCESS_GET,
 /// Set Process Info Type
-RECEIVE_PACKET_TYPE_PROCESS_SET
+PACKET_TYPE_PROCESS_SET
 }PacketType;
 
 /// Sub-type for Command Packet

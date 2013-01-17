@@ -27,19 +27,19 @@ void AdminServerProcessor::Process(AdminServerPacketParser *curClient,const Pack
 		outStream.WriteUInt(subPacketType);
 		switch(packetType)
 		{
-		case RECEIVE_PACKET_TYPE_COMMAND:
+		case PACKET_TYPE_COMMAND:
 			commandProcess(subPacketType,stream,outStream);
 			break;
-		case RECEIVE_PACKET_TYPE_SERVICE_GET:
+		case PACKET_TYPE_SERVICE_GET:
 			getServiceInfo(subPacketType,stream,outStream);
 			break;
-		case RECEIVE_PACKET_TYPE_SERVICE_SET:
+		case PACKET_TYPE_SERVICE_SET:
 			setServiceInfo(subPacketType,stream,outStream);
 			break;
-		case RECEIVE_PACKET_TYPE_PROCESS_GET:
+		case PACKET_TYPE_PROCESS_GET:
 			getProcessInfo(subPacketType,stream,outStream);
 			break;
-		case RECEIVE_PACKET_TYPE_PROCESS_SET:
+		case PACKET_TYPE_PROCESS_SET:
 			setProcessInfo(subPacketType,stream,outStream);
 			break;
 
