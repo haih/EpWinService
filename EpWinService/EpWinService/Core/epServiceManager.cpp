@@ -388,19 +388,17 @@ void ServiceManager::Install()
 		}
 		else
 		{
-			userName=_T("");
+			CString startUserName=_T("");
 			CString domainName=SERVICE_PROPERTIES_INSTANCE.GetDomainName();
 			
 			if(domainName.GetLength())
 			{
-				userName.AppendFormat(_T("%s\\%s"),SERVICE_PROPERTIES_INSTANCE.GetDomainName(),SERVICE_PROPERTIES_INSTANCE.GetUserName());
+				startUserName.AppendFormat(_T("%s\\%s"),domainName.GetString(),userName.GetString());
 			}
 			else
 			{
-				userName.AppendFormat(_T(".\\%s"),SERVICE_PROPERTIES_INSTANCE.GetUserName());
+				startUserName.AppendFormat(_T(".\\%s"),userName.GetString());
 			}
-			CString userName=SERVICE_PROPERTIES_INSTANCE.GetDomainName();
-			userName.AppendFormat(_T("\\%s"),SERVICE_PROPERTIES_INSTANCE.GetUserName());
 			schService = CreateService
 				( 
 				schSCManager,	/* SCManager database      */ 
@@ -414,7 +412,7 @@ void ServiceManager::Install()
 				NULL,                      /* no load ordering group  */ 
 				NULL,                      /* no tag identifier       */ 
 				SERVICE_PROPERTIES_INSTANCE.GetDependency(),                      /* no dependencies         */ 
-				userName.GetString(),                      /* LocalSystem account     */ 
+				startUserName.GetString(),                      /* LocalSystem account     */ 
 				SERVICE_PROPERTIES_INSTANCE.GetUserPassword()
 				);                     /* no password             */ 
 

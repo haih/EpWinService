@@ -34,6 +34,7 @@ ServiceProperties::ServiceProperties()
 
 	m_dependency=m_origDependency;
 	m_dependency.Replace(_T(' '), _T('\0'));
+	m_dependency.Replace(_T(';'), _T('\0'));
 
 	memset(textBuffer,0,sizeof(TCHAR)*MAX_PATH);
 	GetPrivateProfileString(_T("Settings"),_T("UseAdminServer"),_T("Y"),textBuffer,MAX_PATH,m_iniFileName.GetString());
