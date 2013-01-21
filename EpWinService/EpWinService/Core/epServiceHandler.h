@@ -31,7 +31,6 @@ An Interface for Service Handler.
 #ifndef __EP_SERVICE_HANDLER_H__
 #define __EP_SERVICE_HANDLER_H__
 #include "epl.h"
-#include "winsvc.h"
 #include "epServiceDefines.h"
 
 using namespace epl;

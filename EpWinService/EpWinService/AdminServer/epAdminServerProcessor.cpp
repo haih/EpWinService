@@ -194,6 +194,10 @@ void AdminServerProcessor::getProcessInfo(unsigned int subPacketType,Stream &str
 		switch(subPacketType)
 		{
 		case PROCESS_GET_PACKET_TYPE_ALL:
+			if(PROCESS_HANDLER_INSTANCE.At(procIdx)->IsProcessStarted())
+				retOutStream.WriteUInt(PROCESS_STATUS_TYPE_RUNNING);
+			else
+				retOutStream.WriteUInt(PROCESS_STATUS_TYPE_STOPPED);
 			retOutStream.WriteUInt(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetDelayStartTime());
 			retOutStream.WriteUInt(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetDelayPauseEndTime());
 			retOutStream.WriteUInt(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetIsProcessRestart());
@@ -635,7 +639,7 @@ void AdminServerProcessor::commandService(unsigned int subPacketType,Stream &str
 			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
 		else
 		{
-			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_SERVICE_HANDLE_ERROR);
 			retOutStream.WriteUInt(err);
 			retOutStream.WriteUInt(errCode);
 		}
@@ -646,7 +650,7 @@ void AdminServerProcessor::commandService(unsigned int subPacketType,Stream &str
 			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
 		else
 		{
-			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_SERVICE_HANDLE_ERROR);
 			retOutStream.WriteUInt(err);
 			retOutStream.WriteUInt(errCode);
 		}
@@ -657,7 +661,7 @@ void AdminServerProcessor::commandService(unsigned int subPacketType,Stream &str
 			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
 		else
 		{
-			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_SERVICE_HANDLE_ERROR);
 			retOutStream.WriteUInt(err);
 			retOutStream.WriteUInt(errCode);
 		}
@@ -668,7 +672,7 @@ void AdminServerProcessor::commandService(unsigned int subPacketType,Stream &str
 			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
 		else
 		{
-			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_SERVICE_HANDLE_ERROR);
 			retOutStream.WriteUInt(err);
 			retOutStream.WriteUInt(errCode);
 		}
@@ -687,7 +691,7 @@ void AdminServerProcessor::commandService(unsigned int subPacketType,Stream &str
 		}
 		else
 		{
-			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_SERVICE_HANDLE_ERROR);
 			retOutStream.WriteUInt(err);
 			retOutStream.WriteUInt(errCode);
 		}
@@ -766,7 +770,7 @@ void AdminServerProcessor::commandService(unsigned int subPacketType,Stream &str
 			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
 		else
 		{
-			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_SERVICE_HANDLE_ERROR);
 			retOutStream.WriteUInt(err);
 			retOutStream.WriteUInt(errCode);
 		}
@@ -777,7 +781,7 @@ void AdminServerProcessor::commandService(unsigned int subPacketType,Stream &str
 			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
 		else
 		{
-			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_SERVICE_HANDLE_ERROR);
 			retOutStream.WriteUInt(err);
 			retOutStream.WriteUInt(errCode);
 		}
@@ -856,7 +860,7 @@ void AdminServerProcessor::commandService(unsigned int subPacketType,Stream &str
 			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
 		else
 		{
-			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_SERVICE_HANDLE_ERROR);
 			retOutStream.WriteUInt(err);
 			retOutStream.WriteUInt(errCode);
 		}
@@ -870,7 +874,7 @@ void AdminServerProcessor::commandService(unsigned int subPacketType,Stream &str
 		}
 		else
 		{
-			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_SERVICE_HANDLE_ERROR);
 			retOutStream.WriteUInt(err);
 			retOutStream.WriteUInt(errCode);
 		}

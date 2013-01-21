@@ -1,6 +1,9 @@
 #ifndef __EP_SERVICE_DEFINES_H__
 #define __EP_SERVICE_DEFINES_H__
 
+
+#include "winsvc.h"
+
 /// Control Bit for Service Configuration
 typedef enum _serviceEditControlBit{
 	/// Change BinaryPathName
