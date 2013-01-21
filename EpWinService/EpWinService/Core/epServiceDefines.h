@@ -16,7 +16,7 @@ typedef enum _serviceEditControlBit{
 	SERVICE_EDIT_CONTROL_USERNAME=0x00000008,
 	/// Change UserPassword
 	SERVICE_EDIT_CONTROL_USERPASSWORD=0x00000010,
-	/// Change Serive Display Name
+	/// Change Service Display Name
 	SERVICE_EDIT_CONTROL_DISPLAYNAME=0x00000020,
 }ServiceEditControlBit;
 
