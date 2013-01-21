@@ -104,6 +104,7 @@
     <ClCompile Include="Core\epLogWriter.cpp" />
     <ClCompile Include="Core\epProcessHandler.cpp" />
     <ClCompile Include="Core\epProcessObject.cpp" />
+    <ClCompile Include="Core\epServiceHandler.cpp" />
     <ClCompile Include="Core\epServiceManager.cpp" />
     <ClCompile Include="Core\epServiceProperties.cpp" />
     <ClCompile Include="EpWinService.cpp" />
@@ -118,6 +119,8 @@
     <ClInclude Include="Core\epLogWriter.h" />
     <ClInclude Include="Core\epProcessHandler.h" />
     <ClInclude Include="Core\epProcessObject.h" />
+    <ClInclude Include="Core\epServiceDefines.h" />
+    <ClInclude Include="Core\epServiceHandler.h" />
     <ClInclude Include="Core\epServiceManager.h" />
     <ClInclude Include="Core\epServiceProperties.h" />
     <ClInclude Include="EpLibraryHeaders\epAlgorithm.h" />

@@ -25,6 +25,12 @@
     <Filter Include="EpServerEngineHeaders">
       <UniqueIdentifier>{fef9e155-7727-4b5d-a610-f32ca78fe4ac}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\ProcessManagement">
+      <UniqueIdentifier>{b99875c3-a30e-4cc7-a765-b52b3f37d3ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\ServiceManagement">
+      <UniqueIdentifier>{571ee094-5925-4912-9ca2-c556b3066094}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -34,12 +40,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Core\epLogWriter.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\epProcessHandler.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\epProcessObject.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="Core\epServiceManager.cpp">
@@ -60,6 +60,15 @@
     <ClCompile Include="AdminServer\epAdminServerWorker.cpp">
       <Filter>AdminServer</Filter>
     </ClCompile>
+    <ClCompile Include="Core\epProcessHandler.cpp">
+      <Filter>Core\ProcessManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\epProcessObject.cpp">
+      <Filter>Core\ProcessManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\epServiceHandler.cpp">
+      <Filter>Core\ServiceManagement</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -69,12 +78,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Core\epLogWriter.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\epProcessHandler.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\epProcessObject.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="Core\epServiceManager.h">
@@ -325,6 +328,18 @@
     </ClInclude>
     <ClInclude Include="EpServerEngineHeaders\epServerObjectList.h">
       <Filter>EpServerEngineHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\epProcessHandler.h">
+      <Filter>Core\ProcessManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\epProcessObject.h">
+      <Filter>Core\ProcessManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\epServiceDefines.h">
+      <Filter>Core\ServiceManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\epServiceHandler.h">
+      <Filter>Core\ServiceManagement</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

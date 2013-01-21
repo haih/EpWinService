@@ -539,22 +539,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Core\epProcessHandler.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Core\epProcessHandler.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Core\epProcessObject.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Core\epProcessObject.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Core\epServiceManager.cpp"
 				>
 			</File>
@@ -570,6 +554,42 @@
 				RelativePath=".\Core\epServiceProperties.h"
 				>
 			</File>
+			<Filter
+				Name="ProcessManagement"
+				>
+				<File
+					RelativePath=".\Core\epProcessHandler.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Core\epProcessHandler.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Core\epProcessObject.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Core\epProcessObject.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="ServiceManagement"
+				>
+				<File
+					RelativePath=".\Core\epServiceDefines.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Core\epServiceHandler.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Core\epServiceHandler.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="AdminServer"
