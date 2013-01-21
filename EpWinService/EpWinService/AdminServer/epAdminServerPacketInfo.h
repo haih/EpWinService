@@ -50,7 +50,9 @@ PACKET_TYPE_SERVICE_SET,
 /// Get Process Info type
 PACKET_TYPE_PROCESS_GET,
 /// Set Process Info Type
-PACKET_TYPE_PROCESS_SET
+PACKET_TYPE_PROCESS_SET,
+/// Service Command type
+PACKET_TYPE_SERVICE_COMMAND
 }PacketType;
 
 /// Sub-type for Command Packet
@@ -159,6 +161,29 @@ PROCESS_SET_PACKET_TYPE_IS_USER_INTERFACE,
 PROCESS_SET_PACKET_TYPE_ALL
 
 }ProcessSetPacketType;
+
+
+/// Sub-type for Service Command Packet
+typedef enum _serviceCommandPacketType{
+/// Service Start Command
+SERVICE_COMMAND_PACKET_TYPE_START=0,
+/// Service Continue Command
+SERVICE_COMMAND_PACKET_TYPE_CONTINUE,
+/// Service Stop Command
+SERVICE_COMMAND_PACKET_TYPE_STOP,
+/// Service Pause Command
+SERVICE_COMMAND_PACKET_TYPE_PAUSE,
+/// Service Control Command
+SERVICE_COMMAND_PACKET_TYPE_CONTROL,
+/// Service Install Command
+SERVICE_COMMAND_PACKET_TYPE_INSTALL,
+/// Service Uninstall Command
+SERVICE_COMMAND_PACKET_TYPE_UNINSTALL,
+/// Service Edit Command
+SERVICE_COMMAND_PACKET_TYPE_EDIT,
+/// Service Get Status command
+SERVICE_COMMAND_PACKET_TYPE_GET_STATUS
+}ServiceCommandPacketType;
 
 /// Packet Process Result Type
 typedef enum _packetProcessStatus{

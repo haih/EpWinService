@@ -2,6 +2,7 @@
 #include "epAdminServerProcessor.h"
 #include "epProcessHandler.h"
 #include "epServiceProperties.h"
+#include "epServiceHandler.h"
 
 void AdminServerProcessor::Process(AdminServerPacketParser *curClient,const Packet *packet)
 {
@@ -41,6 +42,8 @@ void AdminServerProcessor::Process(AdminServerPacketParser *curClient,const Pack
 			break;
 		case PACKET_TYPE_PROCESS_SET:
 			setProcessInfo(subPacketType,stream,outStream);
+		case PACKET_TYPE_SERVICE_COMMAND:
+
 			break;
 
 		}
@@ -603,5 +606,275 @@ void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &str
 		retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_PROCESS_IDX_OUT_OF_RANCE);
 		retOutStream.WriteInt(procIdx);
 		return;
+	}
+}
+
+
+void AdminServerProcessor::commandService(unsigned int subPacketType,Stream &stream,Stream &retOutStream)
+{
+	CString serviceName;
+	if(!GetString(stream,serviceName))
+	{
+		retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
+		return;
+	}
+	ServiceHandlerError err=SERVICE_HANDLER_ERROR_SUCCESS;
+	DWORD errCode;
+	SERVICE_STATUS_PROCESS statusProc;
+	SERVICE_STATUS status;
+	unsigned int code;
+	unsigned int tmpVal;
+
+	ServiceInfo info;
+	
+	switch(subPacketType)
+	{
+	case SERVICE_COMMAND_PACKET_TYPE_START:
+		err=SERVICE_HANDLER_INSTANCE.StartService(serviceName.GetString(),errCode);
+		if(err==SERVICE_HANDLER_ERROR_SUCCESS)	
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+		else
+		{
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
+			retOutStream.WriteUInt(err);
+			retOutStream.WriteUInt(errCode);
+		}
+		break;
+	case SERVICE_COMMAND_PACKET_TYPE_CONTINUE:
+		err=SERVICE_HANDLER_INSTANCE.ContinueService(serviceName.GetString(),errCode);
+		if(err==SERVICE_HANDLER_ERROR_SUCCESS)	
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+		else
+		{
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
+			retOutStream.WriteUInt(err);
+			retOutStream.WriteUInt(errCode);
+		}
+		break;
+	case SERVICE_COMMAND_PACKET_TYPE_STOP:
+		err=SERVICE_HANDLER_INSTANCE.StopService(serviceName.GetString(),errCode);
+		if(err==SERVICE_HANDLER_ERROR_SUCCESS)	
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+		else
+		{
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
+			retOutStream.WriteUInt(err);
+			retOutStream.WriteUInt(errCode);
+		}
+		break;
+	case SERVICE_COMMAND_PACKET_TYPE_PAUSE:
+		err=SERVICE_HANDLER_INSTANCE.PauseService(serviceName.GetString(),errCode);
+		if(err==SERVICE_HANDLER_ERROR_SUCCESS)	
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+		else
+		{
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
+			retOutStream.WriteUInt(err);
+			retOutStream.WriteUInt(errCode);
+		}
+		break;
+	case SERVICE_COMMAND_PACKET_TYPE_CONTROL:
+		if(!stream.ReadUInt(code))
+		{
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+			return;
+		}
+		err=SERVICE_HANDLER_INSTANCE.ControlService(serviceName.GetString(),(ServiceControlCode)code,status,errCode);
+		if(err==SERVICE_HANDLER_ERROR_SUCCESS)	
+		{
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+			retOutStream.WriteBytes((unsigned char*)&status,sizeof(SERVICE_STATUS));
+		}
+		else
+		{
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
+			retOutStream.WriteUInt(err);
+			retOutStream.WriteUInt(errCode);
+		}
+		break;
+	case SERVICE_COMMAND_PACKET_TYPE_INSTALL:
+		if(!GetString(stream, info.displayName))
+		{
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+			return;
+		}
+		if(!stream.ReadUInt(tmpVal))
+		{
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+			return;
+		}
+		info.desiredAccess=(ServiceDesiredAccess)tmpVal;
+
+		if(!stream.ReadUInt(tmpVal))
+		{
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+			return;
+		}
+		info.serviceType=(ServiceType)tmpVal;
+		
+		if(!stream.ReadUInt(tmpVal))
+		{
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+			return;
+		}
+		info.startType=(ServiceStartType)tmpVal;
+		
+		if(!stream.ReadUInt(tmpVal))
+		{
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+			return;
+		}
+		info.errorControl=(ServiceErrorControl)tmpVal;
+		
+		if(!GetString(stream,info.binaryPathName))
+		{
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+			return;
+		}
+		if(!GetString(stream, info.loadOrderGroup))
+		{
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+			return;
+		}
+		if(!GetString(stream, info.dependencies))
+		{
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+			return;
+		}
+		if(!GetString(stream, info.domainName))
+		{
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+			return;
+		}
+		if(!GetString(stream, info.userName))
+		{
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+			return;
+		}
+		if(!GetString(stream, info.password))
+		{
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+			return;
+		}
+		if(!stream.ReadUInt(info.editControlBit))
+		{
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+			return;
+		}
+		err=SERVICE_HANDLER_INSTANCE.InstallService(serviceName.GetString(),info,errCode);
+		if(err==SERVICE_HANDLER_ERROR_SUCCESS)	
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+		else
+		{
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
+			retOutStream.WriteUInt(err);
+			retOutStream.WriteUInt(errCode);
+		}
+		break;
+	case SERVICE_COMMAND_PACKET_TYPE_UNINSTALL:
+		err=SERVICE_HANDLER_INSTANCE.UnInstallService(serviceName.GetString(),errCode);
+		if(err==SERVICE_HANDLER_ERROR_SUCCESS)	
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+		else
+		{
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
+			retOutStream.WriteUInt(err);
+			retOutStream.WriteUInt(errCode);
+		}
+		break;
+	case SERVICE_COMMAND_PACKET_TYPE_EDIT:
+		if(!GetString(stream, info.displayName))
+		{
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+			return;
+		}
+		if(!stream.ReadUInt(tmpVal))
+		{
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+			return;
+		}
+		info.desiredAccess=(ServiceDesiredAccess)tmpVal;
+
+		if(!stream.ReadUInt(tmpVal))
+		{
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+			return;
+		}
+		info.serviceType=(ServiceType)tmpVal;
+
+		if(!stream.ReadUInt(tmpVal))
+		{
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+			return;
+		}
+		info.startType=(ServiceStartType)tmpVal;
+
+		if(!stream.ReadUInt(tmpVal))
+		{
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+			return;
+		}
+		info.errorControl=(ServiceErrorControl)tmpVal;
+
+		if(!GetString(stream,info.binaryPathName))
+		{
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+			return;
+		}
+		if(!GetString(stream, info.loadOrderGroup))
+		{
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+			return;
+		}
+		if(!GetString(stream, info.dependencies))
+		{
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+			return;
+		}
+		if(!GetString(stream, info.domainName))
+		{
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+			return;
+		}
+		if(!GetString(stream, info.userName))
+		{
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+			return;
+		}
+		if(!GetString(stream, info.password))
+		{
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+			return;
+		}
+		if(!stream.ReadUInt(info.editControlBit))
+		{
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+			return;
+		}
+		err=SERVICE_HANDLER_INSTANCE.EditService(serviceName.GetString(),info,errCode);
+		if(err==SERVICE_HANDLER_ERROR_SUCCESS)	
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+		else
+		{
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
+			retOutStream.WriteUInt(err);
+			retOutStream.WriteUInt(errCode);
+		}
+		break;
+	case SERVICE_COMMAND_PACKET_TYPE_GET_STATUS:
+		err=SERVICE_HANDLER_INSTANCE.GetServiceStatus(serviceName.GetString(),statusProc,errCode);
+		if(err==SERVICE_HANDLER_ERROR_SUCCESS)	
+		{
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+			retOutStream.WriteBytes((unsigned char*)&statusProc,sizeof(SERVICE_STATUS_PROCESS));
+		}
+		else
+		{
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
+			retOutStream.WriteUInt(err);
+			retOutStream.WriteUInt(errCode);
+		}
+		break;
+
 	}
 }

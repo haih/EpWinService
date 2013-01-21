@@ -95,7 +95,7 @@ ServiceHandlerError ServiceHandler::StopService(const TCHAR *serviceName, DWORD 
 		{
 			// call ControlService to kill the given service
 			SERVICE_STATUS status;
-			if(!::ControlService(schService,SERVICE_CONTROL_STOP,&status))
+			if(!::ControlService(schService,SERVICE_CONTROL_CODE_STOP,&status))
 			{
 				retErrCode = GetLastError();
 				err=SERVICE_HANDLER_ERROR_FAIL_CONTROLSERVICE;
@@ -137,7 +137,7 @@ ServiceHandlerError ServiceHandler::PauseService(const TCHAR *serviceName, DWORD
 		{
 			// call ControlService to kill the given service
 			SERVICE_STATUS status;
-			if(!::ControlService(schService,SERVICE_CONTROL_PAUSE,&status))
+			if(!::ControlService(schService,SERVICE_CONTROL_CODE_PAUSE,&status))
 			{
 				retErrCode = GetLastError();
 				err=SERVICE_HANDLER_ERROR_FAIL_CONTROLSERVICE;
@@ -180,7 +180,7 @@ ServiceHandlerError ServiceHandler::ContinueService(const TCHAR *serviceName, DW
 		{
 			// call ControlService to kill the given service
 			SERVICE_STATUS status;
-			if(!::ControlService(schService,SERVICE_CONTROL_CONTINUE,&status))
+			if(!::ControlService(schService,SERVICE_CONTROL_CODE_CONTINUE,&status))
 			{
 				retErrCode = GetLastError();
 				err=SERVICE_HANDLER_ERROR_FAIL_CONTROLSERVICE;
@@ -192,7 +192,7 @@ ServiceHandlerError ServiceHandler::ContinueService(const TCHAR *serviceName, DW
 	return err;
 }
 
-ServiceHandlerError ServiceHandler::ControlService(const TCHAR *serviceName,ServiceControlCode code , DWORD &retErrCode)
+ServiceHandlerError ServiceHandler::ControlService(const TCHAR *serviceName,ServiceControlCode code, SERVICE_STATUS &retStatus , DWORD &retErrCode)
 {
 	retErrCode=0;
 	if(!serviceName)
@@ -222,8 +222,8 @@ ServiceHandlerError ServiceHandler::ControlService(const TCHAR *serviceName,Serv
 		else
 		{
 			// call ControlService to kill the given service
-			SERVICE_STATUS status;
-			if(!::ControlService(schService,SERVICE_CONTROL_CONTINUE,&status))
+			
+			if(!::ControlService(schService,code,&retStatus))
 			{
 				retErrCode = GetLastError();
 				err=SERVICE_HANDLER_ERROR_FAIL_CONTROLSERVICE;
@@ -263,10 +263,10 @@ ServiceHandlerError ServiceHandler::InstallService(const TCHAR *serviceName,Serv
 	if(m_scManager)
 	{
 
-		CString displayName=TCHARToCString(info.displayName);
-		CString domainName=TCHARToCString(info.domainName);
-		CString userName=TCHARToCString(info.userName);
-		CString dependencies=TCHARToCString(info.dependencies);
+		CString displayName=info.displayName;
+		CString domainName=info.domainName;
+		CString userName=info.userName;
+		CString dependencies=info.dependencies;
 		CString startUserName=_T("");
 		unsigned long desiredAccess=info.desiredAccess;
 		unsigned long serviceType=info.startType;
@@ -311,8 +311,8 @@ ServiceHandlerError ServiceHandler::InstallService(const TCHAR *serviceName,Serv
 				serviceType , /* service type            */ 
 				startType,      /* start type              */ 
 				errorControl,      /* error control type      */ 
-				info.binaryPathName,			/* service's binary        */ 
-				info.loadOrderGroup,                      /* no load ordering group  */ 
+				info.binaryPathName.GetString(),			/* service's binary        */ 
+				info.loadOrderGroup.GetString(),                      /* no load ordering group  */ 
 				NULL,                      /* no tag identifier       */ 
 				dependencies.GetString(),                      /* no dependencies         */ 
 				NULL,                      /* LocalSystem account     */ 
@@ -346,12 +346,12 @@ ServiceHandlerError ServiceHandler::InstallService(const TCHAR *serviceName,Serv
 				serviceType, /* service type            */ 
 				startType,      /* start type              */ 
 				errorControl,      /* error control type      */ 
-				info.binaryPathName,			/* service's binary        */ 
-				info.loadOrderGroup,                      /* no load ordering group  */ 
+				info.binaryPathName.GetString(),			/* service's binary        */ 
+				info.loadOrderGroup.GetString(),                      /* no load ordering group  */ 
 				NULL,                      /* no tag identifier       */ 
 				dependencies.GetString(),                      /* no dependencies         */ 
 				startUserName.GetString(),                      /* LocalSystem account     */ 
-				info.password
+				info.password.GetString()
 				);                     /* no password             */ 
 
 		}
@@ -432,10 +432,10 @@ ServiceHandlerError ServiceHandler::EditService(const TCHAR *serviceName,Service
 		}
 		else
 		{
-			CString displayName=TCHARToCString(info.displayName);
-			CString domainName=TCHARToCString(info.domainName);
-			CString userName=TCHARToCString(info.userName);
-			CString dependencies=TCHARToCString(info.dependencies);
+			CString displayName=info.displayName;
+			CString domainName=info.domainName;
+			CString userName=info.userName;
+			CString dependencies=info.dependencies;
 			CString startUserName=_T("");
 			startUserName=_T("");
 
@@ -515,6 +515,57 @@ ServiceHandlerError ServiceHandler::EditService(const TCHAR *serviceName,Service
 
 
 		}
+	}
+	return err;
+}
+
+
+ServiceHandlerError ServiceHandler::GetServiceStatus(const TCHAR *serviceName,SERVICE_STATUS_PROCESS &retStatus, DWORD &retErrCode)
+{
+	retErrCode=0;
+	if(!serviceName)
+		return SERVICE_HANDLER_ERROR_FAIL_INVALIDSERVICENAME;
+
+	ServiceHandlerError err=SERVICE_HANDLER_ERROR_SUCCESS;
+
+	if (m_scManager==0) 
+	{
+		m_scManager = OpenSCManager( NULL, NULL, SC_MANAGER_ALL_ACCESS); 
+		if (m_scManager==0) 
+		{
+			retErrCode = GetLastError();
+			err=SERVICE_HANDLER_ERROR_FAIL_OPENSCMANAGER;
+		}
+	}
+
+	if(m_scManager)
+	{
+		
+		
+		// open the service
+		SC_HANDLE schService = OpenService( m_scManager, serviceName, SERVICE_ALL_ACCESS);
+		if (schService==0) 
+		{
+			retErrCode = GetLastError();
+			err=SERVICE_HANDLER_ERROR_FAIL_OPENSERVICE;
+		}
+		else
+		{
+			// call ControlService to kill the given service
+			SERVICE_STATUS_PROCESS status;
+			DWORD byteNeeded;
+			if(!::QueryServiceStatusEx(schService,SC_STATUS_PROCESS_INFO,(BYTE*)&status,sizeof(SERVICE_STATUS_PROCESS),&byteNeeded))
+			{
+				retErrCode = GetLastError();
+				err=SERVICE_HANDLER_ERROR_FAIL_CONTROLSERVICE;
+			}
+			else
+			{
+				retStatus=status;
+			}
+			CloseServiceHandle(schService); 
+		}
+
 	}
 	return err;
 }

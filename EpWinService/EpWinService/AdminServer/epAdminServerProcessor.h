@@ -99,6 +99,14 @@ private:
 	*/
 	void setProcessInfo(unsigned int subPacketType,Stream &stream,Stream &retOutStream);
 
+	/*!
+	Process the CommandService type packet and save the result to the retOutStream.
+	@param[in] subPacketType the ProcessInfo type to process
+	@param[in] stream the packet stream to process
+	@param[out] retOutStream the stream to save the result status
+	*/
+	void commandService(unsigned int subPacketType,Stream &stream,Stream &retOutStream);
+
 private:
 	/*!
 	Default Constructor

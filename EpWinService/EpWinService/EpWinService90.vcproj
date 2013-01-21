@@ -262,6 +262,10 @@
 				Name="ServiceManagement"
 				>
 				<File
+					RelativePath=".\Core\epServiceDefines.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Core\epServiceHandler.cpp"
 					>
 				</File>
