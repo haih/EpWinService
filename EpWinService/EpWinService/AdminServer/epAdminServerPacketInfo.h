@@ -212,6 +212,8 @@ typedef enum _processStatusType{
 @brief A Class for the Receive Packet.	
 */
 struct ReceivePacket{
+	/// Packet Num
+	unsigned int num;
 	/// Processing Count
 	unsigned int count;
 };
@@ -221,6 +223,8 @@ struct ReceivePacket{
 @brief A Class for the Send Packet.	
 */
 struct SendPacket{
+	/// Packet Num
+	unsigned int num;
 	/// Processing Result Count
 	unsigned int count;
 };
