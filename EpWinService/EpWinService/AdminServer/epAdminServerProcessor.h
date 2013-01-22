@@ -38,13 +38,6 @@ An Interface for Admin Server Packet Processor.
 using namespace epl;
 using namespace epse;
 
-/*!
-@def ADMIN_SERVER_PROCESS_INSTANCE
-@brief Admin Server Packet Processor Singleton Instance
-
-Macro for the Admin Server Packet Processor Singleton Instance.
-*/
-#define ADMIN_SERVER_PROCESS_INSTANCE epl::SingletonHolder<AdminServerProcessor>::Instance()
 
 /*! 
 @class AdminServerProcessor epAdminServerProcessor.h
@@ -53,7 +46,25 @@ Macro for the Admin Server Packet Processor Singleton Instance.
 class AdminServerProcessor
 {
 public:
-	friend class SingletonHolder<AdminServerProcessor>;
+	/*!
+	Default Constructor
+
+	Initializes the Processor
+	*/
+	AdminServerProcessor()
+	{
+
+	}
+
+	/*!
+	Default Destructor
+
+	Destroy the Processor
+	*/
+	~AdminServerProcessor()
+	{
+
+	}
 
 	/*!
 	Process the given packet relative to its type, and send back the result to the client.
@@ -107,26 +118,6 @@ private:
 	*/
 	void commandService(unsigned int subPacketType,Stream &stream,Stream &retOutStream);
 
-private:
-	/*!
-	Default Constructor
-
-	Initializes the Processor
-	*/
-	AdminServerProcessor()
-	{
-
-	}
-
-	/*!
-	Default Destructor
-
-	Destroy the Processor
-	*/
-	~AdminServerProcessor()
-	{
-
-	}
 };
 
 

@@ -42,8 +42,9 @@ void AdminServerProcessor::Process(AdminServerPacketParser *curClient,const Pack
 			break;
 		case PACKET_TYPE_PROCESS_SET:
 			setProcessInfo(subPacketType,stream,outStream);
+			break;
 		case PACKET_TYPE_SERVICE_COMMAND:
-
+			commandService(subPacketType,stream,outStream);
 			break;
 
 		}
@@ -756,11 +757,6 @@ void AdminServerProcessor::commandService(unsigned int subPacketType,Stream &str
 			return;
 		}
 		if(!GetString(stream, info.password))
-		{
-			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
-			return;
-		}
-		if(!stream.ReadUInt(info.editControlBit))
 		{
 			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
 			return;

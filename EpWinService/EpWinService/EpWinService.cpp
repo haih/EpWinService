@@ -47,10 +47,10 @@ int _tmain(int argc, _TCHAR* argv[])
 		_tprintf(_T("Command:-k (Stop Service)\n"));
 		_tprintf(_T("Command:-u (Uninstall Service)\n"));
 		_tprintf(_T("Command:-e (Execute Service)\n"));
-		_tprintf(_T("Command:-b (Bounce the process)\n"));
-		_tprintf(_T("Command:-r (Start the process)\n"));
-		_tprintf(_T("Command:-n (End the process)\n"));
-		_tprintf(_T("Command:-c (Run the custom process)\n"));
+		_tprintf(_T("Command:-b <Process Index>(Bounce the process)\n"));
+		_tprintf(_T("Command:-r <Process Index>(Start the process)\n"));
+		_tprintf(_T("Command:-n <Process Index>(End the process)\n"));
+		_tprintf(_T("Command:-c <Process Index>(Run the custom process)\n"));
 		_tprintf(_T("Process Index:The index of the process to give the command (-1 for all processes)\n\n"));
 		return 0;
 	}

@@ -300,6 +300,8 @@ typedef enum _serviceStatus{
 
 /// Service Control Code Enumerators
 typedef enum _serviceControlCode{
+	/// NO Control
+	SERVICE_CONTROL_CODE_NONE=0,
 	/// Notifies a service that it should stop.</br>
 	/// The hService handle must have the SERVICE_STOP access right.</br>
 	/// After sending the stop request to a service, you should not send other controls to the service.

@@ -82,6 +82,7 @@ const TCHAR * ServiceProperties::GetUserName()
 		return NULL;
 	return m_userName.GetString();
 }
+
 const TCHAR * ServiceProperties::GetUserPassword()
 {
 	LockObj lock(&m_lock);

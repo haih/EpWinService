@@ -21,5 +21,6 @@ AdminServerPacketParser::~AdminServerPacketParser()
 void AdminServerPacketParser::ParsePacket(const Packet &packet )
 {
 	//TODO: Parse Packet
-	ADMIN_SERVER_PROCESS_INSTANCE.Process(this,&packet);
+	AdminServerProcessor processor;
+	processor.Process(this,&packet);
 }
