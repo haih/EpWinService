@@ -53,6 +53,7 @@ public:
 	*/
 	~ProcessObject();
 
+	static void ParseCommand(CString cmd, vector<CString>& retCmdList);
 	/*!
 	Start the Process.
 	@return true if started, otherwise false
@@ -257,6 +258,13 @@ private:
 	unsigned int m_delayPauseEndTime;
 	/// Restart when termination/fault
 	bool m_isRestart;
+	/// Pre-process CommandLine List
+	vector<CString> m_preProcessCommandLineList;
+	/// Post-process CommandLine List
+	vector<CString> m_postProcessCommandLineList;
+	/// Custom-process CommandLine List
+	vector<CString> m_customProcessCommandLineList;
+
 	/// Pre-process CommandLine
 	CString m_preProcessCommandLine;
 	/// Post-process CommandLine

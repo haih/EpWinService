@@ -2,6 +2,32 @@
 #include "epProcessObject.h"
 #include "epLogWriter.h"
 
+void ProcessObject::ParseCommand(CString cmd,  vector<CString>& retCmdList)
+{
+	retCmdList.clear();
+	if(cmd.Find(_T(';'))==-1)
+		retCmdList.push_back(cmd);
+	else
+	{
+		int index=cmd.Find(_T(';'));
+		CString tmpCommand=_T("");
+		while(index>=0)
+		{
+			for(int strTrav=0;strTrav<index;strTrav++)
+			{
+				tmpCommand.AppendChar(cmd.GetAt(strTrav));
+			}
+			tmpCommand=tmpCommand.Trim();
+			cmd.Delete(0,index+1);
+			if(tmpCommand.GetLength()>0)
+				retCmdList.push_back(tmpCommand);
+		}
+		cmd=cmd.Trim();
+		if(cmd.GetLength()>0)
+			retCmdList.push_back(cmd);
+	}
+
+}
 ProcessObject::ProcessObject(unsigned int procIndex)
 {
 	m_procIndex=procIndex;
@@ -29,20 +55,26 @@ ProcessObject::ProcessObject(unsigned int procIndex)
 	else
 		m_isRestart=false;
 
+	CString tmpCmd;
+
 	memset(textBuffer,0,sizeof(TCHAR)*MAX_PATH);
 	GetPrivateProfileString(m_processString.GetString(),_T("PreProcessCommandLine"),_T(""),textBuffer,MAX_PATH,m_iniFileName.GetString());
 	m_preProcessCommandLine=textBuffer;
 	m_preProcessCommandLine.Trim();
+	ProcessObject::ParseCommand(m_preProcessCommandLine,m_preProcessCommandLineList);
 
 	memset(textBuffer,0,sizeof(TCHAR)*MAX_PATH);
 	GetPrivateProfileString(m_processString.GetString(),_T("PostProcessCommandLine"),_T(""),textBuffer,MAX_PATH,m_iniFileName.GetString());
 	m_postProcessCommandLine=textBuffer;
 	m_postProcessCommandLine.Trim();
+	ProcessObject::ParseCommand(m_postProcessCommandLine,m_postProcessCommandLineList);
+
 
 	memset(textBuffer,0,sizeof(TCHAR)*MAX_PATH);
 	GetPrivateProfileString(m_processString.GetString(),_T("CustomProcessCommandLine"),_T(""),textBuffer,MAX_PATH,m_iniFileName.GetString());
 	m_customProcessCommandLine=textBuffer;
 	m_customProcessCommandLine.Trim();
+	ProcessObject::ParseCommand(m_customProcessCommandLine,m_customProcessCommandLineList);
 
 	memset(textBuffer,0,sizeof(TCHAR)*MAX_PATH);
 	GetPrivateProfileString(m_processString.GetString(),_T("Impersonate"),_T("N"),textBuffer,MAX_PATH,m_iniFileName.GetString());
@@ -83,7 +115,7 @@ ProcessObject::~ProcessObject()
 
 void ProcessObject::preProcess()
 {
-	if(m_preProcessCommandLine.GetLength())
+	for(int listTrav=0;listTrav<m_preProcessCommandLineList.size();listTrav++)
 	{
 		// start a process with given index
 		STARTUPINFO startUpInfo = { sizeof(STARTUPINFO),NULL,_T(""),NULL,0,0,0,0,0,0,0,STARTF_USESHOWWINDOW,0,0,NULL,0,0,0};  
@@ -99,19 +131,19 @@ void ProcessObject::preProcess()
 		{
 
 			// create the process
-			if(CreateProcess(NULL, const_cast<wchar_t*>(m_preProcessCommandLine.GetString()),NULL,NULL,FALSE,NORMAL_PRIORITY_CLASS, NULL,NULL,&startUpInfo,&pProcInfo))
+			if(CreateProcess(NULL, const_cast<wchar_t*>(m_preProcessCommandLineList.at(listTrav).GetString()),NULL,NULL,FALSE,NORMAL_PRIORITY_CLASS, NULL,NULL,&startUpInfo,&pProcInfo))
 			{
 				WaitForSingleObject(pProcInfo.hProcess,INFINITE);
-				return;
+				continue;
 			}
 			else
 			{
 				TCHAR pTemp[256];
 				long nError = GetLastError();
 
-				_stprintf(pTemp,_T("Failed to start pre-process program '%s', error code = %d"), m_preProcessCommandLine.GetString(), nError); 
+				_stprintf(pTemp,_T("Failed to start pre-process program(%d) '%s', error code = %d"),listTrav, m_preProcessCommandLineList.at(listTrav).GetString(), nError); 
 				LOG_WRITER_INSTANCE.WriteLog( pTemp);
-				return;
+				continue;
 			}
 		}
 		else
@@ -119,31 +151,30 @@ void ProcessObject::preProcess()
 			HANDLE hToken = NULL;
 			if(LogonUser(m_userName.GetString(),(m_domainName.GetLength()==0)?_T("."):m_domainName.GetString(),m_userPassword.GetString(),LOGON32_LOGON_SERVICE,LOGON32_PROVIDER_DEFAULT,&hToken))
 			{
-				if(CreateProcessAsUser(hToken,NULL,const_cast<wchar_t*>(m_preProcessCommandLine.GetString()),NULL,NULL,TRUE,NORMAL_PRIORITY_CLASS,NULL,NULL,&startUpInfo,&pProcInfo))
+				if(CreateProcessAsUser(hToken,NULL,const_cast<wchar_t*>(m_preProcessCommandLineList.at(listTrav).GetString()),NULL,NULL,TRUE,NORMAL_PRIORITY_CLASS,NULL,NULL,&startUpInfo,&pProcInfo))
 				{
 					WaitForSingleObject(pProcInfo.hProcess,INFINITE);
-					return;
+					continue;
 				}
 				long nError = GetLastError();
 				TCHAR pTemp[256];
-				_stprintf(pTemp,_T("Failed to start pre-process program '%s' as user '%s', error code = %d"), m_preProcessCommandLine.GetString(), m_userName.GetString(), nError); 
+				_stprintf(pTemp,_T("Failed to start pre-process program(%d) '%s' as user '%s', error code = %d"),listTrav, m_preProcessCommandLineList.at(listTrav).GetString(), m_userName.GetString(), nError); 
 				LOG_WRITER_INSTANCE.WriteLog( pTemp);
-				return;
+				continue;
 			}
 			long nError = GetLastError();
 			TCHAR pTemp[256];
 			_stprintf(pTemp,_T("Failed to logon as user '%s', error code = %d"), m_userName.GetString(), nError); 
 			LOG_WRITER_INSTANCE.WriteLog( pTemp);
-			return;
+			continue;;
 		}
 	}
-	
 
 }
 
 void ProcessObject::postProcess()
 {
-	if(m_postProcessCommandLine.GetLength())
+	for(int listTrav=0;listTrav<m_postProcessCommandLineList.size();listTrav++)
 	{
 		// start a process with given index
 		STARTUPINFO startUpInfo = { sizeof(STARTUPINFO),NULL,_T(""),NULL,0,0,0,0,0,0,0,STARTF_USESHOWWINDOW,0,0,NULL,0,0,0};  
@@ -159,19 +190,19 @@ void ProcessObject::postProcess()
 		{
 
 			// create the process
-			if(CreateProcess(NULL, const_cast<wchar_t*>(m_postProcessCommandLine.GetString()),NULL,NULL,FALSE,NORMAL_PRIORITY_CLASS, NULL,NULL,&startUpInfo,&pProcInfo))
+			if(CreateProcess(NULL, const_cast<wchar_t*>(m_postProcessCommandLineList.at(listTrav).GetString()),NULL,NULL,FALSE,NORMAL_PRIORITY_CLASS, NULL,NULL,&startUpInfo,&pProcInfo))
 			{
 				WaitForSingleObject(pProcInfo.hProcess,INFINITE);
-				return;
+				continue;
 			}
 			else
 			{
 				TCHAR pTemp[256];
 				long nError = GetLastError();
 
-				_stprintf(pTemp,_T("Failed to start pre-process program '%s', error code = %d"), m_postProcessCommandLine.GetString(), nError); 
+				_stprintf(pTemp,_T("Failed to start post-process program(%d) '%s', error code = %d"),listTrav, m_postProcessCommandLineList.at(listTrav).GetString(), nError); 
 				LOG_WRITER_INSTANCE.WriteLog( pTemp);
-				return;
+				continue;
 			}
 		}
 		else
@@ -179,25 +210,24 @@ void ProcessObject::postProcess()
 			HANDLE hToken = NULL;
 			if(LogonUser(m_userName.GetString(),(m_domainName.GetLength()==0)?_T("."):m_domainName.GetString(),m_userPassword.GetString(),LOGON32_LOGON_SERVICE,LOGON32_PROVIDER_DEFAULT,&hToken))
 			{
-				if(CreateProcessAsUser(hToken,NULL,const_cast<wchar_t*>(m_postProcessCommandLine.GetString()),NULL,NULL,TRUE,NORMAL_PRIORITY_CLASS,NULL,NULL,&startUpInfo,&pProcInfo))
+				if(CreateProcessAsUser(hToken,NULL,const_cast<wchar_t*>(m_postProcessCommandLineList.at(listTrav).GetString()),NULL,NULL,TRUE,NORMAL_PRIORITY_CLASS,NULL,NULL,&startUpInfo,&pProcInfo))
 				{
 					WaitForSingleObject(pProcInfo.hProcess,INFINITE);
-					return;
+					continue;
 				}
 				long nError = GetLastError();
 				TCHAR pTemp[256];
-				_stprintf(pTemp,_T("Failed to start pre-process program '%s' as user '%s', error code = %d"), m_postProcessCommandLine.GetString(), m_userName.GetString(), nError); 
+				_stprintf(pTemp,_T("Failed to start post-process program(%d) '%s' as user '%s', error code = %d"),listTrav, m_postProcessCommandLineList.at(listTrav).GetString(), m_userName.GetString(), nError); 
 				LOG_WRITER_INSTANCE.WriteLog( pTemp);
-				return;
+				continue;
 			}
 			long nError = GetLastError();
 			TCHAR pTemp[256];
 			_stprintf(pTemp,_T("Failed to logon as user '%s', error code = %d"), m_userName.GetString(), nError); 
 			LOG_WRITER_INSTANCE.WriteLog( pTemp);
-			return;
+			continue;
 		}
 	}
-
 
 }
 
@@ -205,9 +235,18 @@ void ProcessObject::postProcess()
 void ProcessObject::CustomProcess()
 {
 	LockObj lock(&m_lock);
+	CString pidString=_T("");
+	pidString.Format(_T("%d"),m_pProcInfo.dwProcessId);
+	CString cmd=_T("");
 
-	if(m_customProcessCommandLine.GetLength())
+	for(int listTrav=0;listTrav<m_customProcessCommandLineList.size();listTrav++)
 	{
+		cmd=m_customProcessCommandLineList.at(listTrav);
+		if(cmd.Find(_T("%p"))>=0)
+			cmd.Replace(_T("%p"),pidString.GetString());
+		if(cmd.Find(_T("%P"))>=0)
+			cmd.Replace(_T("%P"),pidString.GetString());
+
 		// start a process with given index
 		STARTUPINFO startUpInfo = { sizeof(STARTUPINFO),NULL,_T(""),NULL,0,0,0,0,0,0,0,STARTF_USESHOWWINDOW,0,0,NULL,0,0,0};  
 		PROCESS_INFORMATION	pProcInfo;
@@ -222,19 +261,19 @@ void ProcessObject::CustomProcess()
 		{
 
 			// create the process
-			if(CreateProcess(NULL, const_cast<wchar_t*>(m_customProcessCommandLine.GetString()),NULL,NULL,FALSE,NORMAL_PRIORITY_CLASS, NULL,NULL,&startUpInfo,&pProcInfo))
+			if(CreateProcess(NULL, const_cast<wchar_t*>( cmd.GetString()),NULL,NULL,FALSE,NORMAL_PRIORITY_CLASS, NULL,NULL,&startUpInfo,&pProcInfo))
 			{
 				WaitForSingleObject(pProcInfo.hProcess,INFINITE);
-				return;
+				continue;
 			}
 			else
 			{
 				TCHAR pTemp[256];
 				long nError = GetLastError();
 
-				_stprintf(pTemp,_T("Failed to start custom-process program '%s', error code = %d"), m_customProcessCommandLine.GetString(), nError); 
+				_stprintf(pTemp,_T("Failed to start custom-process program(%d) '%s', error code = %d"),listTrav, cmd.GetString(), nError); 
 				LOG_WRITER_INSTANCE.WriteLog( pTemp);
-				return;
+				continue;
 			}
 		}
 		else
@@ -242,22 +281,22 @@ void ProcessObject::CustomProcess()
 			HANDLE hToken = NULL;
 			if(LogonUser(m_userName.GetString(),(m_domainName.GetLength()==0)?_T("."):m_domainName.GetString(),m_userPassword.GetString(),LOGON32_LOGON_SERVICE,LOGON32_PROVIDER_DEFAULT,&hToken))
 			{
-				if(CreateProcessAsUser(hToken,NULL,const_cast<wchar_t*>(m_customProcessCommandLine.GetString()),NULL,NULL,TRUE,NORMAL_PRIORITY_CLASS,NULL,NULL,&startUpInfo,&pProcInfo))
+				if(CreateProcessAsUser(hToken,NULL,const_cast<wchar_t*>(cmd.GetString()),NULL,NULL,TRUE,NORMAL_PRIORITY_CLASS,NULL,NULL,&startUpInfo,&pProcInfo))
 				{
 					WaitForSingleObject(pProcInfo.hProcess,INFINITE);
-					return;
+					continue;
 				}
 				long nError = GetLastError();
 				TCHAR pTemp[256];
-				_stprintf(pTemp,_T("Failed to start custom-process program '%s' as user '%s', error code = %d"), m_customProcessCommandLine.GetString(), m_userName.GetString(), nError); 
+				_stprintf(pTemp,_T("Failed to start custom-process program(%d) '%s' as user '%s', error code = %d"),listTrav,cmd.GetString(), m_userName.GetString(), nError); 
 				LOG_WRITER_INSTANCE.WriteLog( pTemp);
-				return;
+				continue;
 			}
 			long nError = GetLastError();
 			TCHAR pTemp[256];
 			_stprintf(pTemp,_T("Failed to logon as user '%s', error code = %d"), m_userName.GetString(), nError); 
 			LOG_WRITER_INSTANCE.WriteLog( pTemp);
-			return;
+			continue;;
 		}
 	}
 
@@ -455,8 +494,10 @@ CString ProcessObject::GetPreProcessCommandLine()
 void ProcessObject::SetPreProcessCommandLine(CString cmd)
 {
 	LockObj lock(&m_lock);
+	cmd.Trim();
 	m_preProcessCommandLine=cmd;
 	WritePrivateProfileString(m_processString.GetString(),_T("PreProcessCommandLine"),m_preProcessCommandLine.GetString(),m_iniFileName.GetString());
+	ProcessObject::ParseCommand(m_preProcessCommandLine,m_preProcessCommandLineList);
 }
 
 CString ProcessObject::GetPostProcessCommandLine()
@@ -468,8 +509,10 @@ CString ProcessObject::GetPostProcessCommandLine()
 void ProcessObject::SetPostProcessCommandLine(CString cmd)
 {
 	LockObj lock(&m_lock);
+	cmd.Trim();
 	m_postProcessCommandLine=cmd;
 	WritePrivateProfileString(m_processString.GetString(),_T("PostProcessCommandLine"),m_postProcessCommandLine.GetString(),m_iniFileName.GetString());
+	ProcessObject::ParseCommand(m_postProcessCommandLine,m_postProcessCommandLineList);
 }
 
 CString ProcessObject::GetCustomProcessCommandLine()
@@ -481,8 +524,10 @@ CString ProcessObject::GetCustomProcessCommandLine()
 void ProcessObject::SetCustomProcessCommandLine(CString cmd)
 {
 	LockObj lock(&m_lock);
+	cmd.Trim();
 	m_customProcessCommandLine=cmd;
 	WritePrivateProfileString(m_processString.GetString(),_T("CustomProcessCommandLine"),m_customProcessCommandLine.GetString(),m_iniFileName.GetString());
+	ProcessObject::ParseCommand(m_customProcessCommandLine,m_customProcessCommandLineList);
 }
 
 bool ProcessObject::GetIsImpersonate()
