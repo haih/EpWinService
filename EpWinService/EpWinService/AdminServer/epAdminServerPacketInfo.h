@@ -1,7 +1,7 @@
 /*! 
 @file epAdminServerPacketInfo.h
 @author Woong Gyu La a.k.a Chris. <juhgiyo@gmail.com>
-		<http://github.com/juhgiyo/epserverengine>
+		<http://github.com/juhgiyo/epWinService>
 @date January 16, 2013
 @brief Admin Server Packet Information Interface
 @version 1.0

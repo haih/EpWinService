@@ -1,7 +1,7 @@
 /*! 
 @file epServiceProperties.h
 @author Woong Gyu La a.k.a Chris. <juhgiyo@gmail.com>
-		<http://github.com/juhgiyo/epserverengine>
+		<http://github.com/juhgiyo/epWinService>
 @date January 16, 2013
 @brief Service Properties Interface
 @version 1.0

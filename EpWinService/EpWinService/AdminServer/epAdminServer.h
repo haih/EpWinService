@@ -1,7 +1,7 @@
 /*! 
 @file epAdminServer.h
 @author Woong Gyu La a.k.a Chris. <juhgiyo@gmail.com>
-		<http://github.com/juhgiyo/eplibrary>
+		<http://github.com/juhgiyo/epWinService>
 @date January 16, 2013
 @brief Admin Server Class Interface
 @version 2.0
