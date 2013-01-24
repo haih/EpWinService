@@ -54,7 +54,7 @@ typedef enum _serviceEditControlBit{
 typedef enum _serviceDesiredAccess{
 	/// Includes STANDARD_RIGHTS_REQUIRED in addition to all access rights in this table.
 	SERVICE_DESIRED_ACCESS_ALL_ACCESS=SERVICE_ALL_ACCESS ,
-	/// Required to call the ChangeServiceConfig or ChangeServiceConfig2 function to change the service configuration.</br>
+	/// Required to call the ChangeServiceConfig or ChangeServiceConfig2 function to change the service configuration.<br/>
 	/// Because this grants the caller the right to change the executable file that the system runs, it should be granted only to administrators.
 	SERVICE_DESIRED_ACCESS_CHANGE_CONFIG=SERVICE_CHANGE_CONFIG ,
 	/// Required to call the EnumDependentServices function to enumerate all the services dependent on the service.
@@ -65,7 +65,7 @@ typedef enum _serviceDesiredAccess{
 	SERVICE_DESIRED_ACCESS_PAUSE_CONTINUE=SERVICE_PAUSE_CONTINUE ,
 	/// Required to call the QueryServiceConfig and QueryServiceConfig2 functions to query the service configuration.
 	SERVICE_DESIRED_ACCESS_QUERY_CONFIG=SERVICE_QUERY_CONFIG ,
-	/// Required to call the QueryServiceStatus or QueryServiceStatusEx function to ask the service control manager about the status of the service.</br>
+	/// Required to call the QueryServiceStatus or QueryServiceStatusEx function to ask the service control manager about the status of the service.<br/>
 	/// Required to call the NotifyServiceStatusChange function to receive notification when a service changes status.
 	SERVICE_DESIRED_ACCESS_QUERY_STATUS=SERVICE_QUERY_STATUS ,
 	/// Required to call the StartService function to start the service.
@@ -88,10 +88,10 @@ typedef enum _serviceType{
 	SERVICE_TYPE_KERNEL_DRIVER=SERVICE_KERNEL_DRIVER,
 	/// Service that runs in its own process.
 	SERVICE_TYPE_WIN32_OWN_PROCESS=SERVICE_WIN32_OWN_PROCESS,
-	/// Service that shares a process with one or more other services.</br>
+	/// Service that shares a process with one or more other services.<br/>
 	/// For more information, see Service Programs.
 	SERVICE_TYPE_WIN32_SHARE_PROCESS=SERVICE_WIN32_SHARE_PROCESS,
-	/// The service can interact with the desktop. </br>
+	/// The service can interact with the desktop. <br/>
 	/// Note: If you specify either SERVICE_WIN32_OWN_PROCESS or SERVICE_WIN32_SHARE_PROCESS, and the service is running in the context of the LocalSystem account, you can also specify the following value.
 	SERVICE_TYPE_INTERACTIVE_PROCESS=SERVICE_INTERACTIVE_PROCESS,
 	/// No Change
@@ -102,19 +102,19 @@ typedef enum _serviceType{
 
 /// Service Start Type Enumerators
 typedef enum _serviceStartType{
-	/// A service started automatically by the service control manager during system startup.</br>
+	/// A service started automatically by the service control manager during system startup.<br/>
 	/// For more information, see Automatically Starting Services.
 	SERVICE_START_TYPE_AUTO_START=SERVICE_AUTO_START,
-	/// A device driver started by the system loader.</br>
+	/// A device driver started by the system loader.<br/>
 	/// This value is valid only for driver services.
 	SERVICE_START_TYPE_BOOT_START=SERVICE_BOOT_START,
-	/// A service started by the service control manager when a process calls the StartService function.</br>
+	/// A service started by the service control manager when a process calls the StartService function.<br/>
 	/// For more information, see Starting Services on Demand.
 	SERVICE_START_TYPE_DEMAND_START=SERVICE_DEMAND_START,
-	/// A service that cannot be started.</br>
+	/// A service that cannot be started.<br/>
 	/// Attempts to start the service result in the error code ERROR_SERVICE_DISABLED.
 	SERVICE_START_TYPE_DISABLED=SERVICE_DISABLED,
-	/// A device driver started by the IoInitSystem function.</br>
+	/// A device driver started by the IoInitSystem function.<br/>
 	/// This value is valid only for driver services.
 	SERVICE_START_TYPE_SYSTEM_START=SERVICE_SYSTEM_START,
 	/// No Change
@@ -125,16 +125,16 @@ typedef enum _serviceStartType{
 
 /// Service Error Control Type Enumerators
 typedef enum _serviceErrorControl{
-	/// The startup program logs the error in the event log, if possible.</br>
-	/// If the last-known-good configuration is being started, the startup operation fails.</br>
+	/// The startup program logs the error in the event log, if possible.<br/>
+	/// If the last-known-good configuration is being started, the startup operation fails.<br/>
 	/// Otherwise, the system is restarted with the last-known good configuration.
 	SERVICE_ERROR_CONTROL_CRITICAL=SERVICE_ERROR_CRITICAL,
 	/// The startup program ignores the error and continues the startup operation.
 	SERVICE_ERROR_CONTROL_IGNORE=SERVICE_ERROR_IGNORE,
 	/// The startup program logs the error in the event log but continues the startup operation.
 	SERVICE_ERROR_CONTROL_NORMAL=SERVICE_ERROR_NORMAL,
-	/// The startup program logs the error in the event log.</br>
-	/// If the last-known-good configuration is being started, the startup operation continues.</br>
+	/// The startup program logs the error in the event log.<br/>
+	/// If the last-known-good configuration is being started, the startup operation continues.<br/>
 	/// Otherwise, the system is restarted with the last-known-good configuration.
 	SERVICE_ERROR_CONTROL_SEVERE=SERVICE_ERROR_SEVERE,
 	/// No Change
@@ -186,7 +186,7 @@ typedef enum _serviceStartServiceErrCode{
 	SERVICE_START_SERVICE_ERR_CODE_SERVICE_DEPENDENCY_FAIL=ERROR_SERVICE_DEPENDENCY_FAIL,
 	/// The service has been disabled.
 	SERVICE_START_SERVICE_ERR_CODE_SERVICE_DISABLED=ERROR_SERVICE_DISABLED,
-	/// The service did not start due to a logon failure.</br>
+	/// The service did not start due to a logon failure.<br/>
 	/// This error occurs if the service is configured to run under an account that does not have the "Log on as a service" right.
 	SERVICE_START_SERVICE_ERR_CODE_SERVICE_LOGON_FAILED=ERROR_SERVICE_LOGON_FAILED,
 	/// The service has been marked for deletion.
@@ -334,37 +334,37 @@ typedef enum _serviceStatus{
 typedef enum _serviceControlCode{
 	/// NO Control
 	SERVICE_CONTROL_CODE_NONE=0,
-	/// Notifies a service that it should stop.</br>
-	/// The hService handle must have the SERVICE_STOP access right.</br>
+	/// Notifies a service that it should stop.<br/>
+	/// The hService handle must have the SERVICE_STOP access right.<br/>
 	/// After sending the stop request to a service, you should not send other controls to the service.
 	SERVICE_CONTROL_CODE_STOP=SERVICE_CONTROL_STOP,
-	/// Notifies a service that it should pause.</br>
+	/// Notifies a service that it should pause.<br/>
 	/// The hService handle must have the SERVICE_PAUSE_CONTINUE access right.
 	SERVICE_CONTROL_CODE_PAUSE=SERVICE_CONTROL_PAUSE,
-	/// Notifies a paused service that it should resume.</br>
+	/// Notifies a paused service that it should resume.<br/>
 	/// The hService handle must have the SERVICE_PAUSE_CONTINUE access right.
 	SERVICE_CONTROL_CODE_CONTINUE=SERVICE_CONTROL_CONTINUE,
-	/// Notifies a service that it should report its current status information to the service control manager.</br>
-	/// The hService handle must have the SERVICE_INTERROGATE access right.</br>
+	/// Notifies a service that it should report its current status information to the service control manager.<br/>
+	/// The hService handle must have the SERVICE_INTERROGATE access right.<br/>
 	/// Note that this control is not generally useful as the SCM is aware of the current state of the service.
 	SERVICE_CONTROL_CODE_INTERROGATE=SERVICE_CONTROL_INTERROGATE,
-	/// Notifies a service that its startup parameters have changed.</br>
+	/// Notifies a service that its startup parameters have changed.<br/>
 	/// The hService handle must have the SERVICE_PAUSE_CONTINUE access right.
 	SERVICE_CONTROL_CODE_PARAMCHANGE=SERVICE_CONTROL_PARAMCHANGE,
-	/// Notifies a network service that there is a new component for binding.</br>
-	/// The hService handle must have the SERVICE_PAUSE_CONTINUE access right.</br>
+	/// Notifies a network service that there is a new component for binding.<br/>
+	/// The hService handle must have the SERVICE_PAUSE_CONTINUE access right.<br/>
 	/// However, this control code has been deprecated; use Plug and Play functionality instead.
 	SERVICE_CONTROL_CODE_NETBINDADD=SERVICE_CONTROL_NETBINDADD,
-	/// Notifies a network service that a component for binding has been removed.</br>
-	/// The hService handle must have the SERVICE_PAUSE_CONTINUE access right.</br>
+	/// Notifies a network service that a component for binding has been removed.<br/>
+	/// The hService handle must have the SERVICE_PAUSE_CONTINUE access right.<br/>
 	/// However, this control code has been deprecated; use Plug and Play functionality instead.
 	SERVICE_CONTROL_CODE_NETBINDREMOVE=SERVICE_CONTROL_NETBINDREMOVE,
-	/// Notifies a network service that a disabled binding has been enabled.</br>
-	/// The hService handle must have the SERVICE_PAUSE_CONTINUE access right.</br>
+	/// Notifies a network service that a disabled binding has been enabled.<br/>
+	/// The hService handle must have the SERVICE_PAUSE_CONTINUE access right.<br/>
 	/// However, this control code has been deprecated; use Plug and Play functionality instead.
 	SERVICE_CONTROL_CODE_NETBINDENABLE=SERVICE_CONTROL_NETBINDENABLE,
-	/// Notifies a network service that one of its bindings has been disabled.</br>
-	/// The hService handle must have the SERVICE_PAUSE_CONTINUE access right.</br>
+	/// Notifies a network service that one of its bindings has been disabled.<br/>
+	/// The hService handle must have the SERVICE_PAUSE_CONTINUE access right.<br/>
 	/// However, this control code has been deprecated; use Plug and Play functionality instead.
 	SERVICE_CONTROL_CODE_NETBINDDISABLE=SERVICE_CONTROL_NETBINDDISABLE,
 }ServiceControlCode;
