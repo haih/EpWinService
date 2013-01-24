@@ -32,10 +32,7 @@ ProcessObject::ProcessObject(unsigned int procIndex):BaseManagementObject(MANAGE
 	m_commandLine=textBuffer;
 	m_commandLine.Trim();
 
-	m_delayStartTime=GetPrivateProfileInt(m_objectString.GetString(),_T("DelayStartTime"),0,m_iniFileName.GetString());
-	m_delayPauseEndTime=GetPrivateProfileInt(m_objectString.GetString(),_T("DelayPauseEndTime"),0,m_iniFileName.GetString());
 
-	
 	delete[] textBuffer;
 }
 
@@ -246,33 +243,4 @@ void ProcessObject::SetCommandLine(CString cmd)
 	LockObj lock(&m_lock);
 	m_commandLine=cmd;
 	WritePrivateProfileString(m_objectString.GetString(),_T("CommandLine"),m_commandLine.GetString(),m_iniFileName.GetString());
-}
-
-unsigned int ProcessObject::GetDelayStartTime()
-{
-	LockObj lock(&m_lock);
-	return m_delayStartTime;
-}
-void ProcessObject::SetDelayStartTime(unsigned int timeInMilli)
-{
-	LockObj lock(&m_lock);
-	m_delayStartTime=timeInMilli;
-	CString valueString=_T("");
-	valueString.AppendFormat(_T("%d"),m_delayStartTime);
-	WritePrivateProfileString(m_objectString.GetString(),_T("DelayStartTime"),valueString.GetString(),m_iniFileName.GetString());
-}
-
-unsigned int ProcessObject::GetDelayPauseEndTime()
-{
-
-	LockObj lock(&m_lock);
-	return m_delayPauseEndTime;
-}
-void ProcessObject::SetDelayPauseEndTime(unsigned int timeInMilli)
-{
-	LockObj lock(&m_lock);
-	m_delayPauseEndTime=timeInMilli;
-	CString valueString=_T("");
-	valueString.AppendFormat(_T("%d"),m_delayPauseEndTime);
-	WritePrivateProfileString(m_objectString.GetString(),_T("DelayPauseEndTime"),valueString.GetString(),m_iniFileName.GetString());
 }

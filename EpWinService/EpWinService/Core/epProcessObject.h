@@ -102,27 +102,7 @@ public:
 	*/
 	void SetCommandLine(CString cmd);
 
-	/*!
-	Get delay start time of the process
-	@return delay start time of the process
-	*/
-	unsigned int GetDelayStartTime();
-	/*!
-	Set delay start time of the process
-	@param[in] timeInMilli delay start time of the process
-	*/
-	void SetDelayStartTime(unsigned int timeInMilli);
 
-	/*!
-	Get delay pause/end time of the process
-	@return delay start time of the process
-	*/
-	unsigned int GetDelayPauseEndTime();
-	/*!
-	Set delay pause/end time of the process
-	@param[in] timeInMilli delay start time of the process
-	*/
-	void SetDelayPauseEndTime(unsigned int timeInMilli);
 
 	
 
@@ -133,10 +113,7 @@ private:
 
 	/// CommandLine
 	CString m_commandLine;
-	/// Delay start time
-	unsigned int m_delayStartTime;
-	/// Delay pause/end time
-	unsigned int m_delayPauseEndTime;
+
 
 };
 #endif //__EP_PROCESS_OBJECT_H__

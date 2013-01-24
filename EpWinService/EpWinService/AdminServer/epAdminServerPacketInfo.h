@@ -43,14 +43,18 @@ Macro for the Default Admin Server Port.
 typedef enum _packetType{
 /// Command Type
 PACKET_TYPE_COMMAND=0,
-/// Get Service Info Type
-PACKET_TYPE_SERVICE_GET,
-/// Set Service Info Type
-PACKET_TYPE_SERVICE_SET,
+/// Get Main Service Info Type
+PACKET_TYPE_MAIN_SERVICE_GET,
+/// Set Main Service Info Type
+PACKET_TYPE_MAIN_SERVICE_SET,
 /// Get Process Info type
 PACKET_TYPE_PROCESS_GET,
 /// Set Process Info Type
 PACKET_TYPE_PROCESS_SET,
+/// Get Service Info type
+PACKET_TYPE_SERVICE_GET,
+/// Set Service Info Type
+PACKET_TYPE_SERVICE_SET,
 /// Service Command type
 PACKET_TYPE_SERVICE_COMMAND
 }PacketType;
@@ -64,38 +68,51 @@ COMMAND_PACKET_TYPE_END_PROCESS,
 /// Restart the Process
 COMMAND_PACKET_TYPE_BOUNCE_PROCESS,
 /// Start the Custom Process
-COMMAND_PACKET_TYPE_CUSTOM_PROCESS
+COMMAND_PACKET_TYPE_CUSTOM_PROCESS_PROCESS,
+/// Start the Service
+COMMAND_PACKET_TYPE_START_SERVICE,
+/// End the Service
+COMMAND_PACKET_TYPE_END_SERVICE,
+/// Pause the Service
+COMMAND_PACKET_TYPE_PAUSE_SERVICE,
+/// Continue the Service
+COMMAND_PACKET_TYPE_CONTINUE_SERVICE,
+/// Restart the Service
+COMMAND_PACKET_TYPE_BOUNCE_SERVICE,
+/// Start the Custom Service
+COMMAND_PACKET_TYPE_CUSTOM_PROCESS_SERVICE,
+
 }CommandPacketType;
 
 /// Sub-type for Get Service Info Packet
-typedef enum _serviceGetPacketType{
+typedef enum _mainServiceGetPacketType{
 /// Get Service Name
-SERVICE_GET_PACKET_TYPE_SERVICE_NAME=0,
+MAIN_SERVICE_GET_PACKET_TYPE_SERVICE_NAME=0,
 /// Get Domain Name
-SERVICE_GET_PACKET_TYPE_DOMAIN_NAME,
+MAIN_SERVICE_GET_PACKET_TYPE_DOMAIN_NAME,
 /// Get User Name
-SERVICE_GET_PACKET_TYPE_USERNAME,
+MAIN_SERVICE_GET_PACKET_TYPE_USERNAME,
 /// Get User Password
-SERVICE_GET_PACKET_TYPE_USERPASSWORD,
+MAIN_SERVICE_GET_PACKET_TYPE_USERPASSWORD,
 /// Get Dependencies
-SERVICE_GET_PACKET_TYPE_DEPENDENCY,
+MAIN_SERVICE_GET_PACKET_TYPE_DEPENDENCY,
 /// Get Number of Processes
-SERVICE_GET_PACKET_TYPE_NUM_OF_PROCESSES,
+MAIN_SERVICE_GET_PACKET_TYPE_NUM_OF_PROCESSES,
 /// Get Interval time for checking processes
-SERVICE_GET_PACKET_TYPE_CHECKPROCESSINTERVAL,
+MAIN_SERVICE_GET_PACKET_TYPE_CHECKPROCESSINTERVAL,
 /// Get Interval time for checking services
-SERVICE_GET_PACKET_TYPE_CHECKSERVICEINTERVAL,
+MAIN_SERVICE_GET_PACKET_TYPE_CHECKSERVICEINTERVAL,
 /// Get all information above
-SERVICE_GET_PACKET_TYPE_ALL,
-}ServiceGetPacketType;
+MAIN_SERVICE_GET_PACKET_TYPE_ALL,
+}MainServiceGetPacketType;
 
 /// Sub-type for Set Service Info Packet
-typedef enum _serviceSetPacketType{
+typedef enum _mainServiceSetPacketType{
 /// Set Interval time for checking processes
-SERVICE_SET_PACKET_TYPE_CHECKPROCESSINTERVAL=0,
+MAIN_SERVICE_SET_PACKET_TYPE_CHECKPROCESSINTERVAL=0,
 /// Set Interval time for checking services
-SERVICE_SET_PACKET_TYPE_CHECKSERVICESINTERVAL,
-}ServiceSetPacketType;
+MAIN_SERVICE_SET_PACKET_TYPE_CHECKSERVICESINTERVAL,
+}MainServiceSetPacketType;
 
 /// Sub-type for Get Process Info Packet
 typedef enum _processGetPacketType{
@@ -165,6 +182,79 @@ PROCESS_SET_PACKET_TYPE_IS_USER_INTERFACE,
 PROCESS_SET_PACKET_TYPE_ALL
 
 }ProcessSetPacketType;
+
+
+
+/// Sub-type for Get Service Info Packet
+typedef enum _serviceGetPacketType{
+	/// Get Service's Service Name
+	SERVICE_GET_PACKET_TYPE_SERVICENAME=0,
+	/// Get Service's Pre-process CommandLine
+	SERVICE_GET_PACKET_TYPE_PREPROCESS_COMMANDLINE,
+	/// Get Service's Post-process CommandLine
+	SERVICE_GET_PACKET_TYPE_POSTPROCESS_COMMANDLINE,
+	/// Get Service's Custom Process CommandLine
+	SERVICE_GET_PACKET_TYPE_CUSTOMPROCESS_COMMANDLINE,
+	/// Get Service's Domain Name
+	SERVICE_GET_PACKET_TYPE_DOMAINNAME,
+	/// Get Service's Username
+	SERVICE_GET_PACKET_TYPE_USERNAME,
+	/// Get Service's User Password
+	SERVICE_GET_PACKET_TYPE_USERPASSWORD,
+
+	/// Get Service's delay start time
+	SERVICE_GET_PACKET_TYPE_DELAY_START_TIME,
+	/// Get Service's delay pause/end time
+	SERVICE_GET_PACKET_TYPE_DELAY_PAUSE_END_TIME,
+
+	/// Get Service's restart flag when fault.
+	SERVICE_GET_PACKET_TYPE_IS_SERVICE_RESTART,
+	/// Get Service's impersonation flag
+	SERVICE_GET_PACKET_TYPE_IS_IMPERSONATE,
+	/// Get Service's user-interface flag
+	SERVICE_GET_PACKET_TYPE_IS_USER_INTERFACE,
+
+	/// Get current Service's status
+	SERVICE_GET_PACKET_TYPE_STATUS,
+
+	/// Get all information above
+	SERVICE_GET_PACKET_TYPE_ALL,
+}ServiceGetPacketType;
+
+
+/// Sub-type for Set Service Info Packet
+typedef enum _serviceSetPacketType{
+	/// Set Service's Service Name
+	SERVICE_SET_PACKET_TYPE_SERVICENAME=0,
+	/// Set Service's Pre-process CommandLine
+	SERVICE_SET_PACKET_TYPE_PREPROCESS_COMMANDLINE,
+	/// Set Service's Post-process CommandLine
+	SERVICE_SET_PACKET_TYPE_POSTPROCESS_COMMANDLINE,
+	/// Set Service's Custom Process CommandLine
+	SERVICE_SET_PACKET_TYPE_CUSTOMPROCESS_COMMANDLINE,
+	/// Set Service's Domain Name
+	SERVICE_SET_PACKET_TYPE_DOMAINNAME,
+	/// Set Service's Username
+	SERVICE_SET_PACKET_TYPE_USERNAME,
+	/// Set Service's User Password
+	SERVICE_SET_PACKET_TYPE_USERPASSWORD,
+
+	/// Set Service's delay start time
+	SERVICE_SET_PACKET_TYPE_DELAY_START_TIME,
+	/// Set Service's delay pause/end time
+	SERVICE_SET_PACKET_TYPE_DELAY_PAUSE_END_TIME,
+
+	/// Set Service's restart flag when fault
+	SERVICE_SET_PACKET_TYPE_IS_SERVICE_RESTART,
+	/// Set Service's impersonate flag
+	SERVICE_SET_PACKET_TYPE_IS_IMPERSONATE,
+	/// Set Service's user-interface flag
+	SERVICE_SET_PACKET_TYPE_IS_USER_INTERFACE,
+
+	/// Set all information above
+	SERVICE_SET_PACKET_TYPE_ALL
+
+}ServiceSetPacketType;
 
 
 /// Sub-type for Service Command Packet

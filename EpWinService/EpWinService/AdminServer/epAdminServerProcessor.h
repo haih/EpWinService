@@ -81,20 +81,36 @@ private:
 	@param[out] retOutStream the stream to save the result status
 	*/
 	void commandProcess(unsigned int subPacketType,Stream &stream,Stream &retOutStream);
+
+	/*!
+	Actually process the Process Command type packet and save the result to the retOutStream.
+	@param[in] subPacketType the command type to process
+	@param[in] stream the packet stream to process
+	@param[out] retOutStream the stream to save the result status
+	*/
+	void commandProcessObject(unsigned int subPacketType,Stream &stream,Stream &retOutStream);
+
+	/*!
+	Actually process the Service Command type packet and save the result to the retOutStream.
+	@param[in] subPacketType the command type to process
+	@param[in] stream the packet stream to process
+	@param[out] retOutStream the stream to save the result status
+	*/
+	void commandServiceObject(unsigned int subPacketType,Stream &stream,Stream &retOutStream);
 	/*!
 	Process the GetServiceInfo type packet and save the result to the retOutStream.
 	@param[in] subPacketType the ServiceInfo type to process
 	@param[in] stream the packet stream to process
 	@param[out] retOutStream the stream to save the result status
 	*/
-	void getServiceInfo(unsigned int subPacketType,Stream &stream,Stream &retOutStream);
+	void getMainServiceInfo(unsigned int subPacketType,Stream &stream,Stream &retOutStream);
 	/*!
 	Process the SetServiceInfo type packet and save the result to the retOutStream.
 	@param[in] subPacketType the ServiceInfo type to process
 	@param[in] stream the packet stream to process
 	@param[out] retOutStream the stream to save the result status
 	*/
-	void setServiceInfo(unsigned int subPacketType,Stream &stream,Stream &retOutStream);	
+	void setMainServiceInfo(unsigned int subPacketType,Stream &stream,Stream &retOutStream);	
 	/*!
 	Process the GetProcessInfo type packet and save the result to the retOutStream.
 	@param[in] subPacketType the ProcessInfo type to process
@@ -109,6 +125,21 @@ private:
 	@param[out] retOutStream the stream to save the result status
 	*/
 	void setProcessInfo(unsigned int subPacketType,Stream &stream,Stream &retOutStream);
+
+	/*!
+	Process the GetServiceInfo type packet and save the result to the retOutStream.
+	@param[in] subPacketType the ServiceInfo type to process
+	@param[in] stream the packet stream to process
+	@param[out] retOutStream the stream to save the result status
+	*/
+	void getServiceInfo(unsigned int subPacketType,Stream &stream,Stream &retOutStream);
+	/*!
+	Process the SetServiceInfo type packet and save the result to the retOutStream.
+	@param[in] subPacketType the ServiceInfo type to process
+	@param[in] stream the packet stream to process
+	@param[out] retOutStream the stream to save the result status
+	*/
+	void setServiceInfo(unsigned int subPacketType,Stream &stream,Stream &retOutStream);
 
 	/*!
 	Process the CommandService type packet and save the result to the retOutStream.

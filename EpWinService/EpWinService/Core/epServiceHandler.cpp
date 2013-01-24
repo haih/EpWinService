@@ -83,7 +83,7 @@ VOID ServiceMonitorThread(VOID *)
 				SERVICE_HANDLER_INSTANCE.At(serviceTrav)->PostProcess();
 				SERVICE_HANDLER_INSTANCE.At(serviceTrav)->Reset();
 
-				if(SERVICE_HANDLER_INSTANCE.At(serviceTrav)->GetIsRestart())
+				if(!SERVICE_HANDLER_INSTANCE.At(serviceTrav)->GetIsUserStopped() && SERVICE_HANDLER_INSTANCE.At(serviceTrav)->GetIsRestart())
 				{
 					if(SERVICE_HANDLER_INSTANCE.At(serviceTrav)->Start())
 					{

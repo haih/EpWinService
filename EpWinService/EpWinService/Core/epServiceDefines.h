@@ -325,6 +325,8 @@ typedef enum _serviceStatus{
 	SERVICE_STATUS_STOP_PENDING=SERVICE_STOP_PENDING,
 	/// The service has stopped.
 	SERVICE_STATUS_STOPPED=SERVICE_STOPPED,
+	/// The Service status unknown.
+	SERVICE_STATUS_UNKNOWN=0x00000008,
 }ServiceStatus;
 
 
