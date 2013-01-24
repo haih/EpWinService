@@ -17,7 +17,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "stdafx.h"
 #include "epServiceHandler.h"
+#include "epServiceProperties.h"
 #include "epLogWriter.h"
+
+ServiceObject *&ServiceHandler::At(unsigned int serviceIndex)
+{
+	return m_serviceList.at(serviceIndex);
+}
 
 ServiceHandler::ServiceHandler()
 {
@@ -29,6 +35,30 @@ ServiceHandler::ServiceHandler()
 		_stprintf(pTemp, _T("ServiceHandler::ServiceHandler : OpenSCManager failed, error code = %d"), nError);
 		LOG_WRITER_INSTANCE.WriteLog(pTemp);
 	}
+
+	CString iniFileName=FolderHelper::GetModuleFileName().c_str();
+	iniFileName.Replace(_T(".exe"),_T(".ini"));
+	TCHAR *textBuffer=new TCHAR[MAX_PATH];
+
+	int serviceIndex=0;
+
+	while(1)
+	{
+		CString serviceString=_T("Service");
+		serviceString.AppendFormat(_T("%d"),serviceIndex);
+
+		memset(textBuffer,0,sizeof(TCHAR)*MAX_PATH);
+		GetPrivateProfileString(serviceString.GetString(),_T("ServiceName"),_T(""),textBuffer,MAX_PATH,iniFileName.GetString());
+		CString serviceName=textBuffer;
+		if(serviceName.GetLength()>0)
+		{
+			ServiceObject *newObj=new ServiceObject(serviceIndex);
+			m_serviceList.push_back(newObj);
+		}
+		else
+			break;
+		serviceIndex++;
+	}
 }
 
 ServiceHandler::~ServiceHandler()
@@ -39,7 +69,33 @@ ServiceHandler::~ServiceHandler()
 	}
 }
 
+VOID ServiceMonitorThread(VOID *)
+{
+	unsigned int checkServiceTime=SERVICE_PROPERTIES_INSTANCE.GetCheckServiceInterval();
+	unsigned int serviceSize=SERVICE_HANDLER_INSTANCE.GetNumberOfServices();
+	while(checkServiceTime)
+	{
+		Sleep(checkServiceTime);
+		for(int serviceTrav=0;serviceTrav<serviceSize;serviceTrav++)
+		{
+			if(!SERVICE_HANDLER_INSTANCE.At(serviceTrav)->IsStarted())
+			{
+				SERVICE_HANDLER_INSTANCE.At(serviceTrav)->PostProcess();
+				SERVICE_HANDLER_INSTANCE.At(serviceTrav)->Reset();
 
+				if(SERVICE_HANDLER_INSTANCE.At(serviceTrav)->GetIsRestart())
+				{
+					if(SERVICE_HANDLER_INSTANCE.At(serviceTrav)->Start())
+					{
+						TCHAR pTemp[121];
+						_stprintf(pTemp, _T("Service[%d] Restarted"),serviceTrav);
+						LOG_WRITER_INSTANCE.WriteLog( pTemp);
+					}
+				}
+			}
+		}		
+	}
+}
 
 ServiceHandlerError ServiceHandler::StartService(const TCHAR *serviceName, DWORD &retErrCode)
 {

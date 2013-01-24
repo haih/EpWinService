@@ -66,6 +66,7 @@ ServiceProperties::ServiceProperties()
 	m_adminServerPort.Trim();
 
 	m_checkProcessInterval=GetPrivateProfileInt(_T("Settings"),_T("CheckProcessInterval"),10,m_iniFileName.GetString());
+	m_checkServiceInterval=GetPrivateProfileInt(_T("Settings"),_T("CheckServiceInterval"),10,m_iniFileName.GetString());
 
 	delete[] textBuffer;
 
@@ -148,5 +149,24 @@ void ServiceProperties::SetCheckProcessInterval(unsigned int timeInMilli)
 	CString valueString=_T("");
 	valueString.AppendFormat(_T("%d"),m_checkProcessInterval);
 	WritePrivateProfileString(_T("Settings"),_T("CheckProcessInterval"),valueString.GetString(),m_iniFileName.GetString());
+
+}
+
+
+const unsigned int ServiceProperties::GetCheckServiceInterval()
+{
+	LockObj lock(&m_lock);
+	return m_checkServiceInterval;
+}
+
+void ServiceProperties::SetCheckServiceInterval(unsigned int timeInMilli)
+{
+	LockObj lock(&m_lock);
+	m_checkServiceInterval=timeInMilli;
+
+
+	CString valueString=_T("");
+	valueString.AppendFormat(_T("%d"),m_checkServiceInterval);
+	WritePrivateProfileString(_T("Settings"),_T("CheckServiceInterval"),valueString.GetString(),m_iniFileName.GetString());
 
 }

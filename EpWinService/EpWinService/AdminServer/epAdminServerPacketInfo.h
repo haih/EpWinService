@@ -83,6 +83,8 @@ SERVICE_GET_PACKET_TYPE_DEPENDENCY,
 SERVICE_GET_PACKET_TYPE_NUM_OF_PROCESSES,
 /// Get Interval time for checking processes
 SERVICE_GET_PACKET_TYPE_CHECKPROCESSINTERVAL,
+/// Get Interval time for checking services
+SERVICE_GET_PACKET_TYPE_CHECKSERVICEINTERVAL,
 /// Get all information above
 SERVICE_GET_PACKET_TYPE_ALL,
 }ServiceGetPacketType;
@@ -91,6 +93,8 @@ SERVICE_GET_PACKET_TYPE_ALL,
 typedef enum _serviceSetPacketType{
 /// Set Interval time for checking processes
 SERVICE_SET_PACKET_TYPE_CHECKPROCESSINTERVAL=0,
+/// Set Interval time for checking services
+SERVICE_SET_PACKET_TYPE_CHECKSERVICESINTERVAL,
 }ServiceSetPacketType;
 
 /// Sub-type for Get Process Info Packet

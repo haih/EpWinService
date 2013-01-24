@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "epServiceProperties.h"
 #include "epProcessHandler.h"
 #include "epLogWriter.h"
+#include "epServiceHandler.h"
 
 VOID WINAPI ServiceMain(DWORD dwArgc, LPTSTR *lpszArgv);
 
@@ -514,7 +515,7 @@ void WINAPI ServiceHandler(DWORD fdwControl)
 		// terminate all processes started by this service before shutdown
 		for(int procTrav=0;procTrav<PROCESS_HANDLER_INSTANCE.GetNumberOfProcesses();procTrav++)
 		{
-			PROCESS_HANDLER_INSTANCE.At(procTrav)->EndProcess();
+			PROCESS_HANDLER_INSTANCE.At(procTrav)->Stop();
 		}
 		if(SERVICE_PROPERTIES_INSTANCE.GetUseAdminServer())
 		{
@@ -556,12 +557,12 @@ void WINAPI ServiceHandler(DWORD fdwControl)
 			{
 				for(int procTrav=0;procTrav<PROCESS_HANDLER_INSTANCE.GetNumberOfProcesses();procTrav++)
 				{
-					PROCESS_HANDLER_INSTANCE.At(procTrav)->EndProcess();
+					PROCESS_HANDLER_INSTANCE.At(procTrav)->Stop();
 				}
 			}
 			else
 			{
-				PROCESS_HANDLER_INSTANCE.At(idx)->EndProcess();
+				PROCESS_HANDLER_INSTANCE.At(idx)->Stop();
 				TCHAR pTemp[121];
 				_stprintf(pTemp, _T("ControlService: End Process%d"), idx);
 				LOG_WRITER_INSTANCE.WriteLog( pTemp);
@@ -574,17 +575,17 @@ void WINAPI ServiceHandler(DWORD fdwControl)
 			{
 				for(int procTrav=0;procTrav<PROCESS_HANDLER_INSTANCE.GetNumberOfProcesses();procTrav++)
 				{
-					PROCESS_HANDLER_INSTANCE.At(procTrav)->EndProcess();
+					PROCESS_HANDLER_INSTANCE.At(procTrav)->Stop();
 				}
 				for(int procTrav=0;procTrav<PROCESS_HANDLER_INSTANCE.GetNumberOfProcesses();procTrav++)
 				{
-					PROCESS_HANDLER_INSTANCE.At(procTrav)->StartProcess();
+					PROCESS_HANDLER_INSTANCE.At(procTrav)->Start();
 				}
 			}
 			else
 			{
-				PROCESS_HANDLER_INSTANCE.At(idx)->EndProcess();
-				PROCESS_HANDLER_INSTANCE.At(idx)->StartProcess();
+				PROCESS_HANDLER_INSTANCE.At(idx)->Stop();
+				PROCESS_HANDLER_INSTANCE.At(idx)->Start();
 				TCHAR pTemp[121];
 				_stprintf(pTemp, _T("ControlService: Bounce Process%d"), idx);
 				LOG_WRITER_INSTANCE.WriteLog( pTemp);
@@ -598,12 +599,12 @@ void WINAPI ServiceHandler(DWORD fdwControl)
 			{
 				for(int procTrav=0;procTrav<PROCESS_HANDLER_INSTANCE.GetNumberOfProcesses();procTrav++)
 				{
-					PROCESS_HANDLER_INSTANCE.At(procTrav)->StartProcess();
+					PROCESS_HANDLER_INSTANCE.At(procTrav)->Start();
 				}
 			}
 			else
 			{
-				PROCESS_HANDLER_INSTANCE.At(idx)->StartProcess();
+				PROCESS_HANDLER_INSTANCE.At(idx)->Start();
 				TCHAR pTemp[121];
 				_stprintf(pTemp, _T("ControlService: Start Process%d"), idx);
 				LOG_WRITER_INSTANCE.WriteLog( pTemp);
@@ -676,9 +677,23 @@ VOID WINAPI ServiceMain(DWORD dwArgc, LPTSTR *lpszArgv)
 		_stprintf(pTemp, _T("ProcMonitorThread started"));
 		LOG_WRITER_INSTANCE.WriteLog( pTemp);
 	}
+	if(_beginthread(ServiceMonitorThread, 0, NULL) == -1)
+	{
+		long nError = GetLastError();
+		TCHAR pTemp[121];
+		_stprintf(pTemp, _T("ServiceMonitorThread failed, error code = %d"), nError);
+		LOG_WRITER_INSTANCE.WriteLog( pTemp);
+	}
+	else
+	{
+		TCHAR pTemp[121];
+		_stprintf(pTemp, _T("ServiceMonitorThread started"));
+		LOG_WRITER_INSTANCE.WriteLog( pTemp);
+	}
+	
 	for(int procTrav=0;procTrav<PROCESS_HANDLER_INSTANCE.GetNumberOfProcesses();procTrav++)
 	{
-		if(PROCESS_HANDLER_INSTANCE.At(procTrav)->StartProcess())
+		if(PROCESS_HANDLER_INSTANCE.At(procTrav)->Start())
 		{
 			TCHAR pTemp[121];
 			_stprintf(pTemp, _T("Process%d started"),procTrav);

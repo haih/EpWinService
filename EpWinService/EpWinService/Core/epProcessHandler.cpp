@@ -83,9 +83,9 @@ VOID ProcMonitorThread(VOID *)
 					PROCESS_HANDLER_INSTANCE.At(procTrav)->PostProcess();
 					PROCESS_HANDLER_INSTANCE.At(procTrav)->Reset();
 
-					if(PROCESS_HANDLER_INSTANCE.At(procTrav)->GetIsProcessRestart())
+					if(PROCESS_HANDLER_INSTANCE.At(procTrav)->GetIsRestart())
 					{
-						if(PROCESS_HANDLER_INSTANCE.At(procTrav)->StartProcess())
+						if(PROCESS_HANDLER_INSTANCE.At(procTrav)->Start())
 						{
 							TCHAR pTemp[121];
 							_stprintf(pTemp, _T("Process[%d] Restarted"),procTrav);

@@ -92,6 +92,13 @@ public:
 	*/
 	const unsigned int GetCheckProcessInterval();
 
+	
+	/*!
+	Get the Interval time to check services
+	@return the Interval time to check services
+	*/
+	const unsigned int GetCheckServiceInterval();
+
 	/*!
 	Get the flag for using Admin Server
 	@return true if using Admin Server otherwise false
@@ -108,6 +115,12 @@ public:
 	@param[in] timeInMilli the Interval time to check processes
 	*/
 	void SetCheckProcessInterval(unsigned int timeInMilli);
+
+		/*!
+	Set the Interval time to check services
+	@param[in] timeInMilli the Interval time to check services
+	*/
+	void SetCheckServiceInterval(unsigned int timeInMilli);
 private:
 	/*!
 	Default Constructor
@@ -138,6 +151,8 @@ private:
 
 	/// Interval time to check processes
 	unsigned int m_checkProcessInterval;
+	/// Interval time to check services
+	unsigned int m_checkServiceInterval;
 
 	/// flag for using Admin Server
 	bool m_useAdminServer;

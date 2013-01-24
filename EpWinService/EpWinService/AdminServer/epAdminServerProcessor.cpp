@@ -89,14 +89,14 @@ void AdminServerProcessor::commandProcess(unsigned int subPacketType,Stream &str
 			switch(subPacketType)
 			{
 			case COMMAND_PACKET_TYPE_START_PROCESS:
-				PROCESS_HANDLER_INSTANCE.At(procTrav)->StartProcess();			
+				PROCESS_HANDLER_INSTANCE.At(procTrav)->Start();			
 				break;
 			case COMMAND_PACKET_TYPE_END_PROCESS:
-				PROCESS_HANDLER_INSTANCE.At(procTrav)->EndProcess();
+				PROCESS_HANDLER_INSTANCE.At(procTrav)->Stop();
 				break;
 			case COMMAND_PACKET_TYPE_BOUNCE_PROCESS:
-				PROCESS_HANDLER_INSTANCE.At(procTrav)->EndProcess();
-				PROCESS_HANDLER_INSTANCE.At(procTrav)->StartProcess();
+				PROCESS_HANDLER_INSTANCE.At(procTrav)->Stop();
+				PROCESS_HANDLER_INSTANCE.At(procTrav)->Start();
 				break;
 			case COMMAND_PACKET_TYPE_CUSTOM_PROCESS:
 				PROCESS_HANDLER_INSTANCE.At(procTrav)->CustomProcess();
@@ -112,14 +112,14 @@ void AdminServerProcessor::commandProcess(unsigned int subPacketType,Stream &str
 			switch(subPacketType)
 			{
 			case COMMAND_PACKET_TYPE_START_PROCESS:
-				PROCESS_HANDLER_INSTANCE.At(procIdx)->StartProcess();			
+				PROCESS_HANDLER_INSTANCE.At(procIdx)->Start();			
 				break;
 			case COMMAND_PACKET_TYPE_END_PROCESS:
-				PROCESS_HANDLER_INSTANCE.At(procIdx)->EndProcess();
+				PROCESS_HANDLER_INSTANCE.At(procIdx)->Stop();
 				break;
 			case COMMAND_PACKET_TYPE_BOUNCE_PROCESS:
-				PROCESS_HANDLER_INSTANCE.At(procIdx)->EndProcess();
-				PROCESS_HANDLER_INSTANCE.At(procIdx)->StartProcess();
+				PROCESS_HANDLER_INSTANCE.At(procIdx)->Stop();
+				PROCESS_HANDLER_INSTANCE.At(procIdx)->Start();
 				break;
 			case COMMAND_PACKET_TYPE_CUSTOM_PROCESS:
 				PROCESS_HANDLER_INSTANCE.At(procIdx)->CustomProcess();
@@ -182,6 +182,10 @@ void AdminServerProcessor::getServiceInfo(unsigned int subPacketType,Stream &str
 	case SERVICE_GET_PACKET_TYPE_CHECKPROCESSINTERVAL:
 		retOutStream.WriteUInt(SERVICE_PROPERTIES_INSTANCE.GetCheckProcessInterval());
 		break;
+	case SERVICE_GET_PACKET_TYPE_CHECKSERVICEINTERVAL:
+		retOutStream.WriteUInt(SERVICE_PROPERTIES_INSTANCE.GetCheckServiceInterval());
+		break;
+
 	}
 }
 void AdminServerProcessor::setServiceInfo(unsigned int subPacketType,Stream &stream,Stream &retOutStream)
@@ -194,7 +198,17 @@ void AdminServerProcessor::setServiceInfo(unsigned int subPacketType,Stream &str
 		return;
 	}
 	retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
-	SERVICE_PROPERTIES_INSTANCE.SetCheckProcessInterval(interval);
+	switch(subPacketType)
+	{
+	case SERVICE_SET_PACKET_TYPE_CHECKPROCESSINTERVAL:
+		SERVICE_PROPERTIES_INSTANCE.SetCheckProcessInterval(interval);
+		break;
+	case SERVICE_SET_PACKET_TYPE_CHECKSERVICESINTERVAL:
+		SERVICE_PROPERTIES_INSTANCE.SetCheckServiceInterval(interval);
+		break;
+
+	}
+	
 }
 
 void AdminServerProcessor::getProcessInfo(unsigned int subPacketType,Stream &stream,Stream &retOutStream)
@@ -213,13 +227,13 @@ void AdminServerProcessor::getProcessInfo(unsigned int subPacketType,Stream &str
 		switch(subPacketType)
 		{
 		case PROCESS_GET_PACKET_TYPE_ALL:
-			if(PROCESS_HANDLER_INSTANCE.At(procIdx)->IsProcessStarted())
+			if(PROCESS_HANDLER_INSTANCE.At(procIdx)->IsStarted())
 				retOutStream.WriteUInt(PROCESS_STATUS_TYPE_RUNNING);
 			else
 				retOutStream.WriteUInt(PROCESS_STATUS_TYPE_STOPPED);
 			retOutStream.WriteUInt(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetDelayStartTime());
 			retOutStream.WriteUInt(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetDelayPauseEndTime());
-			retOutStream.WriteUInt(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetIsProcessRestart());
+			retOutStream.WriteUInt(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetIsRestart());
 			retOutStream.WriteUInt(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetIsImpersonate());
 			retOutStream.WriteUInt(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetIsUserInterface());
 			retOutStream.WriteBytes(reinterpret_cast<const unsigned char*>(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetCommandLine().GetString()),(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetCommandLine().GetLength()+1)*sizeof(TCHAR));
@@ -231,7 +245,7 @@ void AdminServerProcessor::getProcessInfo(unsigned int subPacketType,Stream &str
 			retOutStream.WriteBytes(reinterpret_cast<const unsigned char*>(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetUserPassword().GetString()),(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetUserPassword().GetLength()+1)*sizeof(TCHAR));
 			break;
 		case PROCESS_GET_PACKET_TYPE_STATUS:
-			if(PROCESS_HANDLER_INSTANCE.At(procIdx)->IsProcessStarted())
+			if(PROCESS_HANDLER_INSTANCE.At(procIdx)->IsStarted())
 				retOutStream.WriteUInt(PROCESS_STATUS_TYPE_RUNNING);
 			else
 				retOutStream.WriteUInt(PROCESS_STATUS_TYPE_STOPPED);
@@ -264,7 +278,7 @@ void AdminServerProcessor::getProcessInfo(unsigned int subPacketType,Stream &str
 			retOutStream.WriteUInt(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetDelayPauseEndTime());
 			break;
 		case PROCESS_GET_PACKET_TYPE_IS_PROCESS_RESTART:
-			retOutStream.WriteUInt(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetIsProcessRestart());
+			retOutStream.WriteUInt(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetIsRestart());
 			break;
 		case PROCESS_GET_PACKET_TYPE_IS_IMPERSONATE:
 			retOutStream.WriteUInt(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetIsImpersonate());
@@ -442,9 +456,9 @@ void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &str
 			if(stream.ReadUInt(val))
 			{
 				if(val)
-					PROCESS_HANDLER_INSTANCE.At(procIdx)->SetIsProcessRestart(true);
+					PROCESS_HANDLER_INSTANCE.At(procIdx)->SetIsRestart(true);
 				else
-					PROCESS_HANDLER_INSTANCE.At(procIdx)->SetIsProcessRestart(false);
+					PROCESS_HANDLER_INSTANCE.At(procIdx)->SetIsRestart(false);
 				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
 				retOutStream.WriteInt(procIdx);
 			}
@@ -583,9 +597,9 @@ void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &str
 			if(stream.ReadUInt(val))
 			{
 				if(val)
-					PROCESS_HANDLER_INSTANCE.At(procIdx)->SetIsProcessRestart(true);
+					PROCESS_HANDLER_INSTANCE.At(procIdx)->SetIsRestart(true);
 				else
-					PROCESS_HANDLER_INSTANCE.At(procIdx)->SetIsProcessRestart(false);
+					PROCESS_HANDLER_INSTANCE.At(procIdx)->SetIsRestart(false);
 			}
 			else
 			{

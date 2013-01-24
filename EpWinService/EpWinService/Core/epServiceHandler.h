@@ -32,7 +32,7 @@ An Interface for Service Handler.
 #define __EP_SERVICE_HANDLER_H__
 #include "epl.h"
 #include "epServiceDefines.h"
-
+#include "epServiceObject.h"
 using namespace epl;
 
 /*!
@@ -42,6 +42,16 @@ using namespace epl;
 Macro for the Service Handler Singleton Instance.
 */
 #define SERVICE_HANDLER_INSTANCE epl::SingletonHolder<ServiceHandler>::Instance()
+
+
+/*!
+@fn VOID ServiceMonitorThread(VOID *)
+@brief A Thread Function which monitors the services' termination or fault.
+
+Monitor the service's termination or fault and restart the service if stopped
+*/
+
+VOID ServiceMonitorThread(VOID *);
 
 /*! 
 @struct ServiceInfo epServiceManager.h
@@ -165,6 +175,22 @@ public:
 	@return Service Status
 	*/
 	ServiceHandlerError GetServiceStatus(const TCHAR *serviceName, SERVICE_STATUS_PROCESS &retStatus, DWORD &retErrCode);
+
+	/*!
+	Return the pointer to the service object at given index.
+	@param[in] serviceIndex the index of the service object to retrieve
+	@return the pointer to the service object
+	*/
+	ServiceObject *&At(unsigned int serviceIndex);
+
+	/*!
+	Return the number of services handling.
+	@return number of services in the list
+	*/
+	unsigned int GetNumberOfServices()
+	{
+		return m_serviceList.size();
+	}
 private:
 
 	/*!
@@ -182,6 +208,9 @@ private:
 	~ServiceHandler();
 
 	SC_HANDLE m_scManager;
+
+	/// Process List
+	vector<ServiceObject*> m_serviceList;
 };
 
 #endif //__EP_SERVICE_HANDLER_H__
