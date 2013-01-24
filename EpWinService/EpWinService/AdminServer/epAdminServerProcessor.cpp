@@ -50,10 +50,10 @@ void AdminServerProcessor::Process(AdminServerPacketParser *curClient,const Pack
 			commandProcess(subPacketType,stream,outStream);
 			break;
 		case PACKET_TYPE_MAIN_SERVICE_GET:
-			getServiceInfo(subPacketType,stream,outStream);
+			getMainServiceInfo(subPacketType,stream,outStream);
 			break;
 		case PACKET_TYPE_MAIN_SERVICE_SET:
-			setServiceInfo(subPacketType,stream,outStream);
+			setMainServiceInfo(subPacketType,stream,outStream);
 			break;
 		case PACKET_TYPE_PROCESS_GET:
 			getProcessInfo(subPacketType,stream,outStream);
@@ -749,18 +749,6 @@ void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &str
 	}
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
 void AdminServerProcessor::getServiceInfo(unsigned int subPacketType,Stream &stream,Stream &retOutStream)
 {
 	unsigned int procIdx;
@@ -780,6 +768,8 @@ void AdminServerProcessor::getServiceInfo(unsigned int subPacketType,Stream &str
 
 			
 			retOutStream.WriteUInt(SERVICE_HANDLER_INSTANCE.At(procIdx)->GetStatus());
+			retOutStream.WriteUInt(SERVICE_HANDLER_INSTANCE.At(procIdx)->GetDelayStartTime());
+			retOutStream.WriteUInt(SERVICE_HANDLER_INSTANCE.At(procIdx)->GetDelayPauseEndTime());
 			retOutStream.WriteUInt(SERVICE_HANDLER_INSTANCE.At(procIdx)->GetIsRestart());
 			retOutStream.WriteUInt(SERVICE_HANDLER_INSTANCE.At(procIdx)->GetIsImpersonate());
 			retOutStream.WriteUInt(SERVICE_HANDLER_INSTANCE.At(procIdx)->GetIsUserInterface());
