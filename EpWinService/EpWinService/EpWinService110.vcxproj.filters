@@ -25,10 +25,13 @@
     <Filter Include="EpServerEngineHeaders">
       <UniqueIdentifier>{54cd9120-42e7-4b31-b69a-2c2c8b1e8fac}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\ProcessManagement">
+    <Filter Include="Core\Management">
+      <UniqueIdentifier>{916f9128-ec5c-4692-b637-5225c0704060}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Management\ProcessManagement">
       <UniqueIdentifier>{69f3509f-ad4f-4948-ac91-778384d11a99}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\ServiceManagement">
+    <Filter Include="Core\Management\ServiceManagement">
       <UniqueIdentifier>{fbba063b-2853-4037-8a6a-262c5d839ecc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -61,13 +64,19 @@
       <Filter>AdminServer</Filter>
     </ClCompile>
     <ClCompile Include="Core\epProcessHandler.cpp">
-      <Filter>Core\ProcessManagement</Filter>
+      <Filter>Core\Management\ProcessManagement</Filter>
     </ClCompile>
     <ClCompile Include="Core\epProcessObject.cpp">
-      <Filter>Core\ProcessManagement</Filter>
+      <Filter>Core\Management\ProcessManagement</Filter>
     </ClCompile>
     <ClCompile Include="Core\epServiceHandler.cpp">
-      <Filter>Core\ServiceManagement</Filter>
+      <Filter>Core\Management\ServiceManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\epBaseManagementObject.cpp">
+      <Filter>Core\Management</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\epServiceObject.cpp">
+      <Filter>Core\Management\ServiceManagement</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -330,16 +339,22 @@
       <Filter>EpServerEngineHeaders</Filter>
     </ClInclude>
     <ClInclude Include="Core\epProcessHandler.h">
-      <Filter>Core\ProcessManagement</Filter>
+      <Filter>Core\Management\ProcessManagement</Filter>
     </ClInclude>
     <ClInclude Include="Core\epProcessObject.h">
-      <Filter>Core\ProcessManagement</Filter>
+      <Filter>Core\Management\ProcessManagement</Filter>
     </ClInclude>
     <ClInclude Include="Core\epServiceDefines.h">
-      <Filter>Core\ServiceManagement</Filter>
+      <Filter>Core\Management\ServiceManagement</Filter>
     </ClInclude>
     <ClInclude Include="Core\epServiceHandler.h">
-      <Filter>Core\ServiceManagement</Filter>
+      <Filter>Core\Management\ServiceManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\epBaseManagementObject.h">
+      <Filter>Core\Management</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\epServiceObject.h">
+      <Filter>Core\Management\ServiceManagement</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

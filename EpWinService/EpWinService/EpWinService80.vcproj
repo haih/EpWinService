@@ -555,40 +555,60 @@
 				>
 			</File>
 			<Filter
-				Name="ProcessManagement"
+				Name="Management"
 				>
 				<File
-					RelativePath=".\Core\epProcessHandler.cpp"
+					RelativePath=".\Core\epBaseManagementObject.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\Core\epProcessHandler.h"
+					RelativePath=".\Core\epBaseManagementObject.h"
 					>
 				</File>
-				<File
-					RelativePath=".\Core\epProcessObject.cpp"
+				<Filter
+					Name="ProcessManagement"
 					>
-				</File>
-				<File
-					RelativePath=".\Core\epProcessObject.h"
+					<File
+						RelativePath=".\Core\epProcessHandler.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Core\epProcessHandler.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Core\epProcessObject.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Core\epProcessObject.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="ServiceManagement"
 					>
-				</File>
-			</Filter>
-			<Filter
-				Name="ServiceManagement"
-				>
-				<File
-					RelativePath=".\Core\epServiceDefines.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Core\epServiceHandler.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Core\epServiceHandler.h"
-					>
-				</File>
+					<File
+						RelativePath=".\Core\epServiceDefines.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Core\epServiceHandler.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Core\epServiceHandler.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Core\epServiceObject.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Core\epServiceObject.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 		<Filter
