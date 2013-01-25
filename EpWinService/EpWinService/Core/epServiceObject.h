@@ -92,7 +92,7 @@ public:
 	Return the status of the service
 	@return the status of the service
 	*/	
-	ServiceStatus GetStatus();
+	ServiceStatusType GetStatus();
 	
 
 

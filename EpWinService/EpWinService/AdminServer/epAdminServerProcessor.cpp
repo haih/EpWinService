@@ -46,7 +46,7 @@ void AdminServerProcessor::Process(AdminServerPacketParser *curClient,const Pack
 		outStream.WriteUInt(subPacketType);
 		switch(packetType)
 		{
-		case PACKET_TYPE_COMMAND:
+		case PACKET_TYPE_COMMAND_OBJECT:
 			commandProcess(subPacketType,stream,outStream);
 			break;
 		case PACKET_TYPE_MAIN_SERVICE_GET:
@@ -95,24 +95,24 @@ void AdminServerProcessor::commandServiceObject(unsigned int subPacketType,Strea
 		{
 			switch(subPacketType)
 			{
-			case COMMAND_PACKET_TYPE_START_SERVICE:
+			case COMMAND_OBJECT_PACKET_TYPE_START_SERVICE:
 				SERVICE_HANDLER_INSTANCE.At(serviceTrav)->Start();			
 				break;
-			case COMMAND_PACKET_TYPE_END_SERVICE:
+			case COMMAND_OBJECT_PACKET_TYPE_END_SERVICE:
 				SERVICE_HANDLER_INSTANCE.At(serviceTrav)->SetIsUserStopped(true);
 				SERVICE_HANDLER_INSTANCE.At(serviceTrav)->Stop();
 				break;
-			case COMMAND_PACKET_TYPE_PAUSE_SERVICE:
+			case COMMAND_OBJECT_PACKET_TYPE_PAUSE_SERVICE:
 				SERVICE_HANDLER_INSTANCE.At(serviceTrav)->Pause();
 				break;
-			case COMMAND_PACKET_TYPE_CONTINUE_SERVICE:
+			case COMMAND_OBJECT_PACKET_TYPE_CONTINUE_SERVICE:
 				SERVICE_HANDLER_INSTANCE.At(serviceTrav)->Continue();
 				break;
-			case COMMAND_PACKET_TYPE_BOUNCE_SERVICE:
+			case COMMAND_OBJECT_PACKET_TYPE_BOUNCE_SERVICE:
 				SERVICE_HANDLER_INSTANCE.At(serviceTrav)->Stop();
 				SERVICE_HANDLER_INSTANCE.At(serviceTrav)->Start();
 				break;
-			case COMMAND_PACKET_TYPE_CUSTOM_PROCESS_SERVICE:
+			case COMMAND_OBJECT_PACKET_TYPE_CUSTOM_PROCESS_SERVICE:
 				SERVICE_HANDLER_INSTANCE.At(serviceTrav)->CustomProcess();
 				break;
 			}
@@ -125,24 +125,24 @@ void AdminServerProcessor::commandServiceObject(unsigned int subPacketType,Strea
 		{
 			switch(subPacketType)
 			{
-			case COMMAND_PACKET_TYPE_START_SERVICE:
+			case COMMAND_OBJECT_PACKET_TYPE_START_SERVICE:
 				SERVICE_HANDLER_INSTANCE.At(serviceIdx)->Start();			
 				break;
-			case COMMAND_PACKET_TYPE_END_SERVICE:
+			case COMMAND_OBJECT_PACKET_TYPE_END_SERVICE:
 				SERVICE_HANDLER_INSTANCE.At(serviceIdx)->SetIsUserStopped(true);
 				SERVICE_HANDLER_INSTANCE.At(serviceIdx)->Stop();
 				break;
-			case COMMAND_PACKET_TYPE_PAUSE_SERVICE:
+			case COMMAND_OBJECT_PACKET_TYPE_PAUSE_SERVICE:
 				SERVICE_HANDLER_INSTANCE.At(serviceIdx)->Pause();
 				break;
-			case COMMAND_PACKET_TYPE_CONTINUE_SERVICE:
+			case COMMAND_OBJECT_PACKET_TYPE_CONTINUE_SERVICE:
 				SERVICE_HANDLER_INSTANCE.At(serviceIdx)->Continue();
 				break;
-			case COMMAND_PACKET_TYPE_BOUNCE_SERVICE:
+			case COMMAND_OBJECT_PACKET_TYPE_BOUNCE_SERVICE:
 				SERVICE_HANDLER_INSTANCE.At(serviceIdx)->Stop();
 				SERVICE_HANDLER_INSTANCE.At(serviceIdx)->Start();
 				break;
-			case COMMAND_PACKET_TYPE_CUSTOM_PROCESS_SERVICE:
+			case COMMAND_OBJECT_PACKET_TYPE_CUSTOM_PROCESS_SERVICE:
 				SERVICE_HANDLER_INSTANCE.At(serviceIdx)->CustomProcess();
 				break;
 			}
@@ -177,17 +177,17 @@ void AdminServerProcessor::commandProcessObject(unsigned int subPacketType,Strea
 		{
 			switch(subPacketType)
 			{
-			case COMMAND_PACKET_TYPE_START_PROCESS:
+			case COMMAND_OBJECT_PACKET_TYPE_START_PROCESS:
 				PROCESS_HANDLER_INSTANCE.At(procTrav)->Start();			
 				break;
-			case COMMAND_PACKET_TYPE_END_PROCESS:
+			case COMMAND_OBJECT_PACKET_TYPE_END_PROCESS:
 				PROCESS_HANDLER_INSTANCE.At(procTrav)->Stop();
 				break;
-			case COMMAND_PACKET_TYPE_BOUNCE_PROCESS:
+			case COMMAND_OBJECT_PACKET_TYPE_BOUNCE_PROCESS:
 				PROCESS_HANDLER_INSTANCE.At(procTrav)->Stop();
 				PROCESS_HANDLER_INSTANCE.At(procTrav)->Start();
 				break;
-			case COMMAND_PACKET_TYPE_CUSTOM_PROCESS_PROCESS:
+			case COMMAND_OBJECT_PACKET_TYPE_CUSTOM_PROCESS_PROCESS:
 				PROCESS_HANDLER_INSTANCE.At(procTrav)->CustomProcess();
 				break;
 			}
@@ -200,17 +200,17 @@ void AdminServerProcessor::commandProcessObject(unsigned int subPacketType,Strea
 		{
 			switch(subPacketType)
 			{
-			case COMMAND_PACKET_TYPE_START_PROCESS:
+			case COMMAND_OBJECT_PACKET_TYPE_START_PROCESS:
 				PROCESS_HANDLER_INSTANCE.At(procIdx)->Start();			
 				break;
-			case COMMAND_PACKET_TYPE_END_PROCESS:
+			case COMMAND_OBJECT_PACKET_TYPE_END_PROCESS:
 				PROCESS_HANDLER_INSTANCE.At(procIdx)->Stop();
 				break;
-			case COMMAND_PACKET_TYPE_BOUNCE_PROCESS:
+			case COMMAND_OBJECT_PACKET_TYPE_BOUNCE_PROCESS:
 				PROCESS_HANDLER_INSTANCE.At(procIdx)->Stop();
 				PROCESS_HANDLER_INSTANCE.At(procIdx)->Start();
 				break;
-			case COMMAND_PACKET_TYPE_CUSTOM_PROCESS_PROCESS:
+			case COMMAND_OBJECT_PACKET_TYPE_CUSTOM_PROCESS_PROCESS:
 				PROCESS_HANDLER_INSTANCE.At(procIdx)->CustomProcess();
 				break;
 
@@ -230,7 +230,7 @@ void AdminServerProcessor::commandProcessObject(unsigned int subPacketType,Strea
 }
 void AdminServerProcessor::commandProcess(unsigned int subPacketType,Stream &stream,Stream &retOutStream)
 {
-	if((unsigned int)subPacketType<=(unsigned int)COMMAND_PACKET_TYPE_CUSTOM_PROCESS_PROCESS)
+	if((unsigned int)subPacketType<=(unsigned int)COMMAND_OBJECT_PACKET_TYPE_CUSTOM_PROCESS_PROCESS)
 	{
 		commandProcessObject(subPacketType,stream,retOutStream);
 	}

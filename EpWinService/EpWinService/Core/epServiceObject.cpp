@@ -52,7 +52,7 @@ bool ServiceObject::Start()
 	DWORD retCode;
 	if(SERVICE_HANDLER_INSTANCE.ControlService(m_serviceName.GetString(),SERVICE_CONTROL_CODE_INTERROGATE,status,retCode)==SERVICE_HANDLER_ERROR_SUCCESS)
 	{
-		if(status.dwCurrentState==SERVICE_STATUS_RUNNING)
+		if(status.dwCurrentState==SERVICE_STATUS_TYPE_RUNNING)
 			return true;
 	}
 	else
@@ -99,7 +99,7 @@ bool ServiceObject::IsStarted()
 	DWORD retCode;
 	if(SERVICE_HANDLER_INSTANCE.ControlService(m_serviceName.GetString(),SERVICE_CONTROL_CODE_INTERROGATE,status,retCode)==SERVICE_HANDLER_ERROR_SUCCESS)
 	{
-		if(status.dwCurrentState==SERVICE_STATUS_STOPPED)
+		if(status.dwCurrentState==SERVICE_STATUS_TYPE_STOPPED)
 			return false;
 	}
 	return true;
@@ -110,16 +110,16 @@ void ServiceObject::Reset()
 	LockObj lock(&m_lock);
 }
 
-ServiceStatus ServiceObject::GetStatus()
+ServiceStatusType ServiceObject::GetStatus()
 {
 	LockObj lock(&m_lock);
 	SERVICE_STATUS status;
 	DWORD retCode;
 	if(SERVICE_HANDLER_INSTANCE.ControlService(m_serviceName.GetString(),SERVICE_CONTROL_CODE_INTERROGATE,status,retCode)==SERVICE_HANDLER_ERROR_SUCCESS)
 	{
-		return (ServiceStatus)status.dwCurrentState;
+		return (ServiceStatusType)status.dwCurrentState;
 	}
-	return SERVICE_STATUS_UNKNOWN;
+	return SERVICE_STATUS_TYPE_UNKNOWN;
 }
 
 CString ServiceObject::GetServiceName()

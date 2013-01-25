@@ -38,51 +38,50 @@ An Interface for Admin Server Packet Information.
 Macro for the Default Admin Server Port.
 */
 #define DEFAULT_ADMIN_SERVER_PORT _T("8988")
-
 /// Packet Type
 typedef enum _packetType{
-/// Command Type
-PACKET_TYPE_COMMAND=0,
-/// Get Main Service Info Type
-PACKET_TYPE_MAIN_SERVICE_GET,
-/// Set Main Service Info Type
-PACKET_TYPE_MAIN_SERVICE_SET,
-/// Get Process Info type
-PACKET_TYPE_PROCESS_GET,
-/// Set Process Info Type
-PACKET_TYPE_PROCESS_SET,
-/// Get Service Info type
-PACKET_TYPE_SERVICE_GET,
-/// Set Service Info Type
-PACKET_TYPE_SERVICE_SET,
-/// Service Command type
-PACKET_TYPE_SERVICE_COMMAND
+	/// Command Type
+	PACKET_TYPE_COMMAND_OBJECT=0,
+	/// Get Main Service Info Type
+	PACKET_TYPE_MAIN_SERVICE_GET,
+	/// Set Main Service Info Type
+	PACKET_TYPE_MAIN_SERVICE_SET,
+	/// Get Process Info type
+	PACKET_TYPE_PROCESS_GET,
+	/// Set Process Info Type
+	PACKET_TYPE_PROCESS_SET,
+	/// Get Service Info type
+	PACKET_TYPE_SERVICE_GET,
+	/// Set Service Info Type
+	PACKET_TYPE_SERVICE_SET,
+	/// Service Command type
+	PACKET_TYPE_SERVICE_COMMAND
 }PacketType;
 
-/// Sub-type for Command Packet
-typedef enum _commandPacketType{
-/// Start the Process
-COMMAND_PACKET_TYPE_START_PROCESS=0,
-/// End the Process
-COMMAND_PACKET_TYPE_END_PROCESS,
-/// Restart the Process
-COMMAND_PACKET_TYPE_BOUNCE_PROCESS,
-/// Start the Custom Process
-COMMAND_PACKET_TYPE_CUSTOM_PROCESS_PROCESS,
-/// Start the Service
-COMMAND_PACKET_TYPE_START_SERVICE,
-/// End the Service
-COMMAND_PACKET_TYPE_END_SERVICE,
-/// Pause the Service
-COMMAND_PACKET_TYPE_PAUSE_SERVICE,
-/// Continue the Service
-COMMAND_PACKET_TYPE_CONTINUE_SERVICE,
-/// Restart the Service
-COMMAND_PACKET_TYPE_BOUNCE_SERVICE,
-/// Start the Custom Service
-COMMAND_PACKET_TYPE_CUSTOM_PROCESS_SERVICE,
+/// Sub-type for Command Object Packet
+typedef enum _commandObjectPacketType{
+	/// Start the Process
+	COMMAND_OBJECT_PACKET_TYPE_START_PROCESS=0,
+	/// End the Process
+	COMMAND_OBJECT_PACKET_TYPE_END_PROCESS,
+	/// Restart the Process
+	COMMAND_OBJECT_PACKET_TYPE_BOUNCE_PROCESS,
+	/// Start the Custom Process
+	COMMAND_OBJECT_PACKET_TYPE_CUSTOM_PROCESS_PROCESS,
+	/// Start the Service
+	COMMAND_OBJECT_PACKET_TYPE_START_SERVICE,
+	/// End the Service
+	COMMAND_OBJECT_PACKET_TYPE_END_SERVICE,
+	/// Pause the Service
+	COMMAND_OBJECT_PACKET_TYPE_PAUSE_SERVICE,
+	/// Continue the Service
+	COMMAND_OBJECT_PACKET_TYPE_CONTINUE_SERVICE,
+	/// Restart the Service
+	COMMAND_OBJECT_PACKET_TYPE_BOUNCE_SERVICE,
+	/// Start the Custom Service
+	COMMAND_OBJECT_PACKET_TYPE_CUSTOM_PROCESS_SERVICE,
 
-}CommandPacketType;
+}CommandObjectPacketType;
 
 /// Sub-type for Get Service Info Packet
 typedef enum _mainServiceGetPacketType{
