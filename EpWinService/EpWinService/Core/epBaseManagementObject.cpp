@@ -23,7 +23,10 @@ void BaseManagementObject::ParseCommand(CString cmd,  vector<CString>& retCmdLis
 {
 	retCmdList.clear();
 	if(cmd.Find(_T(';'))==-1)
-		retCmdList.push_back(cmd);
+	{
+		if(cmd.GetLength())
+			retCmdList.push_back(cmd);
+	}
 	else
 	{
 		int index=cmd.Find(_T(';'));
