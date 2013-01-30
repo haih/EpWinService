@@ -45,7 +45,7 @@ int _tmain(int argc, _TCHAR* argv[])
 			if(argc!=3)
 			{
 				_tprintf(_T("USAGE ERROR\n"));
-				_tprintf(_T("USAGE: EpWinService <Command:-b/-r/-n/-c> <Process Index>\n"));
+				_tprintf(_T("USAGE: EpWinService <Command:-b/-r/-n/-c> <Process Index:-1~31>\n"));
 				_tprintf(_T("Command:-b (Bounce the process)\n"));
 				_tprintf(_T("Command:-r (Start the process)\n"));
 				_tprintf(_T("Command:-n (End the process)\n"));
@@ -59,16 +59,17 @@ int _tmain(int argc, _TCHAR* argv[])
 	else
 	{
 		_tprintf(_T("USAGE ERROR\n"));
-		_tprintf(_T("USAGE: EpWinService <Command:-i/-s/-k/-u/-e/-b/-r/-n/-c> <Optional:Process Index>\n"));
+		_tprintf(_T("USAGE1: EpWinService <Command:-i/-s/-k/-u/-e>\n"));
+		_tprintf(_T("USAGE2: EpWinService <Command:-e/-b/-r/-n/-c> <Optional:Process Index:-1~31>\n"));
 		_tprintf(_T("Command:-i (Install Service)\n"));
 		_tprintf(_T("Command:-s (Start Service)\n"));
 		_tprintf(_T("Command:-k (Stop Service)\n"));
 		_tprintf(_T("Command:-u (Uninstall Service)\n"));
 		_tprintf(_T("Command:-e (Execute Service)\n"));
-		_tprintf(_T("Command:-b <Process Index>(Bounce the process)\n"));
-		_tprintf(_T("Command:-r <Process Index>(Start the process)\n"));
-		_tprintf(_T("Command:-n <Process Index>(End the process)\n"));
-		_tprintf(_T("Command:-c <Process Index>(Run the custom process)\n"));
+		_tprintf(_T("Command:-b <Process Index:-1~31>(Bounce the process)\n"));
+		_tprintf(_T("Command:-r <Process Index:-1~31>(Start the process)\n"));
+		_tprintf(_T("Command:-n <Process Index:-1~31>(End the process)\n"));
+		_tprintf(_T("Command:-c <Process Index:-1~31>(Run the custom process)\n"));
 		_tprintf(_T("Process Index:The index of the process to give the command (-1 for all processes)\n\n"));
 		return 0;
 	}
