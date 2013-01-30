@@ -119,6 +119,21 @@ public:
 	void StopAdminServer();
 
 	/*!
+	Run the Custom Process
+	@param[in] waitTimeInMilliSec wait time in milli-seconds
+	@remark waitTimeInMilliSec is equal to -1 (0xffffffff) then waits for infinite time.
+	*/
+	void RunCustomProcess(int waitTimeInMilliSec);
+
+	/*!
+	Run command.
+	@param[in] command command to run
+	@param[in] waitTimeInMilliSec wait time in milli-seconds
+	@remark waitTimeInMilliSec is equal to -1 (0xffffffff) then waits for infinite time.
+	*/
+	void RunCommand(CString command, int waitTimeInMilliSec);
+
+	/*!
 	Get the service status
 	@return the service status
 	*/
@@ -159,6 +174,9 @@ private:
 
 	/// Admin Server object
 	AdminServer m_adminServer;
+
+	/// Custom-process CommandLine List
+	vector<CString> m_customProcessCommandLineList;
 
 
 };

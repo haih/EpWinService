@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "stdafx.h"
 #include "epServiceProperties.h"
+#include "epBaseManagementObject.h"
 
 ServiceProperties::ServiceProperties()
 {
@@ -60,6 +61,11 @@ ServiceProperties::ServiceProperties()
 	else
 		m_useAdminServer=false;
 
+	memset(textBuffer,0,sizeof(TCHAR)*MAX_PATH);
+	GetPrivateProfileString(_T("Settings"),_T("CustomProcessCommandLine"),_T(""),textBuffer,MAX_PATH,m_iniFileName.GetString());
+	m_customProcessCommandLine=textBuffer;
+	m_customProcessCommandLine.Trim();
+	
 	memset(textBuffer,0,sizeof(TCHAR)*MAX_PATH);
 	GetPrivateProfileString(_T("Settings"),_T("AdminServerPort"),_T("8988"),textBuffer,MAX_PATH,m_iniFileName.GetString());
 	m_adminServerPort=textBuffer;
@@ -170,3 +176,18 @@ void ServiceProperties::SetCheckServiceInterval(unsigned int timeInMilli)
 	WritePrivateProfileString(_T("Settings"),_T("CheckServiceInterval"),valueString.GetString(),m_iniFileName.GetString());
 
 }
+
+CString ServiceProperties::GetCustomProcessCommandLine()
+{
+	LockObj lock(&m_lock);
+	return m_customProcessCommandLine;
+}
+
+void ServiceProperties::SetCustomProcessCommandLine(CString cmd)
+{
+	LockObj lock(&m_lock);
+	cmd.Trim();
+	m_customProcessCommandLine=cmd;
+	WritePrivateProfileString(_T("Settings"),_T("CustomProcessCommandLine"),m_customProcessCommandLine.GetString(),m_iniFileName.GetString());
+}
+

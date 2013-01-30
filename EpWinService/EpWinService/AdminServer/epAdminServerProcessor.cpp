@@ -20,6 +20,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "epProcessHandler.h"
 #include "epServiceProperties.h"
 #include "epServiceHandler.h"
+#include "epServiceManager.h"
+
+
+bool GetString(Stream &stream, CString &retString)
+{
+	unsigned short retChar;
+	retString=_T("");
+	bool status=false;
+	while((status=stream.ReadUShort(retChar)) && (TCHAR)retChar!=_T('\0'))
+	{
+		retString.AppendChar(static_cast<TCHAR>(retChar));
+	}
+	return status;
+}
 
 void AdminServerProcessor::Process(AdminServerPacketParser *curClient,const Packet *packet)
 {
@@ -46,8 +60,9 @@ void AdminServerProcessor::Process(AdminServerPacketParser *curClient,const Pack
 		outStream.WriteUInt(subPacketType);
 		switch(packetType)
 		{
-		case PACKET_TYPE_COMMAND_OBJECT:
-			commandProcess(subPacketType,stream,outStream);
+		
+		case PACKET_TYPE_MAIN_SERVICE_COMMAND:
+			commandMainServiceObject(subPacketType,stream,outStream);
 			break;
 		case PACKET_TYPE_MAIN_SERVICE_GET:
 			getMainServiceInfo(subPacketType,stream,outStream);
@@ -55,11 +70,17 @@ void AdminServerProcessor::Process(AdminServerPacketParser *curClient,const Pack
 		case PACKET_TYPE_MAIN_SERVICE_SET:
 			setMainServiceInfo(subPacketType,stream,outStream);
 			break;
+		case PACKET_TYPE_COMMAND_PROCESS_OBJECT:
+			commandProcessObject(subPacketType,stream,outStream);
+			break;
 		case PACKET_TYPE_PROCESS_GET:
 			getProcessInfo(subPacketType,stream,outStream);
 			break;
 		case PACKET_TYPE_PROCESS_SET:
 			setProcessInfo(subPacketType,stream,outStream);
+			break;
+		case PACKET_TYPE_COMMAND_SERVICE_OBJECT:
+			commandServiceObject(subPacketType,stream,outStream);
 			break;
 		case PACKET_TYPE_SERVICE_GET:
 			getServiceInfo(subPacketType,stream,outStream);
@@ -78,117 +99,73 @@ void AdminServerProcessor::Process(AdminServerPacketParser *curClient,const Pack
 	curClient->Send(sendPacket);
 }
 
-void AdminServerProcessor::commandServiceObject(unsigned int subPacketType,Stream &stream,Stream &retOutStream)
-{
-	int serviceIdx;
-	if(!stream.ReadInt(serviceIdx))
-	{
-		retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
-		return;
-	}
 
 
-	int serviceCount=(int)SERVICE_HANDLER_INSTANCE.GetNumberOfServices();
-	if(serviceIdx==-1)
-	{
-		for(int serviceTrav=0;serviceTrav<serviceCount;serviceTrav++)
-		{
-			switch(subPacketType)
-			{
-			case COMMAND_OBJECT_PACKET_TYPE_START_SERVICE:
-				SERVICE_HANDLER_INSTANCE.At(serviceTrav)->Start();			
-				break;
-			case COMMAND_OBJECT_PACKET_TYPE_END_SERVICE:
-				SERVICE_HANDLER_INSTANCE.At(serviceTrav)->SetIsUserStopped(true);
-				SERVICE_HANDLER_INSTANCE.At(serviceTrav)->Stop();
-				break;
-			case COMMAND_OBJECT_PACKET_TYPE_PAUSE_SERVICE:
-				SERVICE_HANDLER_INSTANCE.At(serviceTrav)->Pause();
-				break;
-			case COMMAND_OBJECT_PACKET_TYPE_CONTINUE_SERVICE:
-				SERVICE_HANDLER_INSTANCE.At(serviceTrav)->Continue();
-				break;
-			case COMMAND_OBJECT_PACKET_TYPE_BOUNCE_SERVICE:
-				SERVICE_HANDLER_INSTANCE.At(serviceTrav)->Stop();
-				SERVICE_HANDLER_INSTANCE.At(serviceTrav)->Start();
-				break;
-			case COMMAND_OBJECT_PACKET_TYPE_CUSTOM_PROCESS_SERVICE:
-				SERVICE_HANDLER_INSTANCE.At(serviceTrav)->CustomProcess();
-				break;
-			}
 
-		}
-	}
-	else
-	{
-		if(serviceIdx>=0 && serviceIdx<serviceCount)
-		{
-			switch(subPacketType)
-			{
-			case COMMAND_OBJECT_PACKET_TYPE_START_SERVICE:
-				SERVICE_HANDLER_INSTANCE.At(serviceIdx)->Start();			
-				break;
-			case COMMAND_OBJECT_PACKET_TYPE_END_SERVICE:
-				SERVICE_HANDLER_INSTANCE.At(serviceIdx)->SetIsUserStopped(true);
-				SERVICE_HANDLER_INSTANCE.At(serviceIdx)->Stop();
-				break;
-			case COMMAND_OBJECT_PACKET_TYPE_PAUSE_SERVICE:
-				SERVICE_HANDLER_INSTANCE.At(serviceIdx)->Pause();
-				break;
-			case COMMAND_OBJECT_PACKET_TYPE_CONTINUE_SERVICE:
-				SERVICE_HANDLER_INSTANCE.At(serviceIdx)->Continue();
-				break;
-			case COMMAND_OBJECT_PACKET_TYPE_BOUNCE_SERVICE:
-				SERVICE_HANDLER_INSTANCE.At(serviceIdx)->Stop();
-				SERVICE_HANDLER_INSTANCE.At(serviceIdx)->Start();
-				break;
-			case COMMAND_OBJECT_PACKET_TYPE_CUSTOM_PROCESS_SERVICE:
-				SERVICE_HANDLER_INSTANCE.At(serviceIdx)->CustomProcess();
-				break;
-			}
-		}
-		else
-		{
-			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_PROCESS_IDX_OUT_OF_RANCE);
-			retOutStream.WriteInt(serviceIdx);
-			return;
-		}
-	}
-	
-	retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
-	retOutStream.WriteInt(serviceIdx);
-
-}
 void AdminServerProcessor::commandProcessObject(unsigned int subPacketType,Stream &stream,Stream &retOutStream)
 {
-	int procIdx;
-	if(!stream.ReadInt(procIdx))
+	int objIdx;
+	if(!stream.ReadInt(objIdx))
 	{
 		retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
 		return;
+	}
+
+
+	int waitTime=-1;
+	CString cmd=_T("");
+	switch(subPacketType)
+	{
+	case COMMAND_PROCESS_OBJECT_PACKET_TYPE_CUSTOM_PROCESS:
+		if(!stream.ReadInt(waitTime))
+		{
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+			retOutStream.WriteInt(objIdx);
+			return;
+		}
+		break;
+	case COMMAND_PROCESS_OBJECT_PACKET_TYPE_RUN_COMMAND:
+		if(!stream.ReadInt(waitTime))
+		{
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+			retOutStream.WriteInt(objIdx);
+			return;
+		}
+		if(!GetString(stream,cmd))
+		{
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+			retOutStream.WriteInt(objIdx);
+			return;
+		}
+		break;
+	default:
+		break;
 	}
 
 
 	int processCount=(int)PROCESS_HANDLER_INSTANCE.GetNumberOfProcesses();
-	if(procIdx==-1)
+	if(objIdx==-1)
 	{
 
 		for(int procTrav=0;procTrav<processCount;procTrav++)
 		{
 			switch(subPacketType)
 			{
-			case COMMAND_OBJECT_PACKET_TYPE_START_PROCESS:
+			case COMMAND_PROCESS_OBJECT_PACKET_TYPE_START:
 				PROCESS_HANDLER_INSTANCE.At(procTrav)->Start();			
 				break;
-			case COMMAND_OBJECT_PACKET_TYPE_END_PROCESS:
+			case COMMAND_PROCESS_OBJECT_PACKET_TYPE_END:
 				PROCESS_HANDLER_INSTANCE.At(procTrav)->Stop();
 				break;
-			case COMMAND_OBJECT_PACKET_TYPE_BOUNCE_PROCESS:
+			case COMMAND_PROCESS_OBJECT_PACKET_TYPE_BOUNCE:
 				PROCESS_HANDLER_INSTANCE.At(procTrav)->Stop();
 				PROCESS_HANDLER_INSTANCE.At(procTrav)->Start();
 				break;
-			case COMMAND_OBJECT_PACKET_TYPE_CUSTOM_PROCESS_PROCESS:
-				PROCESS_HANDLER_INSTANCE.At(procTrav)->CustomProcess();
+			case COMMAND_PROCESS_OBJECT_PACKET_TYPE_CUSTOM_PROCESS:
+				PROCESS_HANDLER_INSTANCE.At(procTrav)->CustomProcess(waitTime);
+				break;
+			case COMMAND_PROCESS_OBJECT_PACKET_TYPE_RUN_COMMAND:
+				PROCESS_HANDLER_INSTANCE.At(procTrav)->RunCommand(cmd,waitTime);
 				break;
 			}
 
@@ -196,22 +173,25 @@ void AdminServerProcessor::commandProcessObject(unsigned int subPacketType,Strea
 	}
 	else
 	{
-		if(procIdx>=0 && procIdx<processCount)
+		if(objIdx>=0 && objIdx<processCount)
 		{
 			switch(subPacketType)
 			{
-			case COMMAND_OBJECT_PACKET_TYPE_START_PROCESS:
-				PROCESS_HANDLER_INSTANCE.At(procIdx)->Start();			
+			case COMMAND_PROCESS_OBJECT_PACKET_TYPE_START:
+				PROCESS_HANDLER_INSTANCE.At(objIdx)->Start();			
 				break;
-			case COMMAND_OBJECT_PACKET_TYPE_END_PROCESS:
-				PROCESS_HANDLER_INSTANCE.At(procIdx)->Stop();
+			case COMMAND_PROCESS_OBJECT_PACKET_TYPE_END:
+				PROCESS_HANDLER_INSTANCE.At(objIdx)->Stop();
 				break;
-			case COMMAND_OBJECT_PACKET_TYPE_BOUNCE_PROCESS:
-				PROCESS_HANDLER_INSTANCE.At(procIdx)->Stop();
-				PROCESS_HANDLER_INSTANCE.At(procIdx)->Start();
+			case COMMAND_PROCESS_OBJECT_PACKET_TYPE_BOUNCE:
+				PROCESS_HANDLER_INSTANCE.At(objIdx)->Stop();
+				PROCESS_HANDLER_INSTANCE.At(objIdx)->Start();
 				break;
-			case COMMAND_OBJECT_PACKET_TYPE_CUSTOM_PROCESS_PROCESS:
-				PROCESS_HANDLER_INSTANCE.At(procIdx)->CustomProcess();
+			case COMMAND_PROCESS_OBJECT_PACKET_TYPE_CUSTOM_PROCESS:
+				PROCESS_HANDLER_INSTANCE.At(objIdx)->CustomProcess(waitTime);
+				break;
+			case COMMAND_PROCESS_OBJECT_PACKET_TYPE_RUN_COMMAND:
+				PROCESS_HANDLER_INSTANCE.At(objIdx)->RunCommand(cmd,waitTime);
 				break;
 
 			}
@@ -219,27 +199,167 @@ void AdminServerProcessor::commandProcessObject(unsigned int subPacketType,Strea
 		else
 		{
 			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_PROCESS_IDX_OUT_OF_RANCE);
-			retOutStream.WriteInt(procIdx);
+			retOutStream.WriteInt(objIdx);
 			return;
 		}
 	}
 
 	retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
-	retOutStream.WriteInt(procIdx);
+	retOutStream.WriteInt(objIdx);
 
 }
-void AdminServerProcessor::commandProcess(unsigned int subPacketType,Stream &stream,Stream &retOutStream)
+
+
+
+void AdminServerProcessor::commandServiceObject(unsigned int subPacketType,Stream &stream,Stream &retOutStream)
 {
-	if((unsigned int)subPacketType<=(unsigned int)COMMAND_OBJECT_PACKET_TYPE_CUSTOM_PROCESS_PROCESS)
+	int objIdx;
+	if(!stream.ReadInt(objIdx))
 	{
-		commandProcessObject(subPacketType,stream,retOutStream);
+		retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
+		return;
+	}
+
+
+	int waitTime=-1;
+	CString cmd=_T("");
+	switch(subPacketType)
+	{
+	case COMMAND_SERVICE_OBJECT_PACKET_TYPE_CUSTOM_PROCESS:
+		if(!stream.ReadInt(waitTime))
+		{
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+			retOutStream.WriteInt(objIdx);
+			return;
+		}
+		break;
+	case COMMAND_SERVICE_OBJECT_PACKET_TYPE_RUN_COMMAND:
+		if(!stream.ReadInt(waitTime))
+		{
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+			retOutStream.WriteInt(objIdx);
+			return;
+		}
+		if(!GetString(stream,cmd))
+		{
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+			retOutStream.WriteInt(objIdx);
+			return;
+		}
+		break;
+	default:
+		break;
+	}
+
+	int serviceCount=(int)SERVICE_HANDLER_INSTANCE.GetNumberOfServices();
+	if(objIdx==-1)
+	{
+		for(int serviceTrav=0;serviceTrav<serviceCount;serviceTrav++)
+		{
+			switch(subPacketType)
+			{
+			case COMMAND_SERVICE_OBJECT_PACKET_TYPE_START:
+				SERVICE_HANDLER_INSTANCE.At(serviceTrav)->Start();			
+				break;
+			case COMMAND_SERVICE_OBJECT_PACKET_TYPE_END:
+				SERVICE_HANDLER_INSTANCE.At(serviceTrav)->SetIsUserStopped(true);
+				SERVICE_HANDLER_INSTANCE.At(serviceTrav)->Stop();
+				break;
+			case COMMAND_SERVICE_OBJECT_PACKET_TYPE_PAUSE:
+				SERVICE_HANDLER_INSTANCE.At(serviceTrav)->Pause();
+				break;
+			case COMMAND_SERVICE_OBJECT_PACKET_TYPE_CONTINUE:
+				SERVICE_HANDLER_INSTANCE.At(serviceTrav)->Continue();
+				break;
+			case COMMAND_SERVICE_OBJECT_PACKET_TYPE_BOUNCE:
+				SERVICE_HANDLER_INSTANCE.At(serviceTrav)->Stop();
+				SERVICE_HANDLER_INSTANCE.At(serviceTrav)->Start();
+				break;
+			case COMMAND_SERVICE_OBJECT_PACKET_TYPE_CUSTOM_PROCESS:
+				SERVICE_HANDLER_INSTANCE.At(serviceTrav)->CustomProcess(waitTime);
+				break;
+			case COMMAND_SERVICE_OBJECT_PACKET_TYPE_RUN_COMMAND:
+				SERVICE_HANDLER_INSTANCE.At(serviceTrav)->RunCommand(cmd,waitTime);
+				break;
+			}
+
+		}
 	}
 	else
 	{
-		commandServiceObject(subPacketType,stream,retOutStream);
+		if(objIdx>=0 && objIdx<serviceCount)
+		{
+			switch(subPacketType)
+			{
+			case COMMAND_SERVICE_OBJECT_PACKET_TYPE_START:
+				SERVICE_HANDLER_INSTANCE.At(objIdx)->Start();			
+				break;
+			case COMMAND_SERVICE_OBJECT_PACKET_TYPE_END:
+				SERVICE_HANDLER_INSTANCE.At(objIdx)->SetIsUserStopped(true);
+				SERVICE_HANDLER_INSTANCE.At(objIdx)->Stop();
+				break;
+			case COMMAND_SERVICE_OBJECT_PACKET_TYPE_PAUSE:
+				SERVICE_HANDLER_INSTANCE.At(objIdx)->Pause();
+				break;
+			case COMMAND_SERVICE_OBJECT_PACKET_TYPE_CONTINUE:
+				SERVICE_HANDLER_INSTANCE.At(objIdx)->Continue();
+				break;
+			case COMMAND_SERVICE_OBJECT_PACKET_TYPE_BOUNCE:
+				SERVICE_HANDLER_INSTANCE.At(objIdx)->Stop();
+				SERVICE_HANDLER_INSTANCE.At(objIdx)->Start();
+				break;
+			case COMMAND_SERVICE_OBJECT_PACKET_TYPE_CUSTOM_PROCESS:
+				SERVICE_HANDLER_INSTANCE.At(objIdx)->CustomProcess(waitTime);
+				break;
+			case COMMAND_SERVICE_OBJECT_PACKET_TYPE_RUN_COMMAND:
+				SERVICE_HANDLER_INSTANCE.At(objIdx)->RunCommand(cmd,waitTime);
+				break;
+			}
+		}
+		else
+		{
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_PROCESS_IDX_OUT_OF_RANCE);
+			retOutStream.WriteInt(objIdx);
+			return;
+		}
 	}
-	
+
+	retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+	retOutStream.WriteInt(objIdx);
+
 }
+void AdminServerProcessor::commandMainServiceObject(unsigned int subPacketType,Stream &stream,Stream &retOutStream)
+{
+	int waitTime=-1;
+	CString cmd=_T("");
+	switch(subPacketType)
+	{
+	case COMMAND_MAIN_SERVICE_PACKET_TYPE_CUSTOM_PROCESS:
+		if(!stream.ReadInt(waitTime))
+		{
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+			return;
+		}
+		SERVICE_MANAGER_INSTANCE.RunCustomProcess(waitTime);
+		break;
+	case COMMAND_MAIN_SERVICE_PACKET_TYPE_RUN_COMMAND:
+		if(!stream.ReadInt(waitTime))
+		{
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+			return;
+		}
+		if(!GetString(stream,cmd))
+		{
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+			return;
+		}
+		SERVICE_MANAGER_INSTANCE.RunCommand(cmd,waitTime);
+		break;
+	}
+
+	retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+}
+
 void AdminServerProcessor::getMainServiceInfo(unsigned int subPacketType,Stream &stream,Stream &retOutStream)
 {
 	unsigned int strLen=0;
@@ -288,6 +408,9 @@ void AdminServerProcessor::getMainServiceInfo(unsigned int subPacketType,Stream 
 	case MAIN_SERVICE_GET_PACKET_TYPE_CHECKSERVICEINTERVAL:
 		retOutStream.WriteUInt(SERVICE_PROPERTIES_INSTANCE.GetCheckServiceInterval());
 		break;
+	case MAIN_SERVICE_GET_PACKET_TYPE_CUSTOMPROCESS_COMMANDLINE:
+		retOutStream.WriteBytes(reinterpret_cast<const unsigned char*>(SERVICE_PROPERTIES_INSTANCE.GetCustomProcessCommandLine().GetString()),(SERVICE_PROPERTIES_INSTANCE.GetCustomProcessCommandLine().GetLength()+1)*sizeof(TCHAR));
+		break;
 
 	}
 }
@@ -295,12 +418,33 @@ void AdminServerProcessor::setMainServiceInfo(unsigned int subPacketType,Stream 
 {
 
 	unsigned int interval;
-	if(!stream.ReadUInt(interval))
+	CString retString;
+	
+
+
+	switch(subPacketType)
 	{
-		retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
-		return;
+	case MAIN_SERVICE_SET_PACKET_TYPE_CHECKPROCESSINTERVAL:
+	case MAIN_SERVICE_SET_PACKET_TYPE_CHECKSERVICESINTERVAL:
+		if(!stream.ReadUInt(interval))
+		{
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
+			return;
+		}
+		break;
+
+	case MAIN_SERVICE_SET_PACKET_TYPE_CUSTOMPROCESS_COMMANDLINE:
+		if(!GetString(stream,retString))
+		{
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+			return;
+		}	
+		break;
+	default:
+		break;
+
 	}
-	retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+
 	switch(subPacketType)
 	{
 	case MAIN_SERVICE_SET_PACKET_TYPE_CHECKPROCESSINTERVAL:
@@ -310,7 +454,12 @@ void AdminServerProcessor::setMainServiceInfo(unsigned int subPacketType,Stream 
 		SERVICE_PROPERTIES_INSTANCE.SetCheckServiceInterval(interval);
 		break;
 
+	case MAIN_SERVICE_SET_PACKET_TYPE_CUSTOMPROCESS_COMMANDLINE:
+		SERVICE_PROPERTIES_INSTANCE.SetCustomProcessCommandLine(retString);
+		break;
+
 	}
+	retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
 	
 }
 
@@ -339,6 +488,8 @@ void AdminServerProcessor::getProcessInfo(unsigned int subPacketType,Stream &str
 			retOutStream.WriteUInt(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetIsRestart());
 			retOutStream.WriteUInt(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetIsImpersonate());
 			retOutStream.WriteUInt(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetIsUserInterface());
+			retOutStream.WriteInt(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetPreProcessWaitTime());
+			retOutStream.WriteInt(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetPostProcessWaitTime());
 			retOutStream.WriteBytes(reinterpret_cast<const unsigned char*>(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetCommandLine().GetString()),(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetCommandLine().GetLength()+1)*sizeof(TCHAR));
 			retOutStream.WriteBytes(reinterpret_cast<const unsigned char*>(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetPreProcessCommandLine().GetString()),(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetPreProcessCommandLine().GetLength()+1)*sizeof(TCHAR));
 			retOutStream.WriteBytes(reinterpret_cast<const unsigned char*>(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetPostProcessCommandLine().GetString()),(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetPostProcessCommandLine().GetLength()+1)*sizeof(TCHAR));
@@ -364,6 +515,12 @@ void AdminServerProcessor::getProcessInfo(unsigned int subPacketType,Stream &str
 			break;
 		case PROCESS_GET_PACKET_TYPE_CUSTOMPROCESS_COMMANDLINE:
 			retOutStream.WriteBytes(reinterpret_cast<const unsigned char*>(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetCustomProcessCommandLine().GetString()),(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetCustomProcessCommandLine().GetLength()+1)*sizeof(TCHAR));
+			break;
+		case PROCESS_GET_PACKET_TYPE_PREPROCESS_WAIT_TIME:
+			retOutStream.WriteInt(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetPreProcessWaitTime());
+			break;
+		case PROCESS_GET_PACKET_TYPE_POSTPROCESS_WAIT_TIME:
+			retOutStream.WriteInt(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetPostProcessWaitTime());
 			break;
 		case PROCESS_GET_PACKET_TYPE_DOMAINNAME:
 			retOutStream.WriteBytes(reinterpret_cast<const unsigned char*>(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetDomainName().GetString()),(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetDomainName().GetLength()+1)*sizeof(TCHAR));
@@ -399,22 +556,13 @@ void AdminServerProcessor::getProcessInfo(unsigned int subPacketType,Stream &str
 	}
 }
 
-bool GetString(Stream &stream, CString &retString)
-{
-	unsigned short retChar;
-	retString=_T("");
-	bool status=false;
-	while((status=stream.ReadUShort(retChar)) && (TCHAR)retChar!=_T('\0'))
-	{
-		retString.AppendChar(static_cast<TCHAR>(retChar));
-	}
-	return status;
-}
+
 
 
 void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &stream,Stream &retOutStream)
 {
 	unsigned int procIdx;
+	int waitTime;
 	if(!stream.ReadUInt(procIdx))
 	{
 		retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
@@ -483,6 +631,38 @@ void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &str
 				return;
 			}	
 			break;
+
+
+		case PROCESS_SET_PACKET_TYPE_PREPROCESS_WAIT_TIME:
+			if(stream.ReadInt(waitTime))
+			{
+				PROCESS_HANDLER_INSTANCE.At(procIdx)->SetPreProcessWaitTime(waitTime);
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+				retOutStream.WriteInt(procIdx);
+			}
+			else
+			{
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+				retOutStream.WriteInt(procIdx);
+				return;
+			}
+			break;
+		case PROCESS_SET_PACKET_TYPE_POSTPROCESS_WAIT_TIME:
+			if(stream.ReadInt(waitTime))
+			{
+
+				PROCESS_HANDLER_INSTANCE.At(procIdx)->SetPostProcessWaitTime(waitTime);
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+				retOutStream.WriteInt(procIdx);
+			}
+			else
+			{
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+				retOutStream.WriteInt(procIdx);
+				return;
+			}
+			break;
+
 		case PROCESS_SET_PACKET_TYPE_DOMAINNAME:
 			if(GetString(stream,retString))
 			{
@@ -647,6 +827,27 @@ void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &str
 				retOutStream.WriteInt(procIdx);
 				return;
 			}	
+			if(stream.ReadInt(waitTime))
+			{
+				PROCESS_HANDLER_INSTANCE.At(procIdx)->SetPreProcessWaitTime(waitTime);
+			}
+			else
+			{
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+				retOutStream.WriteInt(procIdx);
+				return;
+			}
+			if(stream.ReadInt(waitTime))
+			{
+
+				PROCESS_HANDLER_INSTANCE.At(procIdx)->SetPostProcessWaitTime(waitTime);
+			}
+			else
+			{
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+				retOutStream.WriteInt(procIdx);
+				return;
+			}
 			if(GetString(stream,retString))
 			{
 				PROCESS_HANDLER_INSTANCE.At(procIdx)->SetDomainName(retString);
@@ -736,6 +937,7 @@ void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &str
 				retOutStream.WriteInt(procIdx);
 				return;
 			}
+
 			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
 			retOutStream.WriteInt(procIdx);
 			break;
@@ -751,194 +953,234 @@ void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &str
 
 void AdminServerProcessor::getServiceInfo(unsigned int subPacketType,Stream &stream,Stream &retOutStream)
 {
-	unsigned int procIdx;
-	if(!stream.ReadUInt(procIdx))
+	unsigned int serviceIdx;
+	if(!stream.ReadUInt(serviceIdx))
 	{
 		retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
 		return;
 	}
 
-	if(procIdx>=0 && procIdx<SERVICE_HANDLER_INSTANCE.GetNumberOfServices())
+	if(serviceIdx>=0 && serviceIdx<SERVICE_HANDLER_INSTANCE.GetNumberOfServices())
 	{
 		retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
-		retOutStream.WriteInt(procIdx);
+		retOutStream.WriteInt(serviceIdx);
 		switch(subPacketType)
 		{
 		case SERVICE_GET_PACKET_TYPE_ALL:
 
 			
-			retOutStream.WriteUInt(SERVICE_HANDLER_INSTANCE.At(procIdx)->GetStatus());
-			retOutStream.WriteUInt(SERVICE_HANDLER_INSTANCE.At(procIdx)->GetDelayStartTime());
-			retOutStream.WriteUInt(SERVICE_HANDLER_INSTANCE.At(procIdx)->GetDelayPauseEndTime());
-			retOutStream.WriteUInt(SERVICE_HANDLER_INSTANCE.At(procIdx)->GetIsRestart());
-			retOutStream.WriteUInt(SERVICE_HANDLER_INSTANCE.At(procIdx)->GetIsImpersonate());
-			retOutStream.WriteUInt(SERVICE_HANDLER_INSTANCE.At(procIdx)->GetIsUserInterface());
-			retOutStream.WriteBytes(reinterpret_cast<const unsigned char*>(SERVICE_HANDLER_INSTANCE.At(procIdx)->GetServiceName().GetString()),(SERVICE_HANDLER_INSTANCE.At(procIdx)->GetServiceName().GetLength()+1)*sizeof(TCHAR));
-			retOutStream.WriteBytes(reinterpret_cast<const unsigned char*>(SERVICE_HANDLER_INSTANCE.At(procIdx)->GetPreProcessCommandLine().GetString()),(SERVICE_HANDLER_INSTANCE.At(procIdx)->GetPreProcessCommandLine().GetLength()+1)*sizeof(TCHAR));
-			retOutStream.WriteBytes(reinterpret_cast<const unsigned char*>(SERVICE_HANDLER_INSTANCE.At(procIdx)->GetPostProcessCommandLine().GetString()),(SERVICE_HANDLER_INSTANCE.At(procIdx)->GetPostProcessCommandLine().GetLength()+1)*sizeof(TCHAR));
-			retOutStream.WriteBytes(reinterpret_cast<const unsigned char*>(SERVICE_HANDLER_INSTANCE.At(procIdx)->GetCustomProcessCommandLine().GetString()),(SERVICE_HANDLER_INSTANCE.At(procIdx)->GetCustomProcessCommandLine().GetLength()+1)*sizeof(TCHAR));
-			retOutStream.WriteBytes(reinterpret_cast<const unsigned char*>(SERVICE_HANDLER_INSTANCE.At(procIdx)->GetDomainName().GetString()),(SERVICE_HANDLER_INSTANCE.At(procIdx)->GetDomainName().GetLength()+1)*sizeof(TCHAR));
-			retOutStream.WriteBytes(reinterpret_cast<const unsigned char*>(SERVICE_HANDLER_INSTANCE.At(procIdx)->GetUserName().GetString()),(SERVICE_HANDLER_INSTANCE.At(procIdx)->GetUserName().GetLength()+1)*sizeof(TCHAR));
-			retOutStream.WriteBytes(reinterpret_cast<const unsigned char*>(SERVICE_HANDLER_INSTANCE.At(procIdx)->GetUserPassword().GetString()),(SERVICE_HANDLER_INSTANCE.At(procIdx)->GetUserPassword().GetLength()+1)*sizeof(TCHAR));
+			retOutStream.WriteUInt(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetStatus());
+			retOutStream.WriteUInt(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetDelayStartTime());
+			retOutStream.WriteUInt(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetDelayPauseEndTime());
+			retOutStream.WriteUInt(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetIsRestart());
+			retOutStream.WriteUInt(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetIsImpersonate());
+			retOutStream.WriteUInt(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetIsUserInterface());
+			retOutStream.WriteInt(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetPreProcessWaitTime());
+			retOutStream.WriteInt(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetPostProcessWaitTime());
+			retOutStream.WriteBytes(reinterpret_cast<const unsigned char*>(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetServiceName().GetString()),(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetServiceName().GetLength()+1)*sizeof(TCHAR));
+			retOutStream.WriteBytes(reinterpret_cast<const unsigned char*>(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetPreProcessCommandLine().GetString()),(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetPreProcessCommandLine().GetLength()+1)*sizeof(TCHAR));
+			retOutStream.WriteBytes(reinterpret_cast<const unsigned char*>(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetPostProcessCommandLine().GetString()),(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetPostProcessCommandLine().GetLength()+1)*sizeof(TCHAR));
+			retOutStream.WriteBytes(reinterpret_cast<const unsigned char*>(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetCustomProcessCommandLine().GetString()),(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetCustomProcessCommandLine().GetLength()+1)*sizeof(TCHAR));
+			retOutStream.WriteBytes(reinterpret_cast<const unsigned char*>(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetDomainName().GetString()),(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetDomainName().GetLength()+1)*sizeof(TCHAR));
+			retOutStream.WriteBytes(reinterpret_cast<const unsigned char*>(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetUserName().GetString()),(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetUserName().GetLength()+1)*sizeof(TCHAR));
+			retOutStream.WriteBytes(reinterpret_cast<const unsigned char*>(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetUserPassword().GetString()),(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetUserPassword().GetLength()+1)*sizeof(TCHAR));
 			break;
 		case SERVICE_GET_PACKET_TYPE_STATUS:
-			retOutStream.WriteUInt(SERVICE_HANDLER_INSTANCE.At(procIdx)->GetStatus());
+			retOutStream.WriteUInt(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetStatus());
 			break;
 		case SERVICE_GET_PACKET_TYPE_SERVICENAME:
-			retOutStream.WriteBytes(reinterpret_cast<const unsigned char*>(SERVICE_HANDLER_INSTANCE.At(procIdx)->GetServiceName().GetString()),(SERVICE_HANDLER_INSTANCE.At(procIdx)->GetServiceName().GetLength()+1)*sizeof(TCHAR));
+			retOutStream.WriteBytes(reinterpret_cast<const unsigned char*>(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetServiceName().GetString()),(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetServiceName().GetLength()+1)*sizeof(TCHAR));
 			break;
 		case SERVICE_GET_PACKET_TYPE_PREPROCESS_COMMANDLINE:
-			retOutStream.WriteBytes(reinterpret_cast<const unsigned char*>(SERVICE_HANDLER_INSTANCE.At(procIdx)->GetPreProcessCommandLine().GetString()),(SERVICE_HANDLER_INSTANCE.At(procIdx)->GetPreProcessCommandLine().GetLength()+1)*sizeof(TCHAR));
+			retOutStream.WriteBytes(reinterpret_cast<const unsigned char*>(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetPreProcessCommandLine().GetString()),(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetPreProcessCommandLine().GetLength()+1)*sizeof(TCHAR));
 			break;
 		case SERVICE_GET_PACKET_TYPE_POSTPROCESS_COMMANDLINE:
-			retOutStream.WriteBytes(reinterpret_cast<const unsigned char*>(SERVICE_HANDLER_INSTANCE.At(procIdx)->GetPostProcessCommandLine().GetString()),(SERVICE_HANDLER_INSTANCE.At(procIdx)->GetPostProcessCommandLine().GetLength()+1)*sizeof(TCHAR));
+			retOutStream.WriteBytes(reinterpret_cast<const unsigned char*>(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetPostProcessCommandLine().GetString()),(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetPostProcessCommandLine().GetLength()+1)*sizeof(TCHAR));
 			break;
 		case SERVICE_GET_PACKET_TYPE_CUSTOMPROCESS_COMMANDLINE:
-			retOutStream.WriteBytes(reinterpret_cast<const unsigned char*>(SERVICE_HANDLER_INSTANCE.At(procIdx)->GetCustomProcessCommandLine().GetString()),(SERVICE_HANDLER_INSTANCE.At(procIdx)->GetCustomProcessCommandLine().GetLength()+1)*sizeof(TCHAR));
+			retOutStream.WriteBytes(reinterpret_cast<const unsigned char*>(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetCustomProcessCommandLine().GetString()),(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetCustomProcessCommandLine().GetLength()+1)*sizeof(TCHAR));
 			break;
+
+		case SERVICE_GET_PACKET_TYPE_PREPROCESS_WAIT_TIME:
+			retOutStream.WriteInt(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetPreProcessWaitTime());
+			break;
+		case SERVICE_GET_PACKET_TYPE_POSTPROCESS_WAIT_TIME:
+			retOutStream.WriteInt(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetPostProcessWaitTime());
+			break;
+
 		case SERVICE_GET_PACKET_TYPE_DOMAINNAME:
-			retOutStream.WriteBytes(reinterpret_cast<const unsigned char*>(SERVICE_HANDLER_INSTANCE.At(procIdx)->GetDomainName().GetString()),(SERVICE_HANDLER_INSTANCE.At(procIdx)->GetDomainName().GetLength()+1)*sizeof(TCHAR));
+			retOutStream.WriteBytes(reinterpret_cast<const unsigned char*>(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetDomainName().GetString()),(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetDomainName().GetLength()+1)*sizeof(TCHAR));
 			break;
 		case SERVICE_GET_PACKET_TYPE_USERNAME:
-			retOutStream.WriteBytes(reinterpret_cast<const unsigned char*>(SERVICE_HANDLER_INSTANCE.At(procIdx)->GetUserName().GetString()),(SERVICE_HANDLER_INSTANCE.At(procIdx)->GetUserName().GetLength()+1)*sizeof(TCHAR));
+			retOutStream.WriteBytes(reinterpret_cast<const unsigned char*>(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetUserName().GetString()),(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetUserName().GetLength()+1)*sizeof(TCHAR));
 			break;
 		case SERVICE_GET_PACKET_TYPE_USERPASSWORD:
-			retOutStream.WriteBytes(reinterpret_cast<const unsigned char*>(SERVICE_HANDLER_INSTANCE.At(procIdx)->GetUserPassword().GetString()),(SERVICE_HANDLER_INSTANCE.At(procIdx)->GetUserPassword().GetLength()+1)*sizeof(TCHAR));
+			retOutStream.WriteBytes(reinterpret_cast<const unsigned char*>(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetUserPassword().GetString()),(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetUserPassword().GetLength()+1)*sizeof(TCHAR));
 			break;
 		case SERVICE_GET_PACKET_TYPE_DELAY_START_TIME:
-			retOutStream.WriteUInt(SERVICE_HANDLER_INSTANCE.At(procIdx)->GetDelayStartTime());
+			retOutStream.WriteUInt(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetDelayStartTime());
 			break;
 		case SERVICE_GET_PACKET_TYPE_DELAY_PAUSE_END_TIME:
-			retOutStream.WriteUInt(SERVICE_HANDLER_INSTANCE.At(procIdx)->GetDelayPauseEndTime());
+			retOutStream.WriteUInt(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetDelayPauseEndTime());
 			break;
 		case SERVICE_GET_PACKET_TYPE_IS_SERVICE_RESTART:
-			retOutStream.WriteUInt(SERVICE_HANDLER_INSTANCE.At(procIdx)->GetIsRestart());
+			retOutStream.WriteUInt(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetIsRestart());
 			break;
 		case SERVICE_GET_PACKET_TYPE_IS_IMPERSONATE:
-			retOutStream.WriteUInt(SERVICE_HANDLER_INSTANCE.At(procIdx)->GetIsImpersonate());
+			retOutStream.WriteUInt(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetIsImpersonate());
 			break;
 		case SERVICE_GET_PACKET_TYPE_IS_USER_INTERFACE:
-			retOutStream.WriteUInt(SERVICE_HANDLER_INSTANCE.At(procIdx)->GetIsUserInterface());
+			retOutStream.WriteUInt(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetIsUserInterface());
 			break;
 		}
 	}
 	else
 	{
 		retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_PROCESS_IDX_OUT_OF_RANCE);
-		retOutStream.WriteInt(procIdx);
+		retOutStream.WriteInt(serviceIdx);
 		return;
 	}
 }
 void AdminServerProcessor::setServiceInfo(unsigned int subPacketType,Stream &stream,Stream &retOutStream)
 {
-	unsigned int procIdx;
-	if(!stream.ReadUInt(procIdx))
+	unsigned int serviceIdx;
+	if(!stream.ReadUInt(serviceIdx))
 	{
 		retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
 		return;
 	}
 
-	if(procIdx>=0 && procIdx<SERVICE_HANDLER_INSTANCE.GetNumberOfServices())
+	if(serviceIdx>=0 && serviceIdx<SERVICE_HANDLER_INSTANCE.GetNumberOfServices())
 	{
 		CString retString;
 		unsigned int val;
+		int waitTime;
 		switch(subPacketType)
 		{
 		case SERVICE_SET_PACKET_TYPE_SERVICENAME:
 			if(GetString(stream,retString))
 			{
-				SERVICE_HANDLER_INSTANCE.At(procIdx)->SetServiceName(retString);
+				SERVICE_HANDLER_INSTANCE.At(serviceIdx)->SetServiceName(retString);
 				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
-				retOutStream.WriteInt(procIdx);
+				retOutStream.WriteInt(serviceIdx);
 			}
 			else
 			{
 				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
-				retOutStream.WriteInt(procIdx);
+				retOutStream.WriteInt(serviceIdx);
 			}
 
 			break;
 		case SERVICE_SET_PACKET_TYPE_PREPROCESS_COMMANDLINE:
 			if(GetString(stream,retString))
 			{
-				SERVICE_HANDLER_INSTANCE.At(procIdx)->SetPreProcessCommandLine(retString);
+				SERVICE_HANDLER_INSTANCE.At(serviceIdx)->SetPreProcessCommandLine(retString);
 				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
-				retOutStream.WriteInt(procIdx);
+				retOutStream.WriteInt(serviceIdx);
 			}
 			else
 			{
 				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
-				retOutStream.WriteInt(procIdx);
+				retOutStream.WriteInt(serviceIdx);
 				return;
 			}
 			break;
 		case SERVICE_SET_PACKET_TYPE_POSTPROCESS_COMMANDLINE:
 			if(GetString(stream,retString))
 			{
-				SERVICE_HANDLER_INSTANCE.At(procIdx)->SetPostProcessCommandLine(retString);
+				SERVICE_HANDLER_INSTANCE.At(serviceIdx)->SetPostProcessCommandLine(retString);
 				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
-				retOutStream.WriteInt(procIdx);
+				retOutStream.WriteInt(serviceIdx);
 			}
 			else
 			{
 				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
-				retOutStream.WriteInt(procIdx);
+				retOutStream.WriteInt(serviceIdx);
 				return;
 			}
 			break;
 		case SERVICE_SET_PACKET_TYPE_CUSTOMPROCESS_COMMANDLINE:
 			if(GetString(stream,retString))
 			{
-				SERVICE_HANDLER_INSTANCE.At(procIdx)->SetCustomProcessCommandLine(retString);
+				SERVICE_HANDLER_INSTANCE.At(serviceIdx)->SetCustomProcessCommandLine(retString);
 				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
-				retOutStream.WriteInt(procIdx);
+				retOutStream.WriteInt(serviceIdx);
 			}
 			else
 			{
 				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
-				retOutStream.WriteInt(procIdx);
+				retOutStream.WriteInt(serviceIdx);
 				return;
 			}	
 			break;
-		case SERVICE_SET_PACKET_TYPE_DOMAINNAME:
-			if(GetString(stream,retString))
+
+		case SERVICE_SET_PACKET_TYPE_PREPROCESS_WAIT_TIME:
+			if(stream.ReadInt(waitTime))
 			{
-				SERVICE_HANDLER_INSTANCE.At(procIdx)->SetDomainName(retString);
+				SERVICE_HANDLER_INSTANCE.At(serviceIdx)->SetPreProcessWaitTime(waitTime);
 				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
-				retOutStream.WriteInt(procIdx);
+				retOutStream.WriteInt(serviceIdx);
 			}
 			else
 			{
 				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
-				retOutStream.WriteInt(procIdx);
+				retOutStream.WriteInt(serviceIdx);
+				return;
+			}
+			break;
+		case SERVICE_SET_PACKET_TYPE_POSTPROCESS_WAIT_TIME:
+			if(stream.ReadInt(waitTime))
+			{
+				SERVICE_HANDLER_INSTANCE.At(serviceIdx)->SetPostProcessWaitTime(waitTime);
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+				retOutStream.WriteInt(serviceIdx);
+			}
+			else
+			{
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+				retOutStream.WriteInt(serviceIdx);
+				return;
+			}
+			break;
+	case SERVICE_SET_PACKET_TYPE_DOMAINNAME:
+			if(GetString(stream,retString))
+			{
+				SERVICE_HANDLER_INSTANCE.At(serviceIdx)->SetDomainName(retString);
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+				retOutStream.WriteInt(serviceIdx);
+			}
+			else
+			{
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+				retOutStream.WriteInt(serviceIdx);
 				return;
 			}
 			break;
 		case SERVICE_SET_PACKET_TYPE_USERNAME:
 			if(GetString(stream,retString))
 			{
-				SERVICE_HANDLER_INSTANCE.At(procIdx)->SetUserName(retString);
+				SERVICE_HANDLER_INSTANCE.At(serviceIdx)->SetUserName(retString);
 				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
-				retOutStream.WriteInt(procIdx);
+				retOutStream.WriteInt(serviceIdx);
 			}
 			else
 			{
 				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
-				retOutStream.WriteInt(procIdx);
+				retOutStream.WriteInt(serviceIdx);
 				return;
 			}
 			break;
 		case SERVICE_SET_PACKET_TYPE_USERPASSWORD:
 			if(GetString(stream,retString))
 			{
-				SERVICE_HANDLER_INSTANCE.At(procIdx)->SetUserPassword(retString);
+				SERVICE_HANDLER_INSTANCE.At(serviceIdx)->SetUserPassword(retString);
 				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
-				retOutStream.WriteInt(procIdx);
+				retOutStream.WriteInt(serviceIdx);
 			}
 			else
 			{
 				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
-				retOutStream.WriteInt(procIdx);
+				retOutStream.WriteInt(serviceIdx);
 				return;
 			}	
 			break;
@@ -947,28 +1189,28 @@ void AdminServerProcessor::setServiceInfo(unsigned int subPacketType,Stream &str
 		case SERVICE_SET_PACKET_TYPE_DELAY_START_TIME:
 			if(stream.ReadUInt(val))
 			{
-				SERVICE_HANDLER_INSTANCE.At(procIdx)->SetDelayStartTime(val);
+				SERVICE_HANDLER_INSTANCE.At(serviceIdx)->SetDelayStartTime(val);
 				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
-				retOutStream.WriteInt(procIdx);
+				retOutStream.WriteInt(serviceIdx);
 			}
 			else
 			{
 				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
-				retOutStream.WriteInt(procIdx);
+				retOutStream.WriteInt(serviceIdx);
 				return;
 			}
 			break;
 		case SERVICE_SET_PACKET_TYPE_DELAY_PAUSE_END_TIME:
 			if(stream.ReadUInt(val))
 			{
-				SERVICE_HANDLER_INSTANCE.At(procIdx)->SetDelayPauseEndTime(val);
+				SERVICE_HANDLER_INSTANCE.At(serviceIdx)->SetDelayPauseEndTime(val);
 				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
-				retOutStream.WriteInt(procIdx);
+				retOutStream.WriteInt(serviceIdx);
 			}
 			else
 			{
 				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
-				retOutStream.WriteInt(procIdx);
+				retOutStream.WriteInt(serviceIdx);
 				return;
 			}
 			break;
@@ -976,16 +1218,16 @@ void AdminServerProcessor::setServiceInfo(unsigned int subPacketType,Stream &str
 			if(stream.ReadUInt(val))
 			{
 				if(val)
-					SERVICE_HANDLER_INSTANCE.At(procIdx)->SetIsRestart(true);
+					SERVICE_HANDLER_INSTANCE.At(serviceIdx)->SetIsRestart(true);
 				else
-					SERVICE_HANDLER_INSTANCE.At(procIdx)->SetIsRestart(false);
+					SERVICE_HANDLER_INSTANCE.At(serviceIdx)->SetIsRestart(false);
 				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
-				retOutStream.WriteInt(procIdx);
+				retOutStream.WriteInt(serviceIdx);
 			}
 			else
 			{
 				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
-				retOutStream.WriteInt(procIdx);
+				retOutStream.WriteInt(serviceIdx);
 				return;
 			}
 			break;
@@ -993,16 +1235,16 @@ void AdminServerProcessor::setServiceInfo(unsigned int subPacketType,Stream &str
 			if(stream.ReadUInt(val))
 			{
 				if(val)
-					SERVICE_HANDLER_INSTANCE.At(procIdx)->SetIsImpersonate(true);
+					SERVICE_HANDLER_INSTANCE.At(serviceIdx)->SetIsImpersonate(true);
 				else
-					SERVICE_HANDLER_INSTANCE.At(procIdx)->SetIsImpersonate(false);
+					SERVICE_HANDLER_INSTANCE.At(serviceIdx)->SetIsImpersonate(false);
 				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
-				retOutStream.WriteInt(procIdx);
+				retOutStream.WriteInt(serviceIdx);
 			}
 			else
 			{
 				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
-				retOutStream.WriteInt(procIdx);
+				retOutStream.WriteInt(serviceIdx);
 				return;
 			}
 			break;
@@ -1010,191 +1252,183 @@ void AdminServerProcessor::setServiceInfo(unsigned int subPacketType,Stream &str
 			if(stream.ReadUInt(val))
 			{
 				if(val)
-					SERVICE_HANDLER_INSTANCE.At(procIdx)->SetIsUserInterface(true);
+					SERVICE_HANDLER_INSTANCE.At(serviceIdx)->SetIsUserInterface(true);
 				else
-					SERVICE_HANDLER_INSTANCE.At(procIdx)->SetIsUserInterface(false);
+					SERVICE_HANDLER_INSTANCE.At(serviceIdx)->SetIsUserInterface(false);
 				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
-				retOutStream.WriteInt(procIdx);
+				retOutStream.WriteInt(serviceIdx);
 			}
 			else
 			{
 				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
-				retOutStream.WriteInt(procIdx);
+				retOutStream.WriteInt(serviceIdx);
 				return;
 			}
 			break;
 		case SERVICE_SET_PACKET_TYPE_ALL:
 			if(GetString(stream,retString))
 			{
-				SERVICE_HANDLER_INSTANCE.At(procIdx)->SetServiceName(retString);
+				SERVICE_HANDLER_INSTANCE.At(serviceIdx)->SetServiceName(retString);
 			}
 			else
 			{
 				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
-				retOutStream.WriteInt(procIdx);
+				retOutStream.WriteInt(serviceIdx);
 				return;
 			}
 			if(GetString(stream,retString))
 			{
-				SERVICE_HANDLER_INSTANCE.At(procIdx)->SetPreProcessCommandLine(retString);
+				SERVICE_HANDLER_INSTANCE.At(serviceIdx)->SetPreProcessCommandLine(retString);
 			}
 			else
 			{
 				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
-				retOutStream.WriteInt(procIdx);
+				retOutStream.WriteInt(serviceIdx);
 				return;
 			}
 			if(GetString(stream,retString))
 			{
-				SERVICE_HANDLER_INSTANCE.At(procIdx)->SetPostProcessCommandLine(retString);
+				SERVICE_HANDLER_INSTANCE.At(serviceIdx)->SetPostProcessCommandLine(retString);
 			}
 			else
 			{
 				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
-				retOutStream.WriteInt(procIdx);
+				retOutStream.WriteInt(serviceIdx);
 				return;
 			}
 			if(GetString(stream,retString))
 			{
-				SERVICE_HANDLER_INSTANCE.At(procIdx)->SetCustomProcessCommandLine(retString);
+				SERVICE_HANDLER_INSTANCE.At(serviceIdx)->SetCustomProcessCommandLine(retString);
 			}
 			else
 			{
 				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
-				retOutStream.WriteInt(procIdx);
+				retOutStream.WriteInt(serviceIdx);
+				return;
+			}	
+
+			if(stream.ReadInt(waitTime))
+			{
+				SERVICE_HANDLER_INSTANCE.At(serviceIdx)->SetPreProcessWaitTime(waitTime);
+			}
+			else
+			{
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+				retOutStream.WriteInt(serviceIdx);
+				return;
+			}
+			if(stream.ReadInt(waitTime))
+			{
+				SERVICE_HANDLER_INSTANCE.At(serviceIdx)->SetPostProcessWaitTime(waitTime);
+			}
+			else
+			{
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+				retOutStream.WriteInt(serviceIdx);
+				return;
+			}
+
+			if(GetString(stream,retString))
+			{
+				SERVICE_HANDLER_INSTANCE.At(serviceIdx)->SetDomainName(retString);
+			}
+			else
+			{
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+				retOutStream.WriteInt(serviceIdx);
 				return;
 			}	
 			if(GetString(stream,retString))
 			{
-				SERVICE_HANDLER_INSTANCE.At(procIdx)->SetDomainName(retString);
+				SERVICE_HANDLER_INSTANCE.At(serviceIdx)->SetUserName(retString);
 			}
 			else
 			{
 				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
-				retOutStream.WriteInt(procIdx);
-				return;
-			}	
-			if(GetString(stream,retString))
-			{
-				SERVICE_HANDLER_INSTANCE.At(procIdx)->SetUserName(retString);
-			}
-			else
-			{
-				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
-				retOutStream.WriteInt(procIdx);
+				retOutStream.WriteInt(serviceIdx);
 				return;
 			}		
 			if(GetString(stream,retString))
 			{
-				SERVICE_HANDLER_INSTANCE.At(procIdx)->SetUserPassword(retString);
+				SERVICE_HANDLER_INSTANCE.At(serviceIdx)->SetUserPassword(retString);
 			}
 			else
 			{
 				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
-				retOutStream.WriteInt(procIdx);
+				retOutStream.WriteInt(serviceIdx);
 				return;
 			}	
 			if(stream.ReadUInt(val))
 			{
-				SERVICE_HANDLER_INSTANCE.At(procIdx)->SetDelayStartTime(val);
+				SERVICE_HANDLER_INSTANCE.At(serviceIdx)->SetDelayStartTime(val);
 			}
 			else
 			{
 				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
-				retOutStream.WriteInt(procIdx);
+				retOutStream.WriteInt(serviceIdx);
 				return;
 			}
 			if(stream.ReadUInt(val))
 			{
-				SERVICE_HANDLER_INSTANCE.At(procIdx)->SetDelayPauseEndTime(val);
+				SERVICE_HANDLER_INSTANCE.At(serviceIdx)->SetDelayPauseEndTime(val);
 			}
 			else
 			{
 				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
-				retOutStream.WriteInt(procIdx);
-				return;
-			}
-			if(stream.ReadUInt(val))
-			{
-				if(val)
-					SERVICE_HANDLER_INSTANCE.At(procIdx)->SetIsRestart(true);
-				else
-					SERVICE_HANDLER_INSTANCE.At(procIdx)->SetIsRestart(false);
-			}
-			else
-			{
-				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
-				retOutStream.WriteInt(procIdx);
+				retOutStream.WriteInt(serviceIdx);
 				return;
 			}
 			if(stream.ReadUInt(val))
 			{
 				if(val)
-					SERVICE_HANDLER_INSTANCE.At(procIdx)->SetIsImpersonate(true);
+					SERVICE_HANDLER_INSTANCE.At(serviceIdx)->SetIsRestart(true);
 				else
-					SERVICE_HANDLER_INSTANCE.At(procIdx)->SetIsImpersonate(false);
+					SERVICE_HANDLER_INSTANCE.At(serviceIdx)->SetIsRestart(false);
 			}
 			else
 			{
 				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
-				retOutStream.WriteInt(procIdx);
+				retOutStream.WriteInt(serviceIdx);
 				return;
 			}
 			if(stream.ReadUInt(val))
 			{
 				if(val)
-					SERVICE_HANDLER_INSTANCE.At(procIdx)->SetIsUserInterface(true);
+					SERVICE_HANDLER_INSTANCE.At(serviceIdx)->SetIsImpersonate(true);
 				else
-					SERVICE_HANDLER_INSTANCE.At(procIdx)->SetIsUserInterface(false);
+					SERVICE_HANDLER_INSTANCE.At(serviceIdx)->SetIsImpersonate(false);
 			}
 			else
 			{
 				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
-				retOutStream.WriteInt(procIdx);
+				retOutStream.WriteInt(serviceIdx);
+				return;
+			}
+			if(stream.ReadUInt(val))
+			{
+				if(val)
+					SERVICE_HANDLER_INSTANCE.At(serviceIdx)->SetIsUserInterface(true);
+				else
+					SERVICE_HANDLER_INSTANCE.At(serviceIdx)->SetIsUserInterface(false);
+			}
+			else
+			{
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+				retOutStream.WriteInt(serviceIdx);
 				return;
 			}
 			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
-			retOutStream.WriteInt(procIdx);
+			retOutStream.WriteInt(serviceIdx);
 			break;
 		}
 	}
 	else
 	{
 		retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_PROCESS_IDX_OUT_OF_RANCE);
-		retOutStream.WriteInt(procIdx);
+		retOutStream.WriteInt(serviceIdx);
 		return;
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 void AdminServerProcessor::commandService(unsigned int subPacketType,Stream &stream,Stream &retOutStream)

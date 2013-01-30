@@ -74,18 +74,13 @@ public:
 	void Process(AdminServerPacketParser *curClient,const Packet *packet);
 
 private:
-	/*!
-	Process the Command type packet and save the result to the retOutStream.
-	@param[in] subPacketType the command type to process
-	@param[in] stream the packet stream to process
-	@param[out] retOutStream the stream to save the result status
-	*/
-	void commandProcess(unsigned int subPacketType,Stream &stream,Stream &retOutStream);
 
 	/*!
 	Actually process the Process Command type packet and save the result to the retOutStream.
 	@param[in] subPacketType the command type to process
-	@param[in] stream the packet stream to process
+	@param[in] objIdx the index of the process to command
+	@param[in] waitTime the waitTime for CustomProcess/RunCommand
+	@param[in] cmd the command for RunCommand
 	@param[out] retOutStream the stream to save the result status
 	*/
 	void commandProcessObject(unsigned int subPacketType,Stream &stream,Stream &retOutStream);
@@ -93,10 +88,21 @@ private:
 	/*!
 	Actually process the Service Command type packet and save the result to the retOutStream.
 	@param[in] subPacketType the command type to process
-	@param[in] stream the packet stream to process
+	@param[in] objIdx the index of the process to command
+	@param[in] waitTime the waitTime for CustomProcess/RunCommand
+	@param[in] cmd the command for RunCommand
 	@param[out] retOutStream the stream to save the result status
 	*/
 	void commandServiceObject(unsigned int subPacketType,Stream &stream,Stream &retOutStream);
+
+	/*!
+	Process the Main Service Command type packet and save the result to the retOutStream.
+	@param[in] subPacketType the command type to process
+	@param[in] stream the packet stream to process
+	@param[out] retOutStream the stream to save the result status
+	*/
+	void commandMainServiceObject(unsigned int subPacketType,Stream &stream,Stream &retOutStream);
+
 	/*!
 	Process the GetServiceInfo type packet and save the result to the retOutStream.
 	@param[in] subPacketType the ServiceInfo type to process

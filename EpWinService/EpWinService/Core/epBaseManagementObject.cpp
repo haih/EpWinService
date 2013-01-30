@@ -22,30 +22,50 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 void BaseManagementObject::ParseCommand(CString cmd,  vector<CString>& retCmdList)
 {
 	retCmdList.clear();
-	if(cmd.Find(_T(';'))==-1)
+	cmd.Trim();
+
+	CString parsedCommand=_T("");
+	while(cmd.GetLength())
 	{
-		if(cmd.GetLength())
-			retCmdList.push_back(cmd);
-	}
-	else
-	{
-		int index=cmd.Find(_T(';'));
-		CString tmpCommand=_T("");
-		while(index>=0)
+		bool isOpen=false;
+		if(cmd.GetAt(0)==_T('\"'))
 		{
-			for(int strTrav=0;strTrav<index;strTrav++)
-			{
-				tmpCommand.AppendChar(cmd.GetAt(strTrav));
-			}
-			tmpCommand=tmpCommand.Trim();
-			cmd.Delete(0,index+1);
-			if(tmpCommand.GetLength()>0)
-				retCmdList.push_back(tmpCommand);
+			isOpen=true;
 		}
-		cmd=cmd.Trim();
-		if(cmd.GetLength()>0)
-			retCmdList.push_back(cmd);
+		int stringTrav=1;
+		for(;stringTrav<cmd.GetLength();stringTrav++)	
+		{
+			if(isOpen)
+			{
+				if((cmd.GetAt(stringTrav)==_T('\'')&& stringTrav+1==cmd.GetLength()))
+				{
+					stringTrav=stringTrav+1;
+					break;
+				}
+				if(cmd.GetAt(stringTrav)==_T('\'')&& stringTrav+1<cmd.GetLength()&&cmd.GetAt(stringTrav+1)==_T(';'))
+				{
+					stringTrav=stringTrav+2;
+					break;
+				}
+				parsedCommand.AppendChar(cmd.GetAt(stringTrav));
+			}
+			else
+			{
+				if(cmd.GetAt(stringTrav)==_T(';'))
+				{
+					stringTrav=stringTrav+1;
+					break;
+				}
+				parsedCommand.AppendChar(cmd.GetAt(stringTrav));
+			}
+		}
+		cmd.Delete(0,stringTrav);
+		parsedCommand.Trim();
+		if(parsedCommand.GetLength())
+			retCmdList.push_back(parsedCommand);
+		cmd.Trim();
 	}
+	
 
 }
 
@@ -92,6 +112,9 @@ BaseManagementObject::BaseManagementObject(ManagementObjectType objType,unsigned
 	m_customProcessCommandLine.Trim();
 	BaseManagementObject::ParseCommand(m_customProcessCommandLine,m_customProcessCommandLineList);
 
+	m_preProcessWaitTime=GetPrivateProfileInt(m_objectString.GetString(),_T("PreProcessWaitTime"),-1,m_iniFileName.GetString());
+	m_postProcessWaitTime=GetPrivateProfileInt(m_objectString.GetString(),_T("PostProcessWaitTime"),-1,m_iniFileName.GetString());
+	
 	memset(textBuffer,0,sizeof(TCHAR)*MAX_PATH);
 	GetPrivateProfileString(m_objectString.GetString(),_T("Impersonate"),_T("N"),textBuffer,MAX_PATH,m_iniFileName.GetString());
 	if(textBuffer[0]=='y'||textBuffer[0]=='Y'||textBuffer[0]=='1')
@@ -152,7 +175,7 @@ void BaseManagementObject::preProcess()
 			// create the process
 			if(CreateProcess(NULL, const_cast<wchar_t*>(m_preProcessCommandLineList.at(listTrav).GetString()),NULL,NULL,FALSE,NORMAL_PRIORITY_CLASS, NULL,NULL,&startUpInfo,&pProcInfo))
 			{
-				WaitForSingleObject(pProcInfo.hProcess,INFINITE);
+				WaitForSingleObject(pProcInfo.hProcess,(DWORD)m_preProcessWaitTime);
 				continue;
 			}
 			else
@@ -172,7 +195,7 @@ void BaseManagementObject::preProcess()
 			{
 				if(CreateProcessAsUser(hToken,NULL,const_cast<wchar_t*>(m_preProcessCommandLineList.at(listTrav).GetString()),NULL,NULL,TRUE,NORMAL_PRIORITY_CLASS,NULL,NULL,&startUpInfo,&pProcInfo))
 				{
-					WaitForSingleObject(pProcInfo.hProcess,INFINITE);
+					WaitForSingleObject(pProcInfo.hProcess,(DWORD)m_preProcessWaitTime);
 					continue;
 				}
 				long nError = GetLastError();
@@ -211,7 +234,7 @@ void BaseManagementObject::postProcess()
 			// create the process
 			if(CreateProcess(NULL, const_cast<wchar_t*>(m_postProcessCommandLineList.at(listTrav).GetString()),NULL,NULL,FALSE,NORMAL_PRIORITY_CLASS, NULL,NULL,&startUpInfo,&pProcInfo))
 			{
-				WaitForSingleObject(pProcInfo.hProcess,INFINITE);
+				WaitForSingleObject(pProcInfo.hProcess,(DWORD)m_postProcessWaitTime);
 				continue;
 			}
 			else
@@ -231,7 +254,7 @@ void BaseManagementObject::postProcess()
 			{
 				if(CreateProcessAsUser(hToken,NULL,const_cast<wchar_t*>(m_postProcessCommandLineList.at(listTrav).GetString()),NULL,NULL,TRUE,NORMAL_PRIORITY_CLASS,NULL,NULL,&startUpInfo,&pProcInfo))
 				{
-					WaitForSingleObject(pProcInfo.hProcess,INFINITE);
+					WaitForSingleObject(pProcInfo.hProcess,(DWORD)m_postProcessWaitTime);
 					continue;
 				}
 				long nError = GetLastError();
@@ -251,7 +274,7 @@ void BaseManagementObject::postProcess()
 }
 
 
-void BaseManagementObject::CustomProcess()
+void BaseManagementObject::CustomProcess(int waitTimeInMilliSec)
 {
 	LockObj lock(&m_lock);
 	CString cmd=_T("");
@@ -276,7 +299,7 @@ void BaseManagementObject::CustomProcess()
 			// create the process
 			if(CreateProcess(NULL, const_cast<wchar_t*>( cmd.GetString()),NULL,NULL,FALSE,NORMAL_PRIORITY_CLASS, NULL,NULL,&startUpInfo,&pProcInfo))
 			{
-				WaitForSingleObject(pProcInfo.hProcess,INFINITE);
+				WaitForSingleObject(pProcInfo.hProcess,(DWORD)waitTimeInMilliSec);
 				continue;
 			}
 			else
@@ -296,7 +319,7 @@ void BaseManagementObject::CustomProcess()
 			{
 				if(CreateProcessAsUser(hToken,NULL,const_cast<wchar_t*>(cmd.GetString()),NULL,NULL,TRUE,NORMAL_PRIORITY_CLASS,NULL,NULL,&startUpInfo,&pProcInfo))
 				{
-					WaitForSingleObject(pProcInfo.hProcess,INFINITE);
+					WaitForSingleObject(pProcInfo.hProcess,(DWORD)waitTimeInMilliSec);
 					continue;
 				}
 				long nError = GetLastError();
@@ -315,7 +338,72 @@ void BaseManagementObject::CustomProcess()
 
 
 }
+void BaseManagementObject::RunCommand(CString command, int waitTimeInMilliSec)
+{
+	LockObj lock(&m_lock);
 
+	vector<CString> cmdList;
+	BaseManagementObject::ParseCommand(command,cmdList);
+
+	CString cmd=_T("");
+
+	for(int listTrav=0;listTrav<cmdList.size();listTrav++)
+	{
+		cmd=cmdList.at(listTrav);
+
+		// start a process with given index
+		STARTUPINFO startUpInfo = { sizeof(STARTUPINFO),NULL,_T(""),NULL,0,0,0,0,0,0,0,STARTF_USESHOWWINDOW,0,0,NULL,0,0,0};  
+		PROCESS_INFORMATION	pProcInfo;
+		if(m_isUserInterface)
+			startUpInfo.wShowWindow = SW_SHOW;
+		else
+			startUpInfo.wShowWindow = SW_HIDE;
+		startUpInfo.lpDesktop = NULL;
+
+		// set the correct desktop for the process to be started
+		if(m_isImpersonate==false)
+		{
+
+			// create the process
+			if(CreateProcess(NULL, const_cast<wchar_t*>( cmd.GetString()),NULL,NULL,FALSE,NORMAL_PRIORITY_CLASS, NULL,NULL,&startUpInfo,&pProcInfo))
+			{
+				WaitForSingleObject(pProcInfo.hProcess,(DWORD)waitTimeInMilliSec);
+				continue;
+			}
+			else
+			{
+				TCHAR pTemp[256];
+				long nError = GetLastError();
+
+				_stprintf(pTemp,_T("Failed to run command(%d) '%s', error code = %d"),listTrav, cmd.GetString(), nError); 
+				LOG_WRITER_INSTANCE.WriteLog( pTemp);
+				continue;
+			}
+		}
+		else
+		{
+			HANDLE hToken = NULL;
+			if(LogonUser(m_userName.GetString(),(m_domainName.GetLength()==0)?_T("."):m_domainName.GetString(),m_userPassword.GetString(),LOGON32_LOGON_SERVICE,LOGON32_PROVIDER_DEFAULT,&hToken))
+			{
+				if(CreateProcessAsUser(hToken,NULL,const_cast<wchar_t*>(cmd.GetString()),NULL,NULL,TRUE,NORMAL_PRIORITY_CLASS,NULL,NULL,&startUpInfo,&pProcInfo))
+				{
+					WaitForSingleObject(pProcInfo.hProcess,(DWORD)waitTimeInMilliSec);
+					continue;
+				}
+				long nError = GetLastError();
+				TCHAR pTemp[256];
+				_stprintf(pTemp,_T("Failed to run command(%d) '%s' as user '%s', error code = %d"),listTrav,cmd.GetString(), m_userName.GetString(), nError); 
+				LOG_WRITER_INSTANCE.WriteLog( pTemp);
+				continue;
+			}
+			long nError = GetLastError();
+			TCHAR pTemp[256];
+			_stprintf(pTemp,_T("Failed to logon as user '%s', error code = %d"), m_userName.GetString(), nError); 
+			LOG_WRITER_INSTANCE.WriteLog( pTemp);
+			continue;;
+		}
+	}
+}
 
 void BaseManagementObject::PostProcess()
 {
@@ -388,6 +476,37 @@ bool BaseManagementObject::GetIsImpersonate()
 {
 	LockObj lock(&m_lock);
 	return m_isImpersonate;
+}
+
+
+int BaseManagementObject::GetPreProcessWaitTime()
+{
+	LockObj lock(&m_lock);
+	return m_preProcessWaitTime;
+}
+int BaseManagementObject::GetPostProcessWaitTime()
+{
+	LockObj lock(&m_lock);
+	return m_postProcessWaitTime;
+}
+
+void BaseManagementObject::SetPreProcessWaitTime(int waitTimeinMilliSec)
+{
+	LockObj lock(&m_lock);
+	m_preProcessWaitTime=waitTimeinMilliSec;
+	CString valueString=_T("");
+	valueString.AppendFormat(_T("%d"),m_preProcessWaitTime);
+	WritePrivateProfileString(m_objectString.GetString(),_T("PreProcessWaitTime"),valueString.GetString(),m_iniFileName.GetString());
+
+}
+void BaseManagementObject::SetPostProcessWaitTime(int waitTimeinMilliSec)
+{
+	LockObj lock(&m_lock);
+	m_postProcessWaitTime=waitTimeinMilliSec;
+	CString valueString=_T("");
+	valueString.AppendFormat(_T("%d"),m_postProcessWaitTime);
+	WritePrivateProfileString(m_objectString.GetString(),_T("PostProcessWaitTime"),valueString.GetString(),m_iniFileName.GetString());
+
 }
 
 void BaseManagementObject::SetIsImpersonate(bool isImpersonate)

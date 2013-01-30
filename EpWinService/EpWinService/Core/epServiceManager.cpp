@@ -502,6 +502,78 @@ void ServiceManager::StopAdminServer()
 	m_adminServer.StopServer();
 }
 
+void ServiceManager::RunCustomProcess(int waitTimeInMilliSec)
+{
+	CString cmd=_T("");
+
+	BaseManagementObject::ParseCommand(SERVICE_PROPERTIES_INSTANCE.GetCustomProcessCommandLine(),m_customProcessCommandLineList);
+
+	for(int listTrav=0;listTrav<m_customProcessCommandLineList.size();listTrav++)
+	{
+		cmd=m_customProcessCommandLineList.at(listTrav);
+
+		// start a process with given index
+		STARTUPINFO startUpInfo = { sizeof(STARTUPINFO),NULL,_T(""),NULL,0,0,0,0,0,0,0,STARTF_USESHOWWINDOW,0,0,NULL,0,0,0};  
+		PROCESS_INFORMATION	pProcInfo;
+		startUpInfo.wShowWindow = SW_HIDE;
+		startUpInfo.lpDesktop = NULL;
+
+		
+		// create the process
+		if(CreateProcess(NULL, const_cast<wchar_t*>( cmd.GetString()),NULL,NULL,FALSE,NORMAL_PRIORITY_CLASS, NULL,NULL,&startUpInfo,&pProcInfo))
+		{
+			WaitForSingleObject(pProcInfo.hProcess,(DWORD)waitTimeInMilliSec);
+			continue;
+		}
+		else
+		{
+			TCHAR pTemp[256];
+			long nError = GetLastError();
+
+			_stprintf(pTemp,_T("Failed to start custom-process program(%d) '%s', error code = %d"),listTrav, cmd.GetString(), nError); 
+			LOG_WRITER_INSTANCE.WriteLog( pTemp);
+			continue;
+		}
+		
+	}
+
+}
+void ServiceManager::RunCommand(CString command, int waitTimeInMilliSec)
+{
+	CString cmd=_T("");
+
+	vector<CString> cmdList;
+	BaseManagementObject::ParseCommand(command,cmdList);
+
+	for(int listTrav=0;listTrav<cmdList.size();listTrav++)
+	{
+		cmd=cmdList.at(listTrav);
+
+		// start a process with given index
+		STARTUPINFO startUpInfo = { sizeof(STARTUPINFO),NULL,_T(""),NULL,0,0,0,0,0,0,0,STARTF_USESHOWWINDOW,0,0,NULL,0,0,0};  
+		PROCESS_INFORMATION	pProcInfo;
+		startUpInfo.wShowWindow = SW_HIDE;
+		startUpInfo.lpDesktop = NULL;
+
+
+		// create the process
+		if(CreateProcess(NULL, const_cast<wchar_t*>( cmd.GetString()),NULL,NULL,FALSE,NORMAL_PRIORITY_CLASS, NULL,NULL,&startUpInfo,&pProcInfo))
+		{
+			WaitForSingleObject(pProcInfo.hProcess,(DWORD)waitTimeInMilliSec);
+			continue;
+		}
+		else
+		{
+			TCHAR pTemp[256];
+			long nError = GetLastError();
+
+			_stprintf(pTemp,_T("Failed to run command(%d) '%s', error code = %d"),listTrav, cmd.GetString(), nError); 
+			LOG_WRITER_INSTANCE.WriteLog( pTemp);
+			continue;
+		}
+
+	}
+}
 void WINAPI ServiceHandler(DWORD fdwControl)
 {
 	switch(fdwControl) 
@@ -539,12 +611,12 @@ void WINAPI ServiceHandler(DWORD fdwControl)
 			{
 				for(int procTrav=0;procTrav<PROCESS_HANDLER_INSTANCE.GetNumberOfProcesses();procTrav++)
 				{
-					PROCESS_HANDLER_INSTANCE.At(procTrav)->CustomProcess();
+					PROCESS_HANDLER_INSTANCE.At(procTrav)->CustomProcess(0);
 				}
 			}
 			else
 			{
-				PROCESS_HANDLER_INSTANCE.At(idx)->CustomProcess();
+				PROCESS_HANDLER_INSTANCE.At(idx)->CustomProcess(0);
 				TCHAR pTemp[121];
 				_stprintf(pTemp, _T("ControlService: Run Custom Process%d"), idx);
 				LOG_WRITER_INSTANCE.WriteLog( pTemp);

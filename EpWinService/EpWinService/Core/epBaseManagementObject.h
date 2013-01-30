@@ -83,8 +83,18 @@ public:
 
 	/*!
 	Start the custom-Process.
+	@param[in] waitTimeInMilliSec wait time in milli-seconds
+	@remark waitTimeInMilliSec is equal to -1 (0xffffffff) then waits for infinite time.
 	*/
-	virtual void CustomProcess();
+	virtual void CustomProcess(int waitTimeInMilliSec);
+
+	/*!
+	Run command.
+	@param[in] command command to run
+	@param[in] waitTimeInMilliSec wait time in milli-seconds
+	@remark waitTimeInMilliSec is equal to -1 (0xffffffff) then waits for infinite time.
+	*/
+	virtual void RunCommand(CString command, int waitTimeInMilliSec);
 
 	/*!
 	Return whether this object is started or not
@@ -143,7 +153,33 @@ public:
 	*/
 	void SetCustomProcessCommandLine(CString cmd);
 
-		/*!
+	/*!
+	Return Pre-Process wait time in milliseconds
+	@return wait time in milliseconds
+	@remark -1 means waiting infinitely
+	*/
+	int GetPreProcessWaitTime();
+	/*!
+	Return Post-Process wait time in milliseconds
+	@return wait time in milliseconds
+	@remark -1 means waiting infinitely
+	*/
+	int GetPostProcessWaitTime();
+
+	/*!
+	Set Pre-Process wait time
+	@param[in] waitTimeinMilliSec wait time in milliseconds
+	@remark waitTimeinMilliSec==-1 means waiting infinitely
+	*/
+	void SetPreProcessWaitTime(int waitTimeinMilliSec);
+	/*!
+	Set Post-Process  wait time
+	@param[in] waitTimeinMilliSec wait time in milliseconds
+	@remark waitTimeinMilliSec==-1 means waiting infinitely
+	*/
+	void SetPostProcessWaitTime(int waitTimeinMilliSec);
+
+	/*!
 	Get Impersonation flag
 	@return true if Impersonation otherwise false
 	*/
@@ -202,7 +238,7 @@ public:
 	*/
 	void SetUserPassword(CString userPassword);
 
-		/*!
+	/*!
 	Get delay start time of the process
 	@return delay start time of the process
 	*/
@@ -252,7 +288,12 @@ protected:
 	CString m_postProcessCommandLine;
 	/// Custom-process CommandLine
 	CString m_customProcessCommandLine;
-	
+
+	/// Pre-Process wait time in milli-seconds
+	int m_preProcessWaitTime;
+	/// Post-Process wait time in milli-seconds
+	int m_postProcessWaitTime;
+		
 	/// Impersonation flag
 	bool m_isImpersonate;
 	/// User-Interface flag

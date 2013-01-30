@@ -87,8 +87,18 @@ public:
 
 	/*!
 	Start the custom-Process.
+	@param[in] waitTimeInMilliSec wait time in milli-seconds
+	@remark waitTimeInMilliSec is equal to -1 (0xffffffff) then waits for infinite time.
 	*/
-	virtual void CustomProcess();
+	virtual void CustomProcess(int waitTimeInMilliSec);
+
+	/*!
+	Run command.
+	@param[in] command command to run
+	@param[in] waitTimeInMilliSec wait time in milli-seconds
+	@remark waitTimeInMilliSec is equal to -1 (0xffffffff) then waits for infinite time.
+	*/
+	virtual void RunCommand(CString command, int waitTimeInMilliSec);
 
 	/*!
 	Get CommandLine of the process

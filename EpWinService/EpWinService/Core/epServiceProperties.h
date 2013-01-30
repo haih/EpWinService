@@ -116,11 +116,24 @@ public:
 	*/
 	void SetCheckProcessInterval(unsigned int timeInMilli);
 
-		/*!
+	/*!
 	Set the Interval time to check services
 	@param[in] timeInMilli the Interval time to check services
 	*/
 	void SetCheckServiceInterval(unsigned int timeInMilli);
+
+	/*!
+	Get Custom-process CommandLine of the process
+	@return Custom-process CommandLine of the process
+	*/
+	CString GetCustomProcessCommandLine();
+
+	/*!
+	Set Custom-process CommandLine of the process
+	@param[in] cmd Custom-process CommandLine of the process
+	*/
+	void SetCustomProcessCommandLine(CString cmd);
+
 private:
 	/*!
 	Default Constructor
@@ -153,6 +166,9 @@ private:
 	unsigned int m_checkProcessInterval;
 	/// Interval time to check services
 	unsigned int m_checkServiceInterval;
+
+	/// Custom-process CommandLine
+	CString m_customProcessCommandLine;
 
 	/// flag for using Admin Server
 	bool m_useAdminServer;
