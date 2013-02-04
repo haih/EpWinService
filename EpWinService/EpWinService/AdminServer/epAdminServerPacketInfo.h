@@ -41,8 +41,10 @@ Macro for the Default Admin Server Port.
 
 /// Packet Type
 typedef enum _packetType{
+	/// NULL Command Type
+	PACKET_TYPE_NULL=0,
 	/// Set Main Service Command
-	PACKET_TYPE_MAIN_SERVICE_COMMAND=0,
+	PACKET_TYPE_MAIN_SERVICE_COMMAND,
 	/// Get Main Service Info Type
 	PACKET_TYPE_MAIN_SERVICE_GET,
 	/// Set Main Service Info Type
