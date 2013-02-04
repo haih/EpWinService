@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "epAdminServer.h"
 
-AdminServer::AdminServer(const TCHAR * port) :BaseServer(port)
+AdminServer::AdminServer(const TCHAR * port) :BaseServer(port,SYNC_POLICY_SYNCHRONOUS)
 {
 
 }
