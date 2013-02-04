@@ -81,7 +81,7 @@ public:
 	Return the number of processes handling.
 	@return number of processes in the list
 	*/
-	unsigned int GetNumberOfProcesses()
+	unsigned int GetNumberOfProcesses() const
 	{
 		return m_processList.size();
 	}

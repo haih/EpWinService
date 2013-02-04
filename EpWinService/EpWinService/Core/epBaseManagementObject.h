@@ -64,6 +64,11 @@ public:
 	*/
 	virtual ~BaseManagementObject();
 
+	/*!
+	Parser the command given to list of the commands
+	@param[in] cmd the command to parse
+	@param[out] retCmdList the list of the command parsed
+	*/
 	static void ParseCommand(CString cmd, vector<CString>& retCmdList);
 	/*!
 	Start the object.

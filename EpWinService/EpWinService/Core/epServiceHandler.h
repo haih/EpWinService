@@ -187,7 +187,7 @@ public:
 	Return the number of services handling.
 	@return number of services in the list
 	*/
-	unsigned int GetNumberOfServices()
+	unsigned int GetNumberOfServices() const
 	{
 		return m_serviceList.size();
 	}
