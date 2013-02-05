@@ -23,30 +23,30 @@ ServiceProperties::ServiceProperties()
 {
 	m_iniFileName=FolderHelper::GetModuleFileName().c_str();
 	m_iniFileName.Replace(_T(".exe"),_T(".ini"));
-	TCHAR *textBuffer=new TCHAR[MAX_PATH];
+	TCHAR *textBuffer=new TCHAR[MAX_STRING_LENGTH];
 	
-	memset(textBuffer,0,sizeof(TCHAR)*MAX_PATH);
-	GetPrivateProfileString(_T("Settings"),_T("ServiceName"),_T("EpWinService"),textBuffer,MAX_PATH,m_iniFileName.GetString());
+	memset(textBuffer,0,sizeof(TCHAR)*MAX_STRING_LENGTH);
+	GetPrivateProfileString(_T("Settings"),_T("ServiceName"),_T("EpWinService"),textBuffer,MAX_STRING_LENGTH,m_iniFileName.GetString());
 	m_serviceName=textBuffer;
 	m_serviceName.Trim();
 
-	memset(textBuffer,0,sizeof(TCHAR)*MAX_PATH);
-	GetPrivateProfileString(_T("Settings"),_T("DomainName"),_T(""),textBuffer,MAX_PATH,m_iniFileName.GetString());
+	memset(textBuffer,0,sizeof(TCHAR)*MAX_STRING_LENGTH);
+	GetPrivateProfileString(_T("Settings"),_T("DomainName"),_T(""),textBuffer,MAX_STRING_LENGTH,m_iniFileName.GetString());
 	m_domainName=textBuffer;
 	m_domainName.Trim();
 
-	memset(textBuffer,0,sizeof(TCHAR)*MAX_PATH);
-	GetPrivateProfileString(_T("Settings"),_T("UserName"),_T(""),textBuffer,MAX_PATH,m_iniFileName.GetString());
+	memset(textBuffer,0,sizeof(TCHAR)*MAX_STRING_LENGTH);
+	GetPrivateProfileString(_T("Settings"),_T("UserName"),_T(""),textBuffer,MAX_STRING_LENGTH,m_iniFileName.GetString());
 	m_userName=textBuffer;
 	m_userName.Trim();
 
-	memset(textBuffer,0,sizeof(TCHAR)*MAX_PATH);
-	GetPrivateProfileString(_T("Settings"),_T("UserPassword"),_T(""),textBuffer,MAX_PATH,m_iniFileName.GetString());
+	memset(textBuffer,0,sizeof(TCHAR)*MAX_STRING_LENGTH);
+	GetPrivateProfileString(_T("Settings"),_T("UserPassword"),_T(""),textBuffer,MAX_STRING_LENGTH,m_iniFileName.GetString());
 	m_userPassword=textBuffer;
 	m_userPassword.Trim();
 
-	memset(textBuffer,0,sizeof(TCHAR)*MAX_PATH);
-	GetPrivateProfileString(_T("Settings"),_T("Dependencies"),_T(""),textBuffer,MAX_PATH,m_iniFileName.GetString());
+	memset(textBuffer,0,sizeof(TCHAR)*MAX_STRING_LENGTH);
+	GetPrivateProfileString(_T("Settings"),_T("Dependencies"),_T(""),textBuffer,MAX_STRING_LENGTH,m_iniFileName.GetString());
 	m_origDependency=textBuffer;
 	m_origDependency.Trim();
 
@@ -54,20 +54,20 @@ ServiceProperties::ServiceProperties()
 	m_dependency.Replace(_T(' '), _T('\0'));
 	m_dependency.Replace(_T(';'), _T('\0'));
 
-	memset(textBuffer,0,sizeof(TCHAR)*MAX_PATH);
-	GetPrivateProfileString(_T("Settings"),_T("UseAdminServer"),_T("Y"),textBuffer,MAX_PATH,m_iniFileName.GetString());
+	memset(textBuffer,0,sizeof(TCHAR)*MAX_STRING_LENGTH);
+	GetPrivateProfileString(_T("Settings"),_T("UseAdminServer"),_T("Y"),textBuffer,MAX_STRING_LENGTH,m_iniFileName.GetString());
 	if(textBuffer[0]=='y'||textBuffer[0]=='Y'||textBuffer[0]=='1')
 		m_useAdminServer=true;
 	else
 		m_useAdminServer=false;
 
-	memset(textBuffer,0,sizeof(TCHAR)*MAX_PATH);
-	GetPrivateProfileString(_T("Settings"),_T("CustomProcessCommandLine"),_T(""),textBuffer,MAX_PATH,m_iniFileName.GetString());
+	memset(textBuffer,0,sizeof(TCHAR)*MAX_STRING_LENGTH);
+	GetPrivateProfileString(_T("Settings"),_T("CustomProcessCommandLine"),_T(""),textBuffer,MAX_STRING_LENGTH,m_iniFileName.GetString());
 	m_customProcessCommandLine=textBuffer;
 	m_customProcessCommandLine.Trim();
 	
-	memset(textBuffer,0,sizeof(TCHAR)*MAX_PATH);
-	GetPrivateProfileString(_T("Settings"),_T("AdminServerPort"),_T("8988"),textBuffer,MAX_PATH,m_iniFileName.GetString());
+	memset(textBuffer,0,sizeof(TCHAR)*MAX_STRING_LENGTH);
+	GetPrivateProfileString(_T("Settings"),_T("AdminServerPort"),_T("8988"),textBuffer,MAX_STRING_LENGTH,m_iniFileName.GetString());
 	m_adminServerPort=textBuffer;
 	m_adminServerPort.Trim();
 

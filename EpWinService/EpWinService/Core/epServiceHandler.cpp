@@ -38,7 +38,7 @@ ServiceHandler::ServiceHandler()
 
 	CString iniFileName=FolderHelper::GetModuleFileName().c_str();
 	iniFileName.Replace(_T(".exe"),_T(".ini"));
-	TCHAR *textBuffer=new TCHAR[MAX_PATH];
+	TCHAR *textBuffer=new TCHAR[MAX_STRING_LENGTH];
 
 	int serviceIndex=0;
 
@@ -47,8 +47,8 @@ ServiceHandler::ServiceHandler()
 		CString serviceString=_T("Service");
 		serviceString.AppendFormat(_T("%d"),serviceIndex);
 
-		memset(textBuffer,0,sizeof(TCHAR)*MAX_PATH);
-		GetPrivateProfileString(serviceString.GetString(),_T("ServiceName"),_T(""),textBuffer,MAX_PATH,iniFileName.GetString());
+		memset(textBuffer,0,sizeof(TCHAR)*MAX_STRING_LENGTH);
+		GetPrivateProfileString(serviceString.GetString(),_T("ServiceName"),_T(""),textBuffer,MAX_STRING_LENGTH,iniFileName.GetString());
 		CString serviceName=textBuffer;
 		if(serviceName.GetLength()>0)
 		{

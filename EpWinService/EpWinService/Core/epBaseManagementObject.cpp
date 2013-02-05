@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "epBaseManagementObject.h"
 #include "epLogWriter.h"
+#include "epServiceProperties.h"
 
 void BaseManagementObject::ParseCommand(CString cmd,  vector<CString>& retCmdList)
 {
@@ -77,15 +78,15 @@ BaseManagementObject::BaseManagementObject(ManagementObjectType objType,unsigned
 
 	m_iniFileName=FolderHelper::GetModuleFileName().c_str();
 	m_iniFileName.Replace(_T(".exe"),_T(".ini"));
-	TCHAR *textBuffer=new TCHAR[MAX_PATH];
+	TCHAR *textBuffer=new TCHAR[MAX_STRING_LENGTH];
 	if(m_objType==MANAGEMENT_OBJECT_TYPE_PROCESS)
 		m_objectString=_T("Process");
 	else
 		m_objectString=_T("Service");
 	m_objectString.AppendFormat(_T("%d"),m_objIndex);
 
-	memset(textBuffer,0,sizeof(TCHAR)*MAX_PATH);
-	GetPrivateProfileString(m_objectString.GetString(),_T("Restart"),_T("Y"),textBuffer,MAX_PATH,m_iniFileName.GetString());
+	memset(textBuffer,0,sizeof(TCHAR)*MAX_STRING_LENGTH);
+	GetPrivateProfileString(m_objectString.GetString(),_T("Restart"),_T("Y"),textBuffer,MAX_STRING_LENGTH,m_iniFileName.GetString());
 	if(textBuffer[0]=='y'||textBuffer[0]=='Y'||textBuffer[0]=='1')
 		m_isRestart=true;
 	else
@@ -93,21 +94,21 @@ BaseManagementObject::BaseManagementObject(ManagementObjectType objType,unsigned
 
 	CString tmpCmd;
 
-	memset(textBuffer,0,sizeof(TCHAR)*MAX_PATH);
-	GetPrivateProfileString(m_objectString.GetString(),_T("PreProcessCommandLine"),_T(""),textBuffer,MAX_PATH,m_iniFileName.GetString());
+	memset(textBuffer,0,sizeof(TCHAR)*MAX_STRING_LENGTH);
+	GetPrivateProfileString(m_objectString.GetString(),_T("PreProcessCommandLine"),_T(""),textBuffer,MAX_STRING_LENGTH,m_iniFileName.GetString());
 	m_preProcessCommandLine=textBuffer;
 	m_preProcessCommandLine.Trim();
 	BaseManagementObject::ParseCommand(m_preProcessCommandLine,m_preProcessCommandLineList);
 
-	memset(textBuffer,0,sizeof(TCHAR)*MAX_PATH);
-	GetPrivateProfileString(m_objectString.GetString(),_T("PostProcessCommandLine"),_T(""),textBuffer,MAX_PATH,m_iniFileName.GetString());
+	memset(textBuffer,0,sizeof(TCHAR)*MAX_STRING_LENGTH);
+	GetPrivateProfileString(m_objectString.GetString(),_T("PostProcessCommandLine"),_T(""),textBuffer,MAX_STRING_LENGTH,m_iniFileName.GetString());
 	m_postProcessCommandLine=textBuffer;
 	m_postProcessCommandLine.Trim();
 	BaseManagementObject::ParseCommand(m_postProcessCommandLine,m_postProcessCommandLineList);
 
 
-	memset(textBuffer,0,sizeof(TCHAR)*MAX_PATH);
-	GetPrivateProfileString(m_objectString.GetString(),_T("CustomProcessCommandLine"),_T(""),textBuffer,MAX_PATH,m_iniFileName.GetString());
+	memset(textBuffer,0,sizeof(TCHAR)*MAX_STRING_LENGTH);
+	GetPrivateProfileString(m_objectString.GetString(),_T("CustomProcessCommandLine"),_T(""),textBuffer,MAX_STRING_LENGTH,m_iniFileName.GetString());
 	m_customProcessCommandLine=textBuffer;
 	m_customProcessCommandLine.Trim();
 	BaseManagementObject::ParseCommand(m_customProcessCommandLine,m_customProcessCommandLineList);
@@ -115,32 +116,32 @@ BaseManagementObject::BaseManagementObject(ManagementObjectType objType,unsigned
 	m_preProcessWaitTime=GetPrivateProfileInt(m_objectString.GetString(),_T("PreProcessWaitTime"),WAITTIME_INIFINITE,m_iniFileName.GetString());
 	m_postProcessWaitTime=GetPrivateProfileInt(m_objectString.GetString(),_T("PostProcessWaitTime"),WAITTIME_INIFINITE,m_iniFileName.GetString());
 	
-	memset(textBuffer,0,sizeof(TCHAR)*MAX_PATH);
-	GetPrivateProfileString(m_objectString.GetString(),_T("Impersonate"),_T("N"),textBuffer,MAX_PATH,m_iniFileName.GetString());
+	memset(textBuffer,0,sizeof(TCHAR)*MAX_STRING_LENGTH);
+	GetPrivateProfileString(m_objectString.GetString(),_T("Impersonate"),_T("N"),textBuffer,MAX_STRING_LENGTH,m_iniFileName.GetString());
 	if(textBuffer[0]=='y'||textBuffer[0]=='Y'||textBuffer[0]=='1')
 		m_isImpersonate=true;
 	else
 		m_isImpersonate=false;
 
-	memset(textBuffer,0,sizeof(TCHAR)*MAX_PATH);
-	GetPrivateProfileString(m_objectString.GetString(),_T("UserInterface"),_T("N"),textBuffer,MAX_PATH,m_iniFileName.GetString());
+	memset(textBuffer,0,sizeof(TCHAR)*MAX_STRING_LENGTH);
+	GetPrivateProfileString(m_objectString.GetString(),_T("UserInterface"),_T("N"),textBuffer,MAX_STRING_LENGTH,m_iniFileName.GetString());
 	if(m_isImpersonate==false && (textBuffer[0]=='y'||textBuffer[0]=='Y'||textBuffer[0]=='1'))
 		m_isUserInterface=true;
 	else
 		m_isUserInterface=false;
 
-	memset(textBuffer,0,sizeof(TCHAR)*MAX_PATH);
-	GetPrivateProfileString(m_objectString.GetString(),_T("DomainName"),_T(""),textBuffer,MAX_PATH,m_iniFileName.GetString());
+	memset(textBuffer,0,sizeof(TCHAR)*MAX_STRING_LENGTH);
+	GetPrivateProfileString(m_objectString.GetString(),_T("DomainName"),_T(""),textBuffer,MAX_STRING_LENGTH,m_iniFileName.GetString());
 	m_domainName=textBuffer;
 	m_domainName.Trim();
 
-	memset(textBuffer,0,sizeof(TCHAR)*MAX_PATH);
-	GetPrivateProfileString(m_objectString.GetString(),_T("UserName"),_T(""),textBuffer,MAX_PATH,m_iniFileName.GetString());
+	memset(textBuffer,0,sizeof(TCHAR)*MAX_STRING_LENGTH);
+	GetPrivateProfileString(m_objectString.GetString(),_T("UserName"),_T(""),textBuffer,MAX_STRING_LENGTH,m_iniFileName.GetString());
 	m_userName=textBuffer;
 	m_userName.Trim();
 
-	memset(textBuffer,0,sizeof(TCHAR)*MAX_PATH);
-	GetPrivateProfileString(m_objectString.GetString(),_T("Password"),_T(""),textBuffer,MAX_PATH,m_iniFileName.GetString());
+	memset(textBuffer,0,sizeof(TCHAR)*MAX_STRING_LENGTH);
+	GetPrivateProfileString(m_objectString.GetString(),_T("Password"),_T(""),textBuffer,MAX_STRING_LENGTH,m_iniFileName.GetString());
 	m_userPassword=textBuffer;
 	m_userPassword.Trim();
 

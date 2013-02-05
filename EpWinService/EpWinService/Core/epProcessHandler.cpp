@@ -29,7 +29,7 @@ ProcessHandler::ProcessHandler()
 {
 	CString iniFileName=FolderHelper::GetModuleFileName().c_str();
 	iniFileName.Replace(_T(".exe"),_T(".ini"));
-	TCHAR *textBuffer=new TCHAR[MAX_PATH];
+	TCHAR *textBuffer=new TCHAR[MAX_STRING_LENGTH];
 
 	int procIndex=0;
 
@@ -38,8 +38,8 @@ ProcessHandler::ProcessHandler()
 		CString processString=_T("Process");
 		processString.AppendFormat(_T("%d"),procIndex);
 
-		memset(textBuffer,0,sizeof(TCHAR)*MAX_PATH);
-		GetPrivateProfileString(processString.GetString(),_T("CommandLine"),_T(""),textBuffer,MAX_PATH,iniFileName.GetString());
+		memset(textBuffer,0,sizeof(TCHAR)*MAX_STRING_LENGTH);
+		GetPrivateProfileString(processString.GetString(),_T("CommandLine"),_T(""),textBuffer,MAX_STRING_LENGTH,iniFileName.GetString());
 		CString commandLine=textBuffer;
 		if(commandLine.GetLength()>0)
 		{

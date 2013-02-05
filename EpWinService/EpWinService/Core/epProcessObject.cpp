@@ -18,17 +18,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "epProcessObject.h"
 #include "epLogWriter.h"
-
+#include "epServiceProperties.h"
 
 ProcessObject::ProcessObject(unsigned int procIndex):BaseManagementObject(MANAGEMENT_OBJECT_TYPE_PROCESS,procIndex)
 {
 	m_pProcInfo.hProcess=0;
 	m_pProcInfo.hThread=0;
 
-	TCHAR *textBuffer=new TCHAR[MAX_PATH];
+	TCHAR *textBuffer=new TCHAR[MAX_STRING_LENGTH];
 
-	memset(textBuffer,0,sizeof(TCHAR)*MAX_PATH);
-	GetPrivateProfileString(m_objectString.GetString(),_T("CommandLine"),_T(""),textBuffer,MAX_PATH,m_iniFileName.GetString());
+	memset(textBuffer,0,sizeof(TCHAR)*MAX_STRING_LENGTH);
+	GetPrivateProfileString(m_objectString.GetString(),_T("CommandLine"),_T(""),textBuffer,MAX_STRING_LENGTH,m_iniFileName.GetString());
 	m_commandLine=textBuffer;
 	m_commandLine.Trim();
 

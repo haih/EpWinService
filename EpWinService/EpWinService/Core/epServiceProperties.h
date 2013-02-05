@@ -41,6 +41,14 @@ Macro for the Service Properties Singleton Instance.
 */
 #define SERVICE_PROPERTIES_INSTANCE epl::SingletonHolder<ServiceProperties>::Instance()
 
+/*!
+@def MAX_STRING_LENGTH
+@brief Maximum Byte length of the String
+
+Macro for the Maximum Byte length of the String.
+*/
+#define MAX_STRING_LENGTH 1024
+
 /*! 
 @class ServiceProperties epServiceProperties.h
 @brief A class for Service Properties.
