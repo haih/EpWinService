@@ -174,7 +174,7 @@ void BaseManagementObject::preProcess()
 		{
 
 			// create the process
-			if(CreateProcess(NULL, const_cast<wchar_t*>(m_preProcessCommandLineList.at(listTrav).GetString()),NULL,NULL,FALSE,NORMAL_PRIORITY_CLASS, NULL,NULL,&startUpInfo,&pProcInfo))
+			if(CreateProcess(NULL, const_cast<TCHAR*>(m_preProcessCommandLineList.at(listTrav).GetString()),NULL,NULL,FALSE,NORMAL_PRIORITY_CLASS, NULL,NULL,&startUpInfo,&pProcInfo))
 			{
 				WaitForSingleObject(pProcInfo.hProcess,(DWORD)m_preProcessWaitTime);
 				continue;
@@ -194,7 +194,7 @@ void BaseManagementObject::preProcess()
 			HANDLE hToken = NULL;
 			if(LogonUser(m_userName.GetString(),(m_domainName.GetLength()==0)?_T("."):m_domainName.GetString(),m_userPassword.GetString(),LOGON32_LOGON_SERVICE,LOGON32_PROVIDER_DEFAULT,&hToken))
 			{
-				if(CreateProcessAsUser(hToken,NULL,const_cast<wchar_t*>(m_preProcessCommandLineList.at(listTrav).GetString()),NULL,NULL,TRUE,NORMAL_PRIORITY_CLASS,NULL,NULL,&startUpInfo,&pProcInfo))
+				if(CreateProcessAsUser(hToken,NULL,const_cast<TCHAR*>(m_preProcessCommandLineList.at(listTrav).GetString()),NULL,NULL,TRUE,NORMAL_PRIORITY_CLASS,NULL,NULL,&startUpInfo,&pProcInfo))
 				{
 					WaitForSingleObject(pProcInfo.hProcess,(DWORD)m_preProcessWaitTime);
 					continue;
@@ -233,7 +233,7 @@ void BaseManagementObject::postProcess()
 		{
 
 			// create the process
-			if(CreateProcess(NULL, const_cast<wchar_t*>(m_postProcessCommandLineList.at(listTrav).GetString()),NULL,NULL,FALSE,NORMAL_PRIORITY_CLASS, NULL,NULL,&startUpInfo,&pProcInfo))
+			if(CreateProcess(NULL, const_cast<TCHAR*>(m_postProcessCommandLineList.at(listTrav).GetString()),NULL,NULL,FALSE,NORMAL_PRIORITY_CLASS, NULL,NULL,&startUpInfo,&pProcInfo))
 			{
 				WaitForSingleObject(pProcInfo.hProcess,(DWORD)m_postProcessWaitTime);
 				continue;
@@ -253,7 +253,7 @@ void BaseManagementObject::postProcess()
 			HANDLE hToken = NULL;
 			if(LogonUser(m_userName.GetString(),(m_domainName.GetLength()==0)?_T("."):m_domainName.GetString(),m_userPassword.GetString(),LOGON32_LOGON_SERVICE,LOGON32_PROVIDER_DEFAULT,&hToken))
 			{
-				if(CreateProcessAsUser(hToken,NULL,const_cast<wchar_t*>(m_postProcessCommandLineList.at(listTrav).GetString()),NULL,NULL,TRUE,NORMAL_PRIORITY_CLASS,NULL,NULL,&startUpInfo,&pProcInfo))
+				if(CreateProcessAsUser(hToken,NULL,const_cast<TCHAR*>(m_postProcessCommandLineList.at(listTrav).GetString()),NULL,NULL,TRUE,NORMAL_PRIORITY_CLASS,NULL,NULL,&startUpInfo,&pProcInfo))
 				{
 					WaitForSingleObject(pProcInfo.hProcess,(DWORD)m_postProcessWaitTime);
 					continue;
@@ -298,7 +298,7 @@ void BaseManagementObject::CustomProcess(int waitTimeInMilliSec)
 		{
 
 			// create the process
-			if(CreateProcess(NULL, const_cast<wchar_t*>( cmd.GetString()),NULL,NULL,FALSE,NORMAL_PRIORITY_CLASS, NULL,NULL,&startUpInfo,&pProcInfo))
+			if(CreateProcess(NULL, const_cast<TCHAR*>( cmd.GetString()),NULL,NULL,FALSE,NORMAL_PRIORITY_CLASS, NULL,NULL,&startUpInfo,&pProcInfo))
 			{
 				WaitForSingleObject(pProcInfo.hProcess,(DWORD)waitTimeInMilliSec);
 				continue;
@@ -318,7 +318,7 @@ void BaseManagementObject::CustomProcess(int waitTimeInMilliSec)
 			HANDLE hToken = NULL;
 			if(LogonUser(m_userName.GetString(),(m_domainName.GetLength()==0)?_T("."):m_domainName.GetString(),m_userPassword.GetString(),LOGON32_LOGON_SERVICE,LOGON32_PROVIDER_DEFAULT,&hToken))
 			{
-				if(CreateProcessAsUser(hToken,NULL,const_cast<wchar_t*>(cmd.GetString()),NULL,NULL,TRUE,NORMAL_PRIORITY_CLASS,NULL,NULL,&startUpInfo,&pProcInfo))
+				if(CreateProcessAsUser(hToken,NULL,const_cast<TCHAR*>(cmd.GetString()),NULL,NULL,TRUE,NORMAL_PRIORITY_CLASS,NULL,NULL,&startUpInfo,&pProcInfo))
 				{
 					WaitForSingleObject(pProcInfo.hProcess,(DWORD)waitTimeInMilliSec);
 					continue;
@@ -366,7 +366,7 @@ void BaseManagementObject::RunCommand(CString command, int waitTimeInMilliSec)
 		{
 
 			// create the process
-			if(CreateProcess(NULL, const_cast<wchar_t*>( cmd.GetString()),NULL,NULL,FALSE,NORMAL_PRIORITY_CLASS, NULL,NULL,&startUpInfo,&pProcInfo))
+			if(CreateProcess(NULL, const_cast<TCHAR*>( cmd.GetString()),NULL,NULL,FALSE,NORMAL_PRIORITY_CLASS, NULL,NULL,&startUpInfo,&pProcInfo))
 			{
 				WaitForSingleObject(pProcInfo.hProcess,(DWORD)waitTimeInMilliSec);
 				continue;
@@ -386,7 +386,7 @@ void BaseManagementObject::RunCommand(CString command, int waitTimeInMilliSec)
 			HANDLE hToken = NULL;
 			if(LogonUser(m_userName.GetString(),(m_domainName.GetLength()==0)?_T("."):m_domainName.GetString(),m_userPassword.GetString(),LOGON32_LOGON_SERVICE,LOGON32_PROVIDER_DEFAULT,&hToken))
 			{
-				if(CreateProcessAsUser(hToken,NULL,const_cast<wchar_t*>(cmd.GetString()),NULL,NULL,TRUE,NORMAL_PRIORITY_CLASS,NULL,NULL,&startUpInfo,&pProcInfo))
+				if(CreateProcessAsUser(hToken,NULL,const_cast<TCHAR*>(cmd.GetString()),NULL,NULL,TRUE,NORMAL_PRIORITY_CLASS,NULL,NULL,&startUpInfo,&pProcInfo))
 				{
 					WaitForSingleObject(pProcInfo.hProcess,(DWORD)waitTimeInMilliSec);
 					continue;

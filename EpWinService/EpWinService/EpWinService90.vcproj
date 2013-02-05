@@ -18,7 +18,160 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)Bin\Debug"
+			OutputDirectory="$(SolutionDir)Bin"
+			IntermediateDirectory="Intermediate\VS90\$(ConfigurationName)"
+			ConfigurationType="1"
+			CharacterSet="0"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories=".;.\EpLibraryHeaders;.\Core;.\EpServerEngineHeaders;.\AdminServer"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
+				MinimalRebuild="true"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="1"
+				UsePrecompiledHeader="0"
+				WarningLevel="3"
+				DebugInformationFormat="4"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="EpServerEngine_D90.lib"
+				OutputFile="$(OutDir)\$(ProjectName)_D90.exe"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories=".\Libs"
+				GenerateDebugInformation="true"
+				SubSystem="1"
+				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Release|Win32"
+			OutputDirectory="$(SolutionDir)Bin"
+			IntermediateDirectory="Intermediate\VS90\$(ConfigurationName)"
+			ConfigurationType="1"
+			CharacterSet="0"
+			WholeProgramOptimization="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="2"
+				EnableIntrinsicFunctions="true"
+				AdditionalIncludeDirectories=".;.\EpLibraryHeaders;.\Core;.\EpServerEngineHeaders;.\AdminServer"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
+				RuntimeLibrary="0"
+				EnableFunctionLevelLinking="true"
+				UsePrecompiledHeader="0"
+				WarningLevel="3"
+				DebugInformationFormat="3"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="EpServerEngine90.lib"
+				OutputFile="$(OutDir)\$(ProjectName)90.exe"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories=".\Libs"
+				GenerateDebugInformation="true"
+				SubSystem="1"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Debug Unicode|Win32"
+			OutputDirectory="$(SolutionDir)Bin"
 			IntermediateDirectory="Intermediate\VS90\$(ConfigurationName)"
 			ConfigurationType="1"
 			CharacterSet="1"
@@ -62,7 +215,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="EpServerEngineU_D90.lib"
-				OutputFile="$(OutDir)\$(ProjectName)_D90.exe"
+				OutputFile="$(OutDir)\$(ProjectName)U_D90.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories=".\Libs"
 				GenerateDebugInformation="true"
@@ -92,8 +245,8 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)Bin\Release"
+			Name="Release Unicode|Win32"
+			OutputDirectory="$(SolutionDir)Bin"
 			IntermediateDirectory="Intermediate\VS90\$(ConfigurationName)"
 			ConfigurationType="1"
 			CharacterSet="1"
@@ -138,7 +291,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="EpServerEngineU90.lib"
-				OutputFile="$(OutDir)\$(ProjectName)90.exe"
+				OutputFile="$(OutDir)\$(ProjectName)U90.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories=".\Libs"
 				GenerateDebugInformation="true"

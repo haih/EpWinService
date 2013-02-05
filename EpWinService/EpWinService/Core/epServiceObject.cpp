@@ -149,7 +149,7 @@ void ServiceObject::CustomProcess(int waitTimeInMilliSec)
 		{
 
 			// create the process
-			if(CreateProcess(NULL, const_cast<wchar_t*>( cmd.GetString()),NULL,NULL,FALSE,NORMAL_PRIORITY_CLASS, NULL,NULL,&startUpInfo,&pProcInfo))
+			if(CreateProcess(NULL, const_cast<TCHAR*>( cmd.GetString()),NULL,NULL,FALSE,NORMAL_PRIORITY_CLASS, NULL,NULL,&startUpInfo,&pProcInfo))
 			{
 				WaitForSingleObject(pProcInfo.hProcess,waitTimeInMilliSec);
 				continue;
@@ -169,7 +169,7 @@ void ServiceObject::CustomProcess(int waitTimeInMilliSec)
 			HANDLE hToken = NULL;
 			if(LogonUser(m_userName.GetString(),(m_domainName.GetLength()==0)?_T("."):m_domainName.GetString(),m_userPassword.GetString(),LOGON32_LOGON_SERVICE,LOGON32_PROVIDER_DEFAULT,&hToken))
 			{
-				if(CreateProcessAsUser(hToken,NULL,const_cast<wchar_t*>(cmd.GetString()),NULL,NULL,TRUE,NORMAL_PRIORITY_CLASS,NULL,NULL,&startUpInfo,&pProcInfo))
+				if(CreateProcessAsUser(hToken,NULL,const_cast<TCHAR*>(cmd.GetString()),NULL,NULL,TRUE,NORMAL_PRIORITY_CLASS,NULL,NULL,&startUpInfo,&pProcInfo))
 				{
 					WaitForSingleObject(pProcInfo.hProcess,waitTimeInMilliSec);
 					continue;
@@ -222,7 +222,7 @@ void ServiceObject::RunCommand(CString command, int waitTimeInMilliSec)
 		{
 
 			// create the process
-			if(CreateProcess(NULL, const_cast<wchar_t*>( cmd.GetString()),NULL,NULL,FALSE,NORMAL_PRIORITY_CLASS, NULL,NULL,&startUpInfo,&pProcInfo))
+			if(CreateProcess(NULL, const_cast<TCHAR*>( cmd.GetString()),NULL,NULL,FALSE,NORMAL_PRIORITY_CLASS, NULL,NULL,&startUpInfo,&pProcInfo))
 			{
 				WaitForSingleObject(pProcInfo.hProcess,waitTimeInMilliSec);
 				continue;
@@ -242,7 +242,7 @@ void ServiceObject::RunCommand(CString command, int waitTimeInMilliSec)
 			HANDLE hToken = NULL;
 			if(LogonUser(m_userName.GetString(),(m_domainName.GetLength()==0)?_T("."):m_domainName.GetString(),m_userPassword.GetString(),LOGON32_LOGON_SERVICE,LOGON32_PROVIDER_DEFAULT,&hToken))
 			{
-				if(CreateProcessAsUser(hToken,NULL,const_cast<wchar_t*>(cmd.GetString()),NULL,NULL,TRUE,NORMAL_PRIORITY_CLASS,NULL,NULL,&startUpInfo,&pProcInfo))
+				if(CreateProcessAsUser(hToken,NULL,const_cast<TCHAR*>(cmd.GetString()),NULL,NULL,TRUE,NORMAL_PRIORITY_CLASS,NULL,NULL,&startUpInfo,&pProcInfo))
 				{
 					WaitForSingleObject(pProcInfo.hProcess,waitTimeInMilliSec);
 					continue;

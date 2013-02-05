@@ -251,7 +251,7 @@ void ServiceManager::ExecuteSubProcess()
 {
 	SetLastError(0);
 	SERVICE_TABLE_ENTRY	m_lpServiceStartTable;
-	m_lpServiceStartTable.lpServiceName=const_cast<wchar_t*>(SERVICE_PROPERTIES_INSTANCE.GetServiceName());
+	m_lpServiceStartTable.lpServiceName=const_cast<TCHAR*>(SERVICE_PROPERTIES_INSTANCE.GetServiceName());
 	m_lpServiceStartTable.lpServiceProc=ServiceMain;
 
 	if(!StartServiceCtrlDispatcher(&m_lpServiceStartTable))
@@ -520,7 +520,7 @@ void ServiceManager::RunCustomProcess(int waitTimeInMilliSec)
 
 		
 		// create the process
-		if(CreateProcess(NULL, const_cast<wchar_t*>( cmd.GetString()),NULL,NULL,FALSE,NORMAL_PRIORITY_CLASS, NULL,NULL,&startUpInfo,&pProcInfo))
+		if(CreateProcess(NULL, const_cast<TCHAR*>( cmd.GetString()),NULL,NULL,FALSE,NORMAL_PRIORITY_CLASS, NULL,NULL,&startUpInfo,&pProcInfo))
 		{
 			WaitForSingleObject(pProcInfo.hProcess,(DWORD)waitTimeInMilliSec);
 			continue;
@@ -557,7 +557,7 @@ void ServiceManager::RunCommand(CString command, int waitTimeInMilliSec)
 
 
 		// create the process
-		if(CreateProcess(NULL, const_cast<wchar_t*>( cmd.GetString()),NULL,NULL,FALSE,NORMAL_PRIORITY_CLASS, NULL,NULL,&startUpInfo,&pProcInfo))
+		if(CreateProcess(NULL, const_cast<TCHAR*>( cmd.GetString()),NULL,NULL,FALSE,NORMAL_PRIORITY_CLASS, NULL,NULL,&startUpInfo,&pProcInfo))
 		{
 			WaitForSingleObject(pProcInfo.hProcess,(DWORD)waitTimeInMilliSec);
 			continue;
