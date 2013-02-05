@@ -112,8 +112,8 @@ BaseManagementObject::BaseManagementObject(ManagementObjectType objType,unsigned
 	m_customProcessCommandLine.Trim();
 	BaseManagementObject::ParseCommand(m_customProcessCommandLine,m_customProcessCommandLineList);
 
-	m_preProcessWaitTime=GetPrivateProfileInt(m_objectString.GetString(),_T("PreProcessWaitTime"),-1,m_iniFileName.GetString());
-	m_postProcessWaitTime=GetPrivateProfileInt(m_objectString.GetString(),_T("PostProcessWaitTime"),-1,m_iniFileName.GetString());
+	m_preProcessWaitTime=GetPrivateProfileInt(m_objectString.GetString(),_T("PreProcessWaitTime"),WAITTIME_INIFINITE,m_iniFileName.GetString());
+	m_postProcessWaitTime=GetPrivateProfileInt(m_objectString.GetString(),_T("PostProcessWaitTime"),WAITTIME_INIFINITE,m_iniFileName.GetString());
 	
 	memset(textBuffer,0,sizeof(TCHAR)*MAX_PATH);
 	GetPrivateProfileString(m_objectString.GetString(),_T("Impersonate"),_T("N"),textBuffer,MAX_PATH,m_iniFileName.GetString());

@@ -32,7 +32,7 @@ VOID WINAPI ServiceMain(DWORD dwArgc, LPTSTR *lpszArgv);
 
 bool ServiceManager::BounceProcess(int idx)
 {
-	if(idx<-1 || idx>31)
+	if(idx<OBJECT_ID_ALL || idx>31)
 	{
 		TCHAR pTemp[121];
 		_stprintf(pTemp, _T("Invalid argument to BounceProcess: %d"), idx); 
@@ -86,7 +86,7 @@ bool ServiceManager::BounceProcess(int idx)
 
 bool ServiceManager::StartProcess(int idx)
 {
-	if(idx<-1 || idx>31)
+	if(idx<OBJECT_ID_ALL || idx>31)
 	{
 		TCHAR pTemp[121];
 		_stprintf(pTemp, _T("Invalid argument to StartProcess: %d"), idx); 
@@ -140,7 +140,7 @@ bool ServiceManager::StartProcess(int idx)
 
 bool ServiceManager::EndProcess(int idx)
 {
-	if(idx<-1 || idx>31)
+	if(idx<OBJECT_ID_ALL || idx>31)
 	{
 		TCHAR pTemp[121];
 		_stprintf(pTemp, _T("Invalid argument to EndProcess: %d"), idx); 
@@ -194,7 +194,7 @@ bool ServiceManager::EndProcess(int idx)
 
 bool ServiceManager::CustomProcess(int idx)
 {
-	if(idx<-1 || idx>31)
+	if(idx<OBJECT_ID_ALL || idx>31)
 	{
 		TCHAR pTemp[121];
 		_stprintf(pTemp, _T("Invalid argument to CustomProcess: %d"), idx); 

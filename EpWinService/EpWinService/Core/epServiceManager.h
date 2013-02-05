@@ -121,7 +121,7 @@ public:
 	/*!
 	Run the Custom Process
 	@param[in] waitTimeInMilliSec wait time in milli-seconds
-	@remark waitTimeInMilliSec is equal to -1 (0xffffffff) then waits for infinite time.
+	@remark waitTimeInMilliSec is equal to WAITTIME_INIFINITE (0xffffffff) then waits for infinite time.
 	*/
 	void RunCustomProcess(int waitTimeInMilliSec);
 
@@ -129,7 +129,7 @@ public:
 	Run command.
 	@param[in] command command to run
 	@param[in] waitTimeInMilliSec wait time in milli-seconds
-	@remark waitTimeInMilliSec is equal to -1 (0xffffffff) then waits for infinite time.
+	@remark waitTimeInMilliSec is equal to WAITTIME_INIFINITE (0xffffffff) then waits for infinite time.
 	*/
 	void RunCommand(CString command, int waitTimeInMilliSec);
 

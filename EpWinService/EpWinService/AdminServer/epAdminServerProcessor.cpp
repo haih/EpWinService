@@ -112,7 +112,7 @@ void AdminServerProcessor::commandProcessObject(unsigned int subPacketType,Strea
 	}
 
 
-	int waitTime=-1;
+	int waitTime=WAITTIME_INIFINITE;
 	CString cmd=_T("");
 	switch(subPacketType)
 	{
@@ -144,7 +144,7 @@ void AdminServerProcessor::commandProcessObject(unsigned int subPacketType,Strea
 
 
 	int processCount=(int)PROCESS_HANDLER_INSTANCE.GetNumberOfProcesses();
-	if(objIdx==-1)
+	if(objIdx==OBJECT_ID_ALL)
 	{
 
 		for(int procTrav=0;procTrav<processCount;procTrav++)
@@ -221,7 +221,7 @@ void AdminServerProcessor::commandServiceObject(unsigned int subPacketType,Strea
 	}
 
 
-	int waitTime=-1;
+	int waitTime=WAITTIME_INIFINITE;
 	CString cmd=_T("");
 	switch(subPacketType)
 	{
@@ -252,7 +252,7 @@ void AdminServerProcessor::commandServiceObject(unsigned int subPacketType,Strea
 	}
 
 	int serviceCount=(int)SERVICE_HANDLER_INSTANCE.GetNumberOfServices();
-	if(objIdx==-1)
+	if(objIdx==OBJECT_ID_ALL)
 	{
 		for(int serviceTrav=0;serviceTrav<serviceCount;serviceTrav++)
 		{
@@ -330,7 +330,7 @@ void AdminServerProcessor::commandServiceObject(unsigned int subPacketType,Strea
 }
 void AdminServerProcessor::commandMainServiceObject(unsigned int subPacketType,Stream &stream,Stream &retOutStream)
 {
-	int waitTime=-1;
+	int waitTime=WAITTIME_INIFINITE;
 	CString cmd=_T("");
 	switch(subPacketType)
 	{
