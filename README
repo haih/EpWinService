@@ -15,6 +15,7 @@ FEATURES
 * Supports Custom-Process Command to be run through Administration Server
 * Supports all operation on application service through Administration Server
 * Supports the properties change of application service through Administration Server
+* Supports API Library (EpWinServiceAPILibrary) for the client-side application development
 
 
 DOCUMENTATION
