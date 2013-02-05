@@ -338,26 +338,28 @@ typedef enum _packetProcessStatus{
 
 /// Process's Status Type
 typedef enum _processStatusType{
+	/// Unknown
+	PROCESS_STATUS_TYPE_UNKNOWN=0,
 	/// Running
-	PROCESS_STATUS_TYPE_RUNNING=0,
+	PROCESS_STATUS_TYPE_RUNNING,
 	/// Stopped
 	PROCESS_STATUS_TYPE_STOPPED,
 }ProcessStatusType;
 
-/*!
-@def OBJECT_ID_NONE
-@brief Object ID None Declaration
+	/*!
+	@def OBJECT_IDX_NONE
+	@brief Object Index None Declaration
 
-Macro for the Object ID None.
-*/
-#define OBJECT_ID_NONE 0xfffffffe
-/*!
-@def OBJECT_ID_ALL
-@brief Object ID All Declaration
+	Macro for the Object Index None.
+	*/
+#define OBJECT_IDX_NONE 0xfffffffe
+	/*!
+	@def OBJECT_IDX_ALL
+	@brief Object Index All Declaration
 
-Macro for the Object ID All.
-*/
-#define OBJECT_ID_ALL  0xffffffff
+	Macro for the Object Index All.
+	*/
+#define OBJECT_IDX_ALL  0xffffffff
 
 /*!
 @struct ReceivePacket epAdminServerPacketInfo.h

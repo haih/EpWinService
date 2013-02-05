@@ -144,7 +144,7 @@ void AdminServerProcessor::commandProcessObject(unsigned int subPacketType,Strea
 
 
 	int processCount=(int)PROCESS_HANDLER_INSTANCE.GetNumberOfProcesses();
-	if(objIdx==OBJECT_ID_ALL)
+	if(objIdx==OBJECT_IDX_ALL)
 	{
 
 		for(int procTrav=0;procTrav<processCount;procTrav++)
@@ -252,7 +252,7 @@ void AdminServerProcessor::commandServiceObject(unsigned int subPacketType,Strea
 	}
 
 	int serviceCount=(int)SERVICE_HANDLER_INSTANCE.GetNumberOfServices();
-	if(objIdx==OBJECT_ID_ALL)
+	if(objIdx==OBJECT_IDX_ALL)
 	{
 		for(int serviceTrav=0;serviceTrav<serviceCount;serviceTrav++)
 		{
