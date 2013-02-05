@@ -1,7 +1,7 @@
 DESCRIPTION
 
-EpWinService makes it easier for making multiple custom applications as Windows Services. 
-EpWinService also makes it easier to manage each custom application services through Administration Server 
+EpWinService is a Visual C++ framework that supports making multiple custom applications as Windows Services under a GPL3.0 license. 
+It enables to manage each custom application services through Administration Server 
 EpWinService supports Visual C++ 2005/2008/2010/2012.
 Source can be downloaded at <http://github.com/juhgiyo/epwinservice>
 
