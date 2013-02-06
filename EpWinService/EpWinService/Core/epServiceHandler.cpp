@@ -38,7 +38,7 @@ ServiceHandler::ServiceHandler()
 
 	CString iniFileName=FolderHelper::GetModuleFileName().c_str();
 	iniFileName.Replace(_T(".exe"),_T(".ini"));
-	TCHAR *textBuffer=new TCHAR[MAX_STRING_LENGTH];
+	TCHAR *textBuffer=EP_NEW TCHAR[MAX_STRING_LENGTH];
 
 	int serviceIndex=0;
 
@@ -52,13 +52,14 @@ ServiceHandler::ServiceHandler()
 		CString serviceName=textBuffer;
 		if(serviceName.GetLength()>0)
 		{
-			ServiceObject *newObj=new ServiceObject(serviceIndex);
+			ServiceObject *newObj=EP_NEW ServiceObject(serviceIndex);
 			m_serviceList.push_back(newObj);
 		}
 		else
 			break;
 		serviceIndex++;
 	}
+	EP_DELETE[] textBuffer;
 }
 
 ServiceHandler::~ServiceHandler()

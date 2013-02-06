@@ -78,7 +78,7 @@ BaseManagementObject::BaseManagementObject(ManagementObjectType objType,unsigned
 
 	m_iniFileName=FolderHelper::GetModuleFileName().c_str();
 	m_iniFileName.Replace(_T(".exe"),_T(".ini"));
-	TCHAR *textBuffer=new TCHAR[MAX_STRING_LENGTH];
+	TCHAR *textBuffer=EP_NEW TCHAR[MAX_STRING_LENGTH];
 	if(m_objType==MANAGEMENT_OBJECT_TYPE_PROCESS)
 		m_objectString=_T("Process");
 	else
@@ -148,7 +148,7 @@ BaseManagementObject::BaseManagementObject(ManagementObjectType objType,unsigned
 	m_delayStartTime=GetPrivateProfileInt(m_objectString.GetString(),_T("DelayStartTime"),0,m_iniFileName.GetString());
 	m_delayPauseEndTime=GetPrivateProfileInt(m_objectString.GetString(),_T("DelayPauseEndTime"),0,m_iniFileName.GetString());
 
-	delete[] textBuffer;
+	EP_DELETE[] textBuffer;
 }
 
 BaseManagementObject::~BaseManagementObject()

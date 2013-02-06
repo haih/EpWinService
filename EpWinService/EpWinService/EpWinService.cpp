@@ -24,6 +24,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "epProcessHandler.h"
 #include "epLogWriter.h"
 
+
+
+
 const int nBufferSize = 500;
 TCHAR *lpCmdLineData;
 TCHAR *lpCmdLineOption;
@@ -31,9 +34,10 @@ VOID ServiceMainProc();
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	lpCmdLineData=new TCHAR[nBufferSize+1];
-	lpCmdLineOption=new TCHAR[nBufferSize+1];
-	if(argc >= 1)
+
+	lpCmdLineData=EP_NEW TCHAR[nBufferSize+1];
+	lpCmdLineOption=EP_NEW TCHAR[nBufferSize+1];
+	if(argc > 1)
 	{
 		_tcscpy(lpCmdLineData, argv[1]);
 
@@ -71,11 +75,13 @@ int _tmain(int argc, _TCHAR* argv[])
 		_tprintf(_T("Command:-n <Process Index:-1~31>(End the process)\n"));
 		_tprintf(_T("Command:-c <Process Index:-1~31>(Run the custom process)\n"));
 		_tprintf(_T("Process Index:The index of the process to give the command (-1 for all processes)\n\n"));
+		EP_DELETE[] lpCmdLineData;
+		EP_DELETE[] lpCmdLineOption;
 		return 0;
 	}
 	ServiceMainProc();
-	delete[] lpCmdLineData;
-	delete[] lpCmdLineOption;
+	EP_DELETE[] lpCmdLineData;
+	EP_DELETE[] lpCmdLineOption;
 
 	return 0;
 }

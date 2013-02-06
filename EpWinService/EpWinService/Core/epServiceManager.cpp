@@ -260,6 +260,7 @@ void ServiceManager::ExecuteSubProcess()
 		TCHAR pTemp[121];
 		_stprintf(pTemp, _T("StartServiceCtrlDispatcher failed, error code = %d"), nError);
 		LOG_WRITER_INSTANCE.WriteLog( pTemp);
+		return;
 	}
 	TCHAR pTemp[121];
 	_stprintf(pTemp, _T("Service %s running\n"), SERVICE_PROPERTIES_INSTANCE.GetServiceName());

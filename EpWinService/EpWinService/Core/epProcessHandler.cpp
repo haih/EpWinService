@@ -29,7 +29,7 @@ ProcessHandler::ProcessHandler()
 {
 	CString iniFileName=FolderHelper::GetModuleFileName().c_str();
 	iniFileName.Replace(_T(".exe"),_T(".ini"));
-	TCHAR *textBuffer=new TCHAR[MAX_STRING_LENGTH];
+	TCHAR *textBuffer=EP_NEW TCHAR[MAX_STRING_LENGTH];
 
 	int procIndex=0;
 
@@ -43,13 +43,14 @@ ProcessHandler::ProcessHandler()
 		CString commandLine=textBuffer;
 		if(commandLine.GetLength()>0)
 		{
-			ProcessObject *newObj=new ProcessObject(procIndex);
+			ProcessObject *newObj=EP_NEW ProcessObject(procIndex);
 			m_processList.push_back(newObj);
 		}
 		else
 			break;
 		procIndex++;
 	}
+	EP_DELETE[] textBuffer;
 
 
 	

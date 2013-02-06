@@ -36,5 +36,5 @@ AdminServer::~AdminServer()
 
 BaseServerWorker* AdminServer::createNewWorker()
 {
-	return new AdminServerWorker();
+	return EP_NEW AdminServerWorker();
 }

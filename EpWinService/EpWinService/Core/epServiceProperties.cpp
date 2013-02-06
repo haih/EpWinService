@@ -23,7 +23,7 @@ ServiceProperties::ServiceProperties()
 {
 	m_iniFileName=FolderHelper::GetModuleFileName().c_str();
 	m_iniFileName.Replace(_T(".exe"),_T(".ini"));
-	TCHAR *textBuffer=new TCHAR[MAX_STRING_LENGTH];
+	TCHAR *textBuffer=EP_NEW TCHAR[MAX_STRING_LENGTH];
 	
 	memset(textBuffer,0,sizeof(TCHAR)*MAX_STRING_LENGTH);
 	GetPrivateProfileString(_T("Settings"),_T("ServiceName"),_T("EpWinService"),textBuffer,MAX_STRING_LENGTH,m_iniFileName.GetString());
@@ -74,7 +74,7 @@ ServiceProperties::ServiceProperties()
 	m_checkProcessInterval=GetPrivateProfileInt(_T("Settings"),_T("CheckProcessInterval"),10,m_iniFileName.GetString());
 	m_checkServiceInterval=GetPrivateProfileInt(_T("Settings"),_T("CheckServiceInterval"),10,m_iniFileName.GetString());
 
-	delete[] textBuffer;
+	EP_DELETE[] textBuffer;
 
 }
 

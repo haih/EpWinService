@@ -47,7 +47,8 @@ Macro for the Log Writer Singleton Instance.
 @class LogWriter epLogWriter.h
 @brief A class for Writing Log.
 */
-class LogWriter{
+class LogWriter:public BaseTextFile
+{
 public:
 	friend SingletonHolder<LogWriter>;
 	
@@ -62,17 +63,62 @@ private:
 	Default Constructor
 
 	Initializes the Log Writer
+	@param[in] lockPolicyType The lock policy
 	*/
-	LogWriter();
+	LogWriter(LockPolicy lockPolicyType=EP_LOCK_POLICY);
+	
+	/*!
+	Default Copy Constructor
+
+	Initializes the LogWriter 
+	@param[in] b the second object
+	*/
+	LogWriter(const LogWriter& b);
+
+	/*!
+	Assignment operator overloading
+	@param[in] b the second object
+	@return the new copied object
+	*/
+	LogWriter & operator=(const LogWriter&b)
+	{
+		if(this!=&b)
+		{
+			BaseTextFile::operator =(b);
+			LockObj lock(m_logLock);
+			m_fileName=b.m_fileName;
+		}
+		return *this;
+	}
+
+	/*!
+	Loop Function that writes to the file.
+	@remark Sub classes should implement this function
+	*/
+	virtual void writeLoop();
+
+	/*!
+	Actual load Function that loads values from the file.
+	@remark Sub classes should implement this function
+	@param[in] lines the all data from the file
+	*/
+	virtual void loadFromFile(const EpTString &lines);
 	
 	/*!
 	Default Destructor
 
 	Destroy the Log Writer
 	*/
-	~LogWriter();
+	virtual ~LogWriter();
+
+	/// Name of the Log File
+	CString m_fileName;
+
+	/// Log String
+	CString m_logString;
+
+	/// Log Lock
+	BaseLock *m_logLock;
 	
-	/// Mutex Lock
-	Mutex *m_mux;
 };
 #endif //__EP_LOG_WRITER_H__

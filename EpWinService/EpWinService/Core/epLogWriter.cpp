@@ -19,36 +19,71 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "epLogWriter.h"
 
 
-LogWriter::LogWriter()
+LogWriter::LogWriter(LockPolicy lockPolicyType):BaseTextFile(FILE_ENCODING_TYPE_UTF16LE,lockPolicyType)
 {
-	CString logMutexName=FolderHelper::GetModuleFileName().c_str();
-	logMutexName.Replace(_T(".exe"),_T("Mutex"));
-	m_mux=new Mutex(logMutexName.GetString());
+	m_fileName=FolderHelper::GetModuleFileName().c_str();
+	m_fileName.Replace(_T(".exe"),_T(".log"));
+	m_lockPolicy=lockPolicyType;
+	switch(lockPolicyType)
+	{
+	case LOCK_POLICY_CRITICALSECTION:
+		m_logLock=EP_NEW CriticalSectionEx();
+		break;
+	case LOCK_POLICY_MUTEX:
+		m_logLock=EP_NEW Mutex();
+		break;
+	case LOCK_POLICY_NONE:
+		m_logLock=EP_NEW NoLock();
+		break;
+	default:
+		m_logLock=NULL;
+		break;
+	}
 }
 
 LogWriter::~LogWriter()
 {
-	if(m_mux)
-		delete m_mux;
+	if(m_logLock)
+		EP_DELETE m_logLock;
+}
+
+LogWriter::LogWriter(const LogWriter& b):BaseTextFile(b)
+{
+	m_fileName=b.m_fileName;
+	m_lockPolicy=b.m_lockPolicy;
+	switch(m_lockPolicy)
+	{
+	case LOCK_POLICY_CRITICALSECTION:
+		m_logLock=EP_NEW CriticalSectionEx();
+		break;
+	case LOCK_POLICY_MUTEX:
+		m_logLock=EP_NEW Mutex();
+		break;
+	case LOCK_POLICY_NONE:
+		m_logLock=EP_NEW NoLock();
+		break;
+	default:
+		m_logLock=NULL;
+		break;
+	}
 }
 
 void LogWriter::WriteLog(const  TCHAR* pMsg)
 {
 	// write error or other information into log file
-	EP_ASSERT(m_mux);
-	LockObj m_lock(m_mux);
-	static CString m_logFileName=_T("");
-	if(m_logFileName.Compare(_T(""))==0)
-	{
-		m_logFileName=FolderHelper::GetModuleFileName().c_str();
-		m_logFileName.Replace(_T(".exe"),_T(".log"));
-	}
-	try
-	{
-		SYSTEMTIME oT;
-		::GetLocalTime(&oT);
-		FILE* pLog = _tfopen(m_logFileName,_T("a"));
-		_ftprintf(pLog,_T("%02d/%02d/%04d, %02d:%02d:%02d\n    %s\n"),oT.wMonth,oT.wDay,oT.wYear,oT.wHour,oT.wMinute,oT.wSecond,pMsg); 
-		fclose(pLog);
-	} catch(...) {}
+	LockObj lock(m_logLock);
+	SYSTEMTIME oT;
+	::GetLocalTime(&oT);
+	m_logString=_T("");
+	m_logString.AppendFormat(_T("%02d/%02d/%04d, %02d:%02d:%02d\n    %s\n"),oT.wMonth,oT.wDay,oT.wYear,oT.wHour,oT.wMinute,oT.wSecond,pMsg);
+	AppendToFile(m_fileName);
+}
+
+void LogWriter::writeLoop()
+{
+	writeToFile(m_logString.GetString());
+}
+
+void LogWriter::loadFromFile(const EpTString &lines)
+{
 }

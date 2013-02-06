@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ServiceObject::ServiceObject(unsigned int serviceIndex):BaseManagementObject(MANAGEMENT_OBJECT_TYPE_SERVICE,serviceIndex)
 {
 
-	TCHAR *textBuffer=new TCHAR[MAX_STRING_LENGTH];
+	TCHAR *textBuffer=EP_NEW TCHAR[MAX_STRING_LENGTH];
 
 	memset(textBuffer,0,sizeof(TCHAR)*MAX_STRING_LENGTH);
 	GetPrivateProfileString(m_objectString.GetString(),_T("ServiceName"),_T(""),textBuffer,MAX_STRING_LENGTH,m_iniFileName.GetString());
@@ -34,7 +34,7 @@ ServiceObject::ServiceObject(unsigned int serviceIndex):BaseManagementObject(MAN
 	
 	m_isUserStopped=false;
 
-	delete[] textBuffer;
+	EP_DELETE[] textBuffer;
 }
 
 ServiceObject::~ServiceObject()

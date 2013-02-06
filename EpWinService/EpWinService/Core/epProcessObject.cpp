@@ -25,7 +25,7 @@ ProcessObject::ProcessObject(unsigned int procIndex):BaseManagementObject(MANAGE
 	m_pProcInfo.hProcess=0;
 	m_pProcInfo.hThread=0;
 
-	TCHAR *textBuffer=new TCHAR[MAX_STRING_LENGTH];
+	TCHAR *textBuffer=EP_NEW TCHAR[MAX_STRING_LENGTH];
 
 	memset(textBuffer,0,sizeof(TCHAR)*MAX_STRING_LENGTH);
 	GetPrivateProfileString(m_objectString.GetString(),_T("CommandLine"),_T(""),textBuffer,MAX_STRING_LENGTH,m_iniFileName.GetString());
@@ -33,7 +33,7 @@ ProcessObject::ProcessObject(unsigned int procIndex):BaseManagementObject(MANAGE
 	m_commandLine.Trim();
 
 
-	delete[] textBuffer;
+	EP_DELETE[] textBuffer;
 }
 
 ProcessObject::~ProcessObject()
