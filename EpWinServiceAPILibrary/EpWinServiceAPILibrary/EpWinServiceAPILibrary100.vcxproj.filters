@@ -42,9 +42,6 @@
     <ClInclude Include="EpLibraryHeaders\epAssert.h">
       <Filter>EpLibraryHeaders</Filter>
     </ClInclude>
-    <ClInclude Include="EpLibraryHeaders\epBaseFile.h">
-      <Filter>EpLibraryHeaders</Filter>
-    </ClInclude>
     <ClInclude Include="EpLibraryHeaders\epBaseJob.h">
       <Filter>EpLibraryHeaders</Filter>
     </ClInclude>
@@ -308,6 +305,9 @@
     </ClInclude>
     <ClInclude Include="Headers\epWinServiceInfoStruct.h">
       <Filter>Header Files\Definitions</Filter>
+    </ClInclude>
+    <ClInclude Include="EpLibraryHeaders\epBaseTextFile.h">
+      <Filter>EpLibraryHeaders</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

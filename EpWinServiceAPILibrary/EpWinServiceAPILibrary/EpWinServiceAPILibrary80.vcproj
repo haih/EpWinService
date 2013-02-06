@@ -306,10 +306,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\EpLibraryHeaders\epBaseFile.h"
-				>
-			</File>
-			<File
 				RelativePath=".\EpLibraryHeaders\epBaseJob.h"
 				>
 			</File>
@@ -323,6 +319,10 @@
 			</File>
 			<File
 				RelativePath=".\EpLibraryHeaders\epBaseOutputter.h"
+				>
+			</File>
+			<File
+				RelativePath=".\EpLibraryHeaders\epBaseTextFile.h"
 				>
 			</File>
 			<File

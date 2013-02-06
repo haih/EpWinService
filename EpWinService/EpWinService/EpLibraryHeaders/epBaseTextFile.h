@@ -1,9 +1,9 @@
 /*! 
-@file epBaseFile.h
+@file epBaseTextFile.h
 @author Woong Gyu La a.k.a Chris. <juhgiyo@gmail.com>
 		<http://github.com/juhgiyo/eplibrary>
 @date October 01, 2011
-@brief Base File Interface
+@brief Base Text File Interface
 @version 2.0
 
 @section LICENSE
@@ -25,11 +25,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 @section DESCRIPTION
 
-An Interface for the Base File Class.
+An Interface for the Base Text File Class.
 
 */
-#ifndef __EP_BASE_FILE_H__
-#define __EP_BASE_FILE_H__
+#ifndef __EP_BASE_TEXT_FILE_H__
+#define __EP_BASE_TEXT_FILE_H__
 #include "epLib.h"
 #include "epSystem.h"
 #include "epMemory.h"
@@ -42,10 +42,10 @@ using namespace std;
 
 namespace epl{
 	/*!
-	@class BaseFile epBaseFile.h
+	@class BaseTextFile epBaseFile.h
 	@brief A class for Base File.
 	*/
-	class EP_LIBRARY BaseFile{
+	class EP_LIBRARY BaseTextFile{
 	public:
 
 		/*!
@@ -55,7 +55,7 @@ namespace epl{
 		@param[in] encodingType the encoding type for this file
 		@param[in] lockPolicyType The lock policy
 		*/
-		BaseFile(FileEncodingType encodingType=FILE_ENCODING_TYPE_UTF16LE, LockPolicy lockPolicyType=EP_LOCK_POLICY);
+		BaseTextFile(FileEncodingType encodingType=FILE_ENCODING_TYPE_UTF16LE, LockPolicy lockPolicyType=EP_LOCK_POLICY);
 
 		/*!
 		Default Copy Constructor
@@ -63,14 +63,14 @@ namespace epl{
 		Initializes the Base File 
 		@param[in] b the second object
 		*/
-		BaseFile(const BaseFile& b);
+		BaseTextFile(const BaseTextFile& b);
 
 		/*!
 		Assignment operator overloading
 		@param[in] b the second object
 		@return the new copied object
 		*/
-		BaseFile & operator=(const BaseFile&b)
+		BaseTextFile & operator=(const BaseTextFile&b)
 		{
 			if(this!=&b)
 			{
@@ -86,7 +86,7 @@ namespace epl{
 
 		Destroy the Base File 
 		*/
-		virtual ~BaseFile();
+		virtual ~BaseTextFile();
 
 	
 		/*!
@@ -140,7 +140,7 @@ namespace epl{
 		@remark Sub classes should implement this function
 		@param[in] lines the all data from the file
 		*/
-		virtual void loadFromFile(EpTString lines)=0;
+		virtual void loadFromFile(const EpTString &lines)=0;
 
 		/// Encoding type of the file
 		FileEncodingType m_encodingType;
@@ -156,4 +156,4 @@ namespace epl{
 
 
 
-#endif //__EP_BASE_FILE_H__
+#endif //__EP_BASE_TEXT_FILE_H__

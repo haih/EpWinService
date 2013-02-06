@@ -116,9 +116,6 @@
     <ClInclude Include="EpLibraryHeaders\epAssert.h">
       <Filter>EpLibraryHeaders</Filter>
     </ClInclude>
-    <ClInclude Include="EpLibraryHeaders\epBaseFile.h">
-      <Filter>EpLibraryHeaders</Filter>
-    </ClInclude>
     <ClInclude Include="EpLibraryHeaders\epBaseJob.h">
       <Filter>EpLibraryHeaders</Filter>
     </ClInclude>
@@ -355,6 +352,9 @@
     </ClInclude>
     <ClInclude Include="Core\epServiceObject.h">
       <Filter>Core\Management\ServiceManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="EpLibraryHeaders\epBaseTextFile.h">
+      <Filter>EpLibraryHeaders</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
