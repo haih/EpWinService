@@ -124,41 +124,53 @@
     <OutDir>$(SolutionDir)Bin\</OutDir>
     <IntDir>Intermediate\VS110\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_D110</TargetName>
+    <IncludePath>$(WindowsSdkDir)include\shared;$(WindowsSdkDir)include\um;$(WindowsSdkDir)include\winrt;C:\Program Files\Codejock Software\MFC\Xtreme ToolkitPro v15.1.3.0908\Source;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;C:\Program Files\BCGSoft\BCGControlBarPro\BCGCBPro</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'">
     <OutDir>$(SolutionDir)Bin\</OutDir>
     <IntDir>Intermediate\VS110\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_DLL_D110</TargetName>
+    <IncludePath>$(WindowsSdkDir)include\shared;$(WindowsSdkDir)include\um;$(WindowsSdkDir)include\winrt;C:\Program Files\Codejock Software\MFC\Xtreme ToolkitPro v15.1.3.0908\Source;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;C:\Program Files\BCGSoft\BCGControlBarPro\BCGCBPro</IncludePath>
+    <LibraryPath>$(WindowsSdkDir)Lib\win8\um\x86;C:\Program Files\Codejock Software\MFC\Xtreme ToolkitPro v15.1.3.0908\Lib\vc100;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib;C:\Program Files\BCGSoft\BCGControlBarPro\bin</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug DLL Unicode|Win32'">
     <OutDir>$(SolutionDir)Bin\</OutDir>
     <IntDir>Intermediate\VS110\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)U_DLL_D110</TargetName>
+    <IncludePath>$(WindowsSdkDir)include\shared;$(WindowsSdkDir)include\um;$(WindowsSdkDir)include\winrt;C:\Program Files\Codejock Software\MFC\Xtreme ToolkitPro v15.1.3.0908\Source;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;C:\Program Files\BCGSoft\BCGControlBarPro\BCGCBPro</IncludePath>
+    <LibraryPath>$(WindowsSdkDir)Lib\win8\um\x86;C:\Program Files\Codejock Software\MFC\Xtreme ToolkitPro v15.1.3.0908\Lib\vc100;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib;C:\Program Files\BCGSoft\BCGControlBarPro\bin</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Unicode|Win32'">
     <OutDir>$(SolutionDir)Bin\</OutDir>
     <IntDir>Intermediate\VS110\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)U_D110</TargetName>
+    <IncludePath>$(WindowsSdkDir)include\shared;$(WindowsSdkDir)include\um;$(WindowsSdkDir)include\winrt;C:\Program Files\Codejock Software\MFC\Xtreme ToolkitPro v15.1.3.0908\Source;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;C:\Program Files\BCGSoft\BCGControlBarPro\BCGCBPro</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)Bin\</OutDir>
     <IntDir>Intermediate\VS110\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)110</TargetName>
+    <IncludePath>$(WindowsSdkDir)include\shared;$(WindowsSdkDir)include\um;$(WindowsSdkDir)include\winrt;C:\Program Files\Codejock Software\MFC\Xtreme ToolkitPro v15.1.3.0908\Source;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;C:\Program Files\BCGSoft\BCGControlBarPro\BCGCBPro</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release DLL|Win32'">
     <OutDir>$(SolutionDir)Bin\</OutDir>
     <IntDir>Intermediate\VS110\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_DLL110</TargetName>
+    <IncludePath>$(WindowsSdkDir)include\shared;$(WindowsSdkDir)include\um;$(WindowsSdkDir)include\winrt;C:\Program Files\Codejock Software\MFC\Xtreme ToolkitPro v15.1.3.0908\Source;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;C:\Program Files\BCGSoft\BCGControlBarPro\BCGCBPro</IncludePath>
+    <LibraryPath>$(WindowsSdkDir)Lib\win8\um\x86;C:\Program Files\Codejock Software\MFC\Xtreme ToolkitPro v15.1.3.0908\Lib\vc100;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib;C:\Program Files\BCGSoft\BCGControlBarPro\bin</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release DLL Unicode|Win32'">
     <OutDir>$(SolutionDir)Bin\</OutDir>
     <IntDir>Intermediate\VS110\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)U_DLL110</TargetName>
+    <IncludePath>$(WindowsSdkDir)include\shared;$(WindowsSdkDir)include\um;$(WindowsSdkDir)include\winrt;C:\Program Files\Codejock Software\MFC\Xtreme ToolkitPro v15.1.3.0908\Source;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;C:\Program Files\BCGSoft\BCGControlBarPro\BCGCBPro</IncludePath>
+    <LibraryPath>$(WindowsSdkDir)Lib\win8\um\x86;C:\Program Files\Codejock Software\MFC\Xtreme ToolkitPro v15.1.3.0908\Lib\vc100;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib;C:\Program Files\BCGSoft\BCGControlBarPro\bin</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Unicode|Win32'">
     <OutDir>$(SolutionDir)Bin\</OutDir>
     <IntDir>Intermediate\VS110\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)U110</TargetName>
+    <IncludePath>$(WindowsSdkDir)include\shared;$(WindowsSdkDir)include\um;$(WindowsSdkDir)include\winrt;C:\Program Files\Codejock Software\MFC\Xtreme ToolkitPro v15.1.3.0908\Source;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;C:\Program Files\BCGSoft\BCGControlBarPro\BCGCBPro</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
