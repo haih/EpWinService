@@ -367,7 +367,7 @@ namespace epws
 	#define OBJECT_IDX_ALL  0xffffffff
 
 	/*!
-	@struct ReceivePacket epAdminServerPacketInfo.h
+	@struct ReceivePacket epWinServiceClientPacketInfo.h
 	@brief A Class for the Receive Packet.	
 	*/
 	struct EP_WINSERVICE_API ReceivePacket{
@@ -376,7 +376,7 @@ namespace epws
 	};
 
 	/*!
-	@struct SendPacket epAdminServerPacketInfo.h
+	@struct SendPacket epWinServiceClientPacketInfo.h
 	@brief A Class for the Send Packet.	
 	*/
 	struct EP_WINSERVICE_API SendPacket{

@@ -78,9 +78,7 @@ private:
 	/*!
 	Actually process the Process Command type packet and save the result to the retOutStream.
 	@param[in] subPacketType the command type to process
-	@param[in] objIdx the index of the process to command
-	@param[in] waitTime the waitTime for CustomProcess/RunCommand
-	@param[in] cmd the command for RunCommand
+	@param[in] stream the packet stream received
 	@param[out] retOutStream the stream to save the result status
 	*/
 	void commandProcessObject(unsigned int subPacketType,Stream &stream,Stream &retOutStream);
@@ -88,9 +86,7 @@ private:
 	/*!
 	Actually process the Service Command type packet and save the result to the retOutStream.
 	@param[in] subPacketType the command type to process
-	@param[in] objIdx the index of the process to command
-	@param[in] waitTime the waitTime for CustomProcess/RunCommand
-	@param[in] cmd the command for RunCommand
+	@param[in] stream the packet stream received
 	@param[out] retOutStream the stream to save the result status
 	*/
 	void commandServiceObject(unsigned int subPacketType,Stream &stream,Stream &retOutStream);
