@@ -34,8 +34,8 @@ An Interface for Service Object.
 #include "epServiceDefines.h"
 
 /*! 
-@class ProcessObject epProcessObject.h
-@brief A class for Process Object.
+@class ServiceObject epServiceObject.h
+@brief A class for Service Object.
 */
 class ServiceObject:public BaseManagementObject{
 

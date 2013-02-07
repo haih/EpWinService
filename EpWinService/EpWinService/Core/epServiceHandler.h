@@ -54,7 +54,7 @@ Monitor the service's termination or fault and restart the service if stopped
 VOID ServiceMonitorThread(VOID *);
 
 /*! 
-@struct ServiceInfo epServiceManager.h
+@struct ServiceInfo epServiceHandler.h
 @brief A struct for Service Info.
 */
 struct ServiceInfo{
@@ -88,8 +88,8 @@ struct ServiceInfo{
 
 
 /*! 
-@class ServiceManager epServiceManager.h
-@brief A class for Service Manager.
+@class ServiceHandler epServiceHandler.h
+@brief A class for Service Handler.
 */
 class ServiceHandler{
 public:
