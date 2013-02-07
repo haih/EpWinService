@@ -20,7 +20,6 @@ using namespace epws;
 
 WinServiceResult::WinServiceResult()
 {
-	m_packetID=0;
 	m_procCnt=0;
 }
 WinServiceResult::~WinServiceResult()
@@ -29,7 +28,6 @@ WinServiceResult::~WinServiceResult()
 }
 WinServiceResult::WinServiceResult(const WinServiceResult& b)
 {
-	m_packetID=b.m_packetID;
 	m_procCnt=b.m_procCnt;
 	vector<WinServiceResultInfo*>::const_iterator iter;
 	for(iter=b.m_resultList.begin();iter!=b.m_resultList.end();iter++)
@@ -44,7 +42,6 @@ WinServiceResult & WinServiceResult::operator=(const WinServiceResult&b)
 	if(this!=&b)
 	{
 		Clear();
-		m_packetID=b.m_packetID;
 		m_procCnt=b.m_procCnt;
 		vector<WinServiceResultInfo*>::const_iterator iter;
 		for(iter=b.m_resultList.begin();iter!=b.m_resultList.end();iter++)
@@ -66,13 +63,8 @@ void WinServiceResult::Clear()
 	}
 	m_resultList.clear();
 	m_procCnt=0;
-	m_packetID=0;
 }
 
-unsigned int WinServiceResult::GetPacketID() const
-{
-	return m_packetID;
-}
 unsigned int WinServiceResult::GetResultCount() const
 {
 	return m_procCnt;
@@ -90,11 +82,6 @@ const WinServiceResultInfo&WinServiceResult::GetAt(unsigned int idx) const
 }
 
 
-
-void WinServiceResult::SetPacketID(unsigned int packetId)
-{
-	m_packetID=packetId;
-}
 void WinServiceResult::SetResultCount(unsigned int resultCnt)
 {
 	m_procCnt=resultCnt;

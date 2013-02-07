@@ -285,16 +285,7 @@
     <ClInclude Include="Headers\epWinServiceClient.h">
       <Filter>Header Files\Client</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\epWinServicePacketIDGenerator.h">
-      <Filter>Header Files\Client</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\epWinServicePacketParser.h">
-      <Filter>Header Files\Client</Filter>
-    </ClInclude>
     <ClInclude Include="Headers\epWinServicePacketProcessor.h">
-      <Filter>Header Files\Client</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\epWinServiceParserList.h">
       <Filter>Header Files\Client</Filter>
     </ClInclude>
     <ClInclude Include="Headers\epWinServiceClientPacketInfo.h">
@@ -326,16 +317,7 @@
     <ClCompile Include="Sources\epWinServiceClient.cpp">
       <Filter>Source Files\Client</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\epWinServicePacketIDGenerator.cpp">
-      <Filter>Source Files\Client</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\epWinServicePacketParser.cpp">
-      <Filter>Source Files\Client</Filter>
-    </ClCompile>
     <ClCompile Include="Sources\epWinServicePacketProcessor.cpp">
-      <Filter>Source Files\Client</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\epWinServiceParserList.cpp">
       <Filter>Source Files\Client</Filter>
     </ClCompile>
   </ItemGroup>

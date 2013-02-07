@@ -1,9 +1,9 @@
 /*! 
-@file epBaseClientUDP.h
+@file epBaseClientUDPManual.h
 @author Woong Gyu La a.k.a Chris. <juhgiyo@gmail.com>
 		<http://github.com/juhgiyo/epserverengine>
 @date July 18, 2012
-@brief Base UDP Client Interface
+@brief Base UDP Client Manual Interface
 @version 1.0
 
 @section LICENSE
@@ -35,8 +35,6 @@ An Interface for Base UDP Client.
 #include "epPacket.h"
 #include "epBaseServerSendObject.h"
 #include "epServerConf.h"
-#include "epBasePacketParser.h"
-#include "epParserList.h"
 
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
@@ -64,10 +62,10 @@ using namespace std;
 namespace epse{
 
 	/*! 
-	@class BaseClient epBaseClient.h
-	@brief A class for Base Client.
+	@class BaseClientUDPManual epBaseClientUDPManual.h
+	@brief A class for Base Client Manual.
 	*/
-	class EP_SERVER_ENGINE BaseClientUDP:public BaseServerSendObject{
+	class EP_SERVER_ENGINE BaseClientUDPManual:public BaseServerSendObject{
 
 	public:
 		/*!
@@ -76,32 +74,30 @@ namespace epse{
 		Initializes the Client
 		@param[in] hostName the hostname string
 		@param[in] port the port string
-		@param[in] syncPolicy Synchronous Policy
-		@param[in] waitTimeMilliSec wait time for Client Thread to terminate
 		@param[in] lockPolicyType The lock policy
 		*/
-		BaseClientUDP(const TCHAR * hostName=_T(DEFAULT_HOSTNAME), const TCHAR * port=_T(DEFAULT_PORT),SyncPolicy syncPolicy=SYNC_POLICY_ASYNCHRONOUS,unsigned int waitTimeMilliSec=WAITTIME_INIFINITE,epl::LockPolicy lockPolicyType=epl::EP_LOCK_POLICY);
+		BaseClientUDPManual(const TCHAR * hostName=_T(DEFAULT_HOSTNAME), const TCHAR * port=_T(DEFAULT_PORT),epl::LockPolicy lockPolicyType=epl::EP_LOCK_POLICY);
 
 		/*!
 		Default Copy Constructor
 
-		Initializes the BaseClientUDP
+		Initializes the BaseClientUDPManual
 		@param[in] b the second object
 		*/
-		BaseClientUDP(const BaseClientUDP& b);
+		BaseClientUDPManual(const BaseClientUDPManual& b);
 		/*!
 		Default Destructor
 
 		Destroy the Client
 		*/
-		virtual ~BaseClientUDP();
+		virtual ~BaseClientUDPManual();
 
 		/*!
 		Assignment operator overloading
 		@param[in] b the second object
 		@return the new copied object
 		*/
-		BaseClientUDP & operator=(const BaseClientUDP&b)
+		BaseClientUDPManual & operator=(const BaseClientUDPManual&b)
 		{
 			if(this!=&b)
 			{				
@@ -109,7 +105,6 @@ namespace epse{
 				BaseServerSendObject::operator =(b);
 				m_port=b.m_port;
 				m_hostName=b.m_hostName;
-				
 			}
 			return *this;
 		}
@@ -142,26 +137,6 @@ namespace epse{
 
 
 		/*!
-		Set Synchronous Policy
-		@param[in] syncPolicy Synchronous Policy to set
-		@return true if successfully set otherwise false
-		@remark SyncPolicy cannot be set when Client is connected to the server.
-		*/
-		bool SetSyncPolicy(SyncPolicy syncPolicy);
-
-		/*!
-		Get current Synchronous Policy
-		@return Synchronous Policy
-		*/
-		SyncPolicy GetSyncPolicy() const;
-
-		/*!
-		Set the wait time for the thread termination
-		@param[in] milliSec the time for waiting in millisecond
-		*/
-		virtual void SetWaitTime(unsigned int milliSec);
-
-		/*!
 		Get the maximum packet byte size
 		@return the maximum packet byte size
 		*/
@@ -191,21 +166,15 @@ namespace epse{
 		virtual int Send(const Packet &packet);
 
 		/*!
-		Get Packet Parser List
-		@return the list of the packet parser
+		Receive the packet from the server
+		@return received packet
+		@remark the caller must call ReleaseObj() for Packet to avoid the memory leak.
+		@remark if ClientSynchronousPolicy!=CLIENT_SYNC_POLICY_MANUAL then assertion.
 		*/
-		vector<BaseServerObject*> GetPacketParserList() const;
+		Packet *Receive();
 
-	protected:
-		/*!
-		Return the new packet parser
-		@remark Sub-class should implement this to create new parser.
-		@remark Client will automatically release this parser.
-		@return the new packet parser
-		*/
-		virtual BasePacketParser* createNewPacketParser()=0;
-
-
+	
+	
 	private:
 		
 		
@@ -216,12 +185,7 @@ namespace epse{
 		*/
 		int receive(Packet &packet);
 
-		/*!
-		Actually processing the client thread
-		@remark  Subclasses must implement this
-		*/
-		virtual void execute();
-
+		
 		/*!
 		Clean up the client initialization.
 		*/
@@ -233,7 +197,8 @@ namespace epse{
 		*/
 		void disconnect(bool fromInternal);
 
-
+		/// Flag for connection
+		bool m_isConnected;
 		/// port
 		epl::EpString m_port;
 		/// hostname
@@ -257,9 +222,6 @@ namespace epse{
 
 		/// Lock Policy
 		epl::LockPolicy m_lockPolicy;
-
-		/// Parser list
-		ParserList m_parserList;
 
 		/// Maximum UDP Datagram byte size
 		unsigned int m_maxPacketSize;

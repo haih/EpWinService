@@ -16,30 +16,20 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "epWinServiceClient.h"
-#include "epWinServicePacketParser.h"
 
 using namespace epws;
 
-WinServiceClient::WinServiceClient(WinServiceParserList *parserList,const TCHAR * hostName, const TCHAR * port,unsigned int waitTimeMilliSec) :epse::BaseClient(hostName,port,SYNC_POLICY_ASYNCHRONOUS,waitTimeMilliSec)
+WinServiceClient::WinServiceClient(const TCHAR * hostName, const TCHAR * port) :epse::BaseClientManual(hostName,port)
 {
-	m_parserList=parserList;
-	if(m_parserList)
-		m_parserList->RetainObj();
 }
 
-WinServiceClient::WinServiceClient(const WinServiceClient& b):epse::BaseClient(b)
+WinServiceClient::WinServiceClient(const WinServiceClient& b):epse::BaseClientManual(b)
 {
 
 }
 
 WinServiceClient::~WinServiceClient()
 {
-	if(m_parserList)
-		m_parserList->ReleaseObj();
 }
 
 
-epse::BasePacketParser* WinServiceClient::createNewPacketParser()
-{
-	return EP_NEW WinServicePacketParser(m_parserList,m_waitTime);
-}

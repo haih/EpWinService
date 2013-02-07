@@ -16,7 +16,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "epWinServiceCommunicator.h"
-#include "epWinServicePacketIDGenerator.h"
 #include "epWinServicePacketProcessor.h"
 
 using namespace epws;
@@ -24,8 +23,7 @@ WinServiceCommunicator::WinServiceCommunicator(const TCHAR * hostName, const TCH
 {
 	m_hostName=hostName;
 	m_port=port;
-	m_parserList=EP_NEW WinServiceParserList(lockPolicyType);
-	m_client=WinServiceClient(m_parserList,hostName,port,waitTimeMilliSec);
+	m_client=WinServiceClient(hostName,port);
 	m_lockPolicy=lockPolicyType;
 	switch(lockPolicyType)
 	{
@@ -50,8 +48,6 @@ WinServiceCommunicator::~WinServiceCommunicator()
 	{
 		m_client.Disconnect();
 	}
-	if(m_parserList)
-		m_parserList->ReleaseObj();
 	if(m_lock)
 		EP_DELETE m_lock;
 }
@@ -92,11 +88,6 @@ WinServiceCommunicator & WinServiceCommunicator::operator=(const WinServiceCommu
 			m_client.Disconnect();
 		m_client.SetHostName(m_hostName.c_str());
 		m_client.SetPort(m_port.c_str());
-		if(m_parserList)
-			m_parserList->ReleaseObj();
-		m_parserList=b.m_parserList;
-		if(m_parserList)
-			m_parserList->RetainObj();
 
 	}
 	return *this;
@@ -130,10 +121,7 @@ WinServiceCommunicatorSendError WinServiceCommunicator::Send(const WinServicePac
 {
 	LockObj lock(m_lock);
 	retResult.Clear();
-	m_parserList->Clear();
 	PacketContainer<SendPacket> packetContainer=PacketContainer<SendPacket>();
-	unsigned int packetID=m_idGenerator.GenerateID();
-	packetContainer.GetPacketPtr()->packetId=packetID;
 	packetContainer.GetPacketPtr()->count=packetGenerator.GetCount();
 	packetContainer.SetArray(reinterpret_cast<const char*>(packetGenerator.GetStream()),(unsigned int)packetGenerator.GetStreamByteSize());
 	Packet packet=Packet(packetContainer.GetPacketPtr(),packetContainer.GetPacketByteSize(),false);
@@ -154,35 +142,14 @@ WinServiceCommunicatorSendError WinServiceCommunicator::Send(const WinServicePac
 		if(!m_client.Send(packet))
 			return WINSERVICE_COMMUNICATOR_SEND_ERROR_SEND_FAILED;
 	}
-	WinServicePacketParser *parser=NULL;
+	
 
-	SYSTEMTIME startTime;
-	__int64 timeUsed;
-	__int64 waitTime=(__int64)waitTimeMilliSec;
-	startTime=DateTimeHelper::GetCurrentDateTime();
-
-	while(parser==NULL)
-	{
-		parser=m_parserList->PopParser(packetID);
-		if(parser==NULL)
-		{
-			Sleep(0);
-
-			if(waitTime!=WAITTIME_INIFINITE)
-			{
-				timeUsed=DateTimeHelper::AbsDiff(DateTimeHelper::GetCurrentDateTime(),startTime);
-				waitTime=waitTime-timeUsed;
-				startTime=DateTimeHelper::GetCurrentDateTime();
-				if(waitTime<0)
-					return WINSERVICE_COMMUNICATOR_SEND_ERROR_TIME_EXPIRED;
-			}
-			continue;
-		}
-	}
 	WinServicePacketProcessor processor;
-	processor.Process(parser->GetPacketReceived(),retResult);
-	parser->ReleaseObj();
-
+	Packet * packetReceived=m_client.Receive();
+	if(!packetReceived)
+		return WINSERVICE_COMMUNICATOR_SEND_ERROR_RECEIVE_FAILED;
+	processor.Process(packetReceived,retResult);
+	packetReceived->ReleaseObj();
 
 	return WINSERVICE_COMMUNICATOR_SEND_ERROR_SUCCESS;
 

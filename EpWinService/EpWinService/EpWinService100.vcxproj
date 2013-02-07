@@ -256,7 +256,9 @@
     <ClInclude Include="EpLibraryHeaders\epXMLFile.h" />
     <ClInclude Include="EpLibraryHeaders\epXMLite.h" />
     <ClInclude Include="EpServerEngineHeaders\epBaseClient.h" />
+    <ClInclude Include="EpServerEngineHeaders\epBaseClientManual.h" />
     <ClInclude Include="EpServerEngineHeaders\epBaseClientUDP.h" />
+    <ClInclude Include="EpServerEngineHeaders\epBaseClientUDPManual.h" />
     <ClInclude Include="EpServerEngineHeaders\epBasePacketParser.h" />
     <ClInclude Include="EpServerEngineHeaders\epBaseServer.h" />
     <ClInclude Include="EpServerEngineHeaders\epBaseServerObject.h" />
@@ -266,6 +268,7 @@
     <ClInclude Include="EpServerEngineHeaders\epBaseServerWorkerUDP.h" />
     <ClInclude Include="EpServerEngineHeaders\epPacket.h" />
     <ClInclude Include="EpServerEngineHeaders\epPacketContainer.h" />
+    <ClInclude Include="EpServerEngineHeaders\epParserList.h" />
     <ClInclude Include="EpServerEngineHeaders\epse.h" />
     <ClInclude Include="EpServerEngineHeaders\epServerConf.h" />
     <ClInclude Include="EpServerEngineHeaders\epServerEngine.h" />

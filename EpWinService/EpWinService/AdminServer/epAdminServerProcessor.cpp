@@ -41,7 +41,6 @@ void AdminServerProcessor::Process(AdminServerPacketParser *curClient,const Pack
 	Stream outStream;
 	PacketContainer<ReceivePacket> receivePacketContainer=PacketContainer<ReceivePacket>(reinterpret_cast<const void*>(packet->GetPacket()),packet->GetPacketByteSize(),false);
 	PacketContainer<SendPacket> sendPacketContainer=PacketContainer<SendPacket>();
-	sendPacketContainer.GetPacketPtr()->packetId=receivePacketContainer.GetPacketPtr()->packetId;
 	unsigned int procCount=receivePacketContainer.GetPacketPtr()->count;
 	sendPacketContainer.GetPacketPtr()->count=procCount;
 	stream.WriteBytes(reinterpret_cast<unsigned char*>(receivePacketContainer.GetArray()),receivePacketContainer.GetArrayLength());

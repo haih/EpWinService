@@ -557,10 +557,7 @@
     <ClInclude Include="Headers\epWinServiceDefines.h" />
     <ClInclude Include="Headers\epWinServiceInfoStruct.h" />
     <ClInclude Include="Headers\epWinServicePacketGenerator.h" />
-    <ClInclude Include="Headers\epWinServicePacketIDGenerator.h" />
-    <ClInclude Include="Headers\epWinServicePacketParser.h" />
     <ClInclude Include="Headers\epWinServicePacketProcessor.h" />
-    <ClInclude Include="Headers\epWinServiceParserList.h" />
     <ClInclude Include="Headers\epWinServiceResult.h" />
     <ClInclude Include="Headers\epWinServiceResultInfo.h" />
     <ClInclude Include="Headers\epws.h" />
@@ -569,10 +566,7 @@
     <ClCompile Include="Sources\epWinServiceClient.cpp" />
     <ClCompile Include="Sources\epWinServiceCommunicator.cpp" />
     <ClCompile Include="Sources\epWinServicePacketGenerator.cpp" />
-    <ClCompile Include="Sources\epWinServicePacketIDGenerator.cpp" />
-    <ClCompile Include="Sources\epWinServicePacketParser.cpp" />
     <ClCompile Include="Sources\epWinServicePacketProcessor.cpp" />
-    <ClCompile Include="Sources\epWinServiceParserList.cpp" />
     <ClCompile Include="Sources\epWinServiceResult.cpp" />
     <ClCompile Include="Sources\epWinServiceResultInfo.cpp" />
   </ItemGroup>

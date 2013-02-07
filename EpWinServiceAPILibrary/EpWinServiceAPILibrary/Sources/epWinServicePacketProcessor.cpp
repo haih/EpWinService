@@ -25,12 +25,10 @@ void WinServicePacketProcessor::Process(const epse::Packet *packet, WinServiceRe
 	epl::Stream stream;
 	epl::Stream outStream;
 	epse::PacketContainer<ReceivePacket> receivePacketContainer=epse::PacketContainer<ReceivePacket>(reinterpret_cast<const void*>(packet->GetPacket()),packet->GetPacketByteSize(),false);
-	unsigned int packetID =receivePacketContainer.GetPacketPtr()->packetId;
 	unsigned int procCount=receivePacketContainer.GetPacketPtr()->count;
 	stream.WriteBytes(reinterpret_cast<unsigned char*>(receivePacketContainer.GetArray()),receivePacketContainer.GetArrayLength());
 	stream.SetSeek(Stream::STREAM_SEEK_TYPE_SEEK_SET);
 
-	retResult.SetPacketID(packetID);
 	retResult.SetResultCount(procCount);
 
 	for(int procTrav=0;procTrav<procCount;procTrav++)

@@ -381,7 +381,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\EpServerEngineHeaders\epBaseClientManual.h"
+				>
+			</File>
+			<File
 				RelativePath=".\EpServerEngineHeaders\epBaseClientUDP.h"
+				>
+			</File>
+			<File
+				RelativePath=".\EpServerEngineHeaders\epBaseClientUDPManual.h"
 				>
 			</File>
 			<File
@@ -418,6 +426,10 @@
 			</File>
 			<File
 				RelativePath=".\EpServerEngineHeaders\epPacketContainer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\EpServerEngineHeaders\epParserList.h"
 				>
 			</File>
 			<File

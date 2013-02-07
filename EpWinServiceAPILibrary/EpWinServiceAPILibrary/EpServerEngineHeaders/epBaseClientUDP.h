@@ -85,7 +85,7 @@ namespace epse{
 		/*!
 		Default Copy Constructor
 
-		Initializes the BaseClient
+		Initializes the BaseClientUDP
 		@param[in] b the second object
 		*/
 		BaseClientUDP(const BaseClientUDP& b);
@@ -140,6 +140,26 @@ namespace epse{
 		*/
 		epl::EpTString GetPort() const;
 
+
+		/*!
+		Set Synchronous Policy
+		@param[in] syncPolicy Synchronous Policy to set
+		@return true if successfully set otherwise false
+		@remark SyncPolicy cannot be set when Client is connected to the server.
+		*/
+		bool SetSyncPolicy(SyncPolicy syncPolicy);
+
+		/*!
+		Get current Synchronous Policy
+		@return Synchronous Policy
+		*/
+		SyncPolicy GetSyncPolicy() const;
+
+		/*!
+		Set the wait time for the thread termination
+		@param[in] milliSec the time for waiting in millisecond
+		*/
+		virtual void SetWaitTime(unsigned int milliSec);
 
 		/*!
 		Get the maximum packet byte size
@@ -201,13 +221,6 @@ namespace epse{
 		@remark  Subclasses must implement this
 		*/
 		virtual void execute();
-
-		/*!
-		Receiving Loop Function
-		@param[in] lpParam self class object
-		@return the thread terminating status
-		*/
-		static unsigned long ClientThread( LPVOID lpParam ) ;
 
 		/*!
 		Clean up the client initialization.

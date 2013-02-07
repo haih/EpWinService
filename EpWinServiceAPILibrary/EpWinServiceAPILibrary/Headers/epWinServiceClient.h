@@ -33,7 +33,6 @@ An Interface for the WinService Client.
 
 #include "epWinServiceAPILibrary.h"
 #include "epWinServiceClientPacketInfo.h"
-#include "epWinServiceParserList.h"
 namespace epws
 {
 
@@ -42,7 +41,7 @@ namespace epws
 	@brief This is a class for WinService Client Class
 
 	*/
-	class EP_WINSERVICE_API WinServiceClient : public epse::BaseClient
+	class EP_WINSERVICE_API WinServiceClient : public epse::BaseClientManual
 	{
 	private:
 		friend class WinServiceCommunicator;
@@ -50,12 +49,10 @@ namespace epws
 		Default Constructor
 
 		Initializes the Client
-		@param[in] parserList Parser List
 		@param[in] hostName the hostname string
 		@param[in] port the port string
-		@param[in] waitTimeMilliSec wait time for thread to terminate
 		*/
-		WinServiceClient(WinServiceParserList *parserList=NULL,const TCHAR * hostName=_T(DEFAULT_HOSTNAME), const TCHAR * port=DEFAULT_WINSERVICE_PORT,unsigned int waitTimeMilliSec=WAITTIME_INIFINITE);
+		WinServiceClient(const TCHAR * hostName=_T(DEFAULT_HOSTNAME), const TCHAR * port=DEFAULT_WINSERVICE_PORT);
 
 		/*!
 		Default Copy Constructor
@@ -81,26 +78,10 @@ namespace epws
 		{
 			if(this!=&b)
 			{
-				BaseClient::operator =(b);
-				if(m_parserList)
-					m_parserList->ReleaseObj();
-				m_parserList=b.m_parserList;
-				if(m_parserList)
-					m_parserList->RetainObj();
+				BaseClientManual::operator =(b);
 			}
 			return *this;
 		}
-
-		/*!
-		Return the new packet parser
-		@return the new packet parser
-		*/
-		virtual BasePacketParser* createNewPacketParser();
-
-		/// Parser List Pointer
-		WinServiceParserList *m_parserList;
-
-
 	};
 }
 

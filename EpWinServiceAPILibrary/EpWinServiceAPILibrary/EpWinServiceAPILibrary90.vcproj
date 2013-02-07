@@ -572,19 +572,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Sources\epWinServicePacketIDGenerator.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Sources\epWinServicePacketParser.cpp"
-					>
-				</File>
-				<File
 					RelativePath=".\Sources\epWinServicePacketProcessor.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Sources\epWinServiceParserList.cpp"
 					>
 				</File>
 			</Filter>
@@ -630,19 +618,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Headers\epWinServicePacketIDGenerator.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Headers\epWinServicePacketParser.h"
-					>
-				</File>
-				<File
 					RelativePath=".\Headers\epWinServicePacketProcessor.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Headers\epWinServiceParserList.h"
 					>
 				</File>
 			</Filter>
@@ -949,7 +925,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\EpServerEngineHeaders\epBaseClientManual.h"
+				>
+			</File>
+			<File
 				RelativePath=".\EpServerEngineHeaders\epBaseClientUDP.h"
+				>
+			</File>
+			<File
+				RelativePath=".\EpServerEngineHeaders\epBaseClientUDPManual.h"
 				>
 			</File>
 			<File

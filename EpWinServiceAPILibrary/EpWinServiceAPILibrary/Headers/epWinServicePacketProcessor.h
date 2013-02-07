@@ -32,7 +32,6 @@ An Interface for WinService Client Packet Processor.
 #define __EP_WINSERVICE_PACKET_PROCESSOR_H__
 
 #include "epWinServiceAPILibrary.h"
-#include "epWinServicePacketParser.h"
 #include "epWinServiceClientPacketInfo.h"
 #include "epStream.h"
 #include "epWinServiceResult.h"

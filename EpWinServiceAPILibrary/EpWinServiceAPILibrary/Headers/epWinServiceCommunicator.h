@@ -35,8 +35,7 @@ An Interface for WinService Communicator.
 #include "epWinServiceClient.h"
 #include "epWinServiceResult.h"
 #include "epWinServicePacketGenerator.h"
-#include "epWinServicePacketIDGenerator.h"
-#include "epWinServiceParserList.h"
+
 
 namespace epws
 {
@@ -48,8 +47,8 @@ namespace epws
 		WINSERVICE_COMMUNICATOR_SEND_ERROR_CONNECTION_FAILED,
 		/// Send failed
 		WINSERVICE_COMMUNICATOR_SEND_ERROR_SEND_FAILED,
-		/// Time Expired
-		WINSERVICE_COMMUNICATOR_SEND_ERROR_TIME_EXPIRED,
+		/// Receive failed
+		WINSERVICE_COMMUNICATOR_SEND_ERROR_RECEIVE_FAILED,
 
 	}WinServiceCommunicatorSendError;
 
@@ -135,11 +134,6 @@ namespace epws
 		/// Lock Policy
 		LockPolicy m_lockPolicy;
 
-		/// Packet ID Generator
-		WinServicePacketIDGenerator m_idGenerator;
-
-		/// Parser List
-		WinServiceParserList *m_parserList;
 
 	};
 

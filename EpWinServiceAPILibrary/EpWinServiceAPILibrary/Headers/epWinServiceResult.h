@@ -85,12 +85,6 @@ namespace epws
 		void Clear();
 
 		/*!
-		Return the Packet ID
-		@return the Packet ID
-		*/
-		unsigned int GetPacketID() const;
-
-		/*!
 		Return the WinServiceResultInfo count
 		@return the WinServiceResultInfo count
 		*/
@@ -113,12 +107,6 @@ namespace epws
 		friend class WinServicePacketProcessor;
 
 		/*!
-		Set Packet ID with given value
-		@param[in] packetId the packet id to set
-		*/
-		void SetPacketID(unsigned int packetId);
-
-		/*!
 		Set Result Count with given value
 		@param[in] resultCnt the result count to set
 		*/
@@ -129,9 +117,6 @@ namespace epws
 		@param[in] info the new WinServiceResultInfo object pointer to add
 		*/
 		void AddResultInfo(WinServiceResultInfo* info);
-
-		/// Packet ID
-		unsigned int m_packetID;
 		
 		/// Frame Count
 		unsigned int m_procCnt;

@@ -356,6 +356,15 @@
     <ClInclude Include="EpLibraryHeaders\epBaseTextFile.h">
       <Filter>EpLibraryHeaders</Filter>
     </ClInclude>
+    <ClInclude Include="EpServerEngineHeaders\epBaseClientManual.h">
+      <Filter>EpServerEngineHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="EpServerEngineHeaders\epBaseClientUDPManual.h">
+      <Filter>EpServerEngineHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="EpServerEngineHeaders\epParserList.h">
+      <Filter>EpServerEngineHeaders</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\LICENSE">

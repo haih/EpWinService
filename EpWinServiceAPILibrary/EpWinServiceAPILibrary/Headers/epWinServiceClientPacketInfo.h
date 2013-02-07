@@ -371,8 +371,6 @@ namespace epws
 	@brief A Class for the Receive Packet.	
 	*/
 	struct EP_WINSERVICE_API ReceivePacket{
-		/// Packet ID
-		unsigned int packetId;
 		/// Processing Count
 		unsigned int count;
 	};
@@ -382,8 +380,6 @@ namespace epws
 	@brief A Class for the Send Packet.	
 	*/
 	struct EP_WINSERVICE_API SendPacket{
-		/// Packet ID
-		unsigned int packetId;
 		/// Processing Result Count
 		unsigned int count;
 	};
