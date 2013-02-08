@@ -292,6 +292,28 @@ void BaseManagementObject::replaceCommandArgument(CString &cmd)
 		cmd.Replace(_T("%t"),dateTime.GetString());
 	if(cmd.Find(_T("%T"))>=0)
 		cmd.Replace(_T("%T"),dateTime.GetString());
+
+	CString objIndexString=_T("");
+	objIndexString.Format(_T("%d"),m_objIndex);
+	if(cmd.Find(_T("%x"))>=0)
+		cmd.Replace(_T("%x"),objIndexString.GetString());
+	if(cmd.Find(_T("%X"))>=0)
+		cmd.Replace(_T("%X"),objIndexString.GetString());
+
+	CString objTypeString=_T("");
+	switch(m_objType)
+	{
+	case MANAGEMENT_OBJECT_TYPE_PROCESS:
+		objTypeString=_T("ProcessObject");
+		break;
+	case MANAGEMENT_OBJECT_TYPE_SERVICE:
+		objTypeString=_T("ServiceObject");
+		break;
+	}
+	if(cmd.Find(_T("%o"))>=0)
+		cmd.Replace(_T("%o"),objTypeString.GetString());
+	if(cmd.Find(_T("%O"))>=0)
+		cmd.Replace(_T("%O"),objTypeString.GetString());
 }
 
 void BaseManagementObject::PostProcess()

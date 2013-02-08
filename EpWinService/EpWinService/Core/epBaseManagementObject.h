@@ -290,6 +290,9 @@ protected:
 	/*!
 	Replace the given command's arguments
 	@param[in] cmd the single command to replace
+	@remark "%t" or "%T" refers to current time <br/>
+			"%x" or "%X" refers to object index <br/>
+			"%o" or "%o" refers to object type <br/>
 	*/
 	virtual void replaceCommandArgument(CString &cmd);
 
