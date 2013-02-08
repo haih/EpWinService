@@ -282,6 +282,7 @@ protected:
 	/*!
 	Run a single command given.
 	@param[in] command a single command to run
+	@param[in] cmdIdx the index of the command
 	@param[in] waitTimeInMilliSec wait time for the run in milliseconds
 	@param[in] execCommandType the executing command type
 	*/
