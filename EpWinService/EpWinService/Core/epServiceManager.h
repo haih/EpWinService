@@ -151,6 +151,11 @@ public:
 		return m_hServiceStatusHandle;
 	}
 private:
+	/*!
+	Replace the given command's arguments
+	@param[in] cmd the single command to replace
+	*/
+	void replaceCommandArgument(CString &cmd);
 
 	/*!
 	Default Constructor

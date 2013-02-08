@@ -503,6 +503,20 @@ void ServiceManager::StopAdminServer()
 	m_adminServer.StopServer();
 }
 
+void ServiceManager::replaceCommandArgument(CString &cmd)
+{
+	if(cmd.Find(_T("%n"))>=0)
+		cmd.Replace(_T("%n"),SERVICE_PROPERTIES_INSTANCE.GetServiceName());
+	if(cmd.Find(_T("%N"))>=0)
+		cmd.Replace(_T("%N"),SERVICE_PROPERTIES_INSTANCE.GetServiceName());
+
+	CString dateTime=DateTimeHelper::DateTimeToString(DateTimeHelper::GetCurrentDateTime()).c_str();
+	if(cmd.Find(_T("%t"))>=0)
+		cmd.Replace(_T("%t"),dateTime.GetString());
+	if(cmd.Find(_T("%T"))>=0)
+		cmd.Replace(_T("%T"),dateTime.GetString());
+}
+
 void ServiceManager::RunCustomProcess(int waitTimeInMilliSec)
 {
 	CString cmd=_T("");
@@ -512,6 +526,8 @@ void ServiceManager::RunCustomProcess(int waitTimeInMilliSec)
 	for(int listTrav=0;listTrav<m_customProcessCommandLineList.size();listTrav++)
 	{
 		cmd=m_customProcessCommandLineList.at(listTrav);
+
+		replaceCommandArgument(cmd);
 
 		// start a process with given index
 		STARTUPINFO startUpInfo = { sizeof(STARTUPINFO),NULL,_T(""),NULL,0,0,0,0,0,0,0,STARTF_USESHOWWINDOW,0,0,NULL,0,0,0};  
@@ -531,7 +547,7 @@ void ServiceManager::RunCustomProcess(int waitTimeInMilliSec)
 			TCHAR pTemp[256];
 			long nError = GetLastError();
 
-			_stprintf(pTemp,_T("Failed to start custom-process program(%d) '%s', error code = %d"),listTrav, cmd.GetString(), nError); 
+			_stprintf(pTemp,_T("MainService : Failed to start custom-process program(%d) '%s', error code = %d"),listTrav, cmd.GetString(), nError); 
 			LOG_WRITER_INSTANCE.WriteLog( pTemp);
 			continue;
 		}
@@ -550,6 +566,8 @@ void ServiceManager::RunCommand(CString command, int waitTimeInMilliSec)
 	{
 		cmd=cmdList.at(listTrav);
 
+		replaceCommandArgument(cmd);
+	
 		// start a process with given index
 		STARTUPINFO startUpInfo = { sizeof(STARTUPINFO),NULL,_T(""),NULL,0,0,0,0,0,0,0,STARTF_USESHOWWINDOW,0,0,NULL,0,0,0};  
 		PROCESS_INFORMATION	pProcInfo;
@@ -568,7 +586,7 @@ void ServiceManager::RunCommand(CString command, int waitTimeInMilliSec)
 			TCHAR pTemp[256];
 			long nError = GetLastError();
 
-			_stprintf(pTemp,_T("Failed to run command(%d) '%s', error code = %d"),listTrav, cmd.GetString(), nError); 
+			_stprintf(pTemp,_T("MainService : Failed to run command(%d) '%s', error code = %d"),listTrav, cmd.GetString(), nError); 
 			LOG_WRITER_INSTANCE.WriteLog( pTemp);
 			continue;
 		}

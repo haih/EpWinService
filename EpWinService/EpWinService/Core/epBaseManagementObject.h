@@ -40,6 +40,18 @@ typedef enum _managementObjectType{
 	MANAGEMENT_OBJECT_TYPE_SERVICE
 }ManagementObjectType;
 
+/// Execute Command Type
+typedef enum _executeCommandType{
+	/// Pre-Process Type
+	EXECUTE_COMMAND_TYPE_PREPROCESS=0,
+	/// Post-Process Type
+	EXECUTE_COMMAND_TYPE_POSTPROCESS,
+	/// Custom-Process Type
+	EXECUTE_COMMAND_TYPE_CUSTOMPROCESS,
+	/// Run-Command Type
+	EXECUTE_COMMAND_TYPE_RUNCOMMAND,
+}ExecuteCommandType;
+
 
 /*! 
 @class BaseManagementObject epBaseManagementObject.h
@@ -266,6 +278,21 @@ public:
 	void SetDelayPauseEndTime(unsigned int timeInMilli);
 
 protected:
+
+	/*!
+	Run a single command given.
+	@param[in] command a single command to run
+	@param[in] waitTimeInMilliSec wait time for the run in milliseconds
+	@param[in] execCommandType the executing command type
+	*/
+	void executeCommand(CString command,unsigned int cmdIdx, int waitTimeInMilliSec,ExecuteCommandType execCommandType);
+
+	/*!
+	Replace the given command's arguments
+	@param[in] cmd the single command to replace
+	*/
+	virtual void replaceCommandArgument(CString &cmd);
+
 	/*!
 	Actually start the post-Process.
 	*/

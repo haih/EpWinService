@@ -136,6 +136,11 @@ public:
 
 
 private:
+	/*!
+	Replace the given command's arguments
+	@param[in] cmd the single command to replace
+	*/
+	virtual void replaceCommandArgument(CString &cmd);
 
 	/// name of the service
 	CString m_serviceName;

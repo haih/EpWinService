@@ -161,56 +161,7 @@ void BaseManagementObject::preProcess()
 	for(int listTrav=0;listTrav<m_preProcessCommandLineList.size();listTrav++)
 	{
 		// start a process with given index
-		STARTUPINFO startUpInfo = { sizeof(STARTUPINFO),NULL,_T(""),NULL,0,0,0,0,0,0,0,STARTF_USESHOWWINDOW,0,0,NULL,0,0,0};  
-		PROCESS_INFORMATION	pProcInfo;
-		if(m_isUserInterface)
-			startUpInfo.wShowWindow = SW_SHOW;
-		else
-			startUpInfo.wShowWindow = SW_HIDE;
-		startUpInfo.lpDesktop = NULL;
-
-		// set the correct desktop for the process to be started
-		if(m_isImpersonate==false)
-		{
-
-			// create the process
-			if(CreateProcess(NULL, const_cast<TCHAR*>(m_preProcessCommandLineList.at(listTrav).GetString()),NULL,NULL,FALSE,NORMAL_PRIORITY_CLASS, NULL,NULL,&startUpInfo,&pProcInfo))
-			{
-				WaitForSingleObject(pProcInfo.hProcess,(DWORD)m_preProcessWaitTime);
-				continue;
-			}
-			else
-			{
-				TCHAR pTemp[256];
-				long nError = GetLastError();
-
-				_stprintf(pTemp,_T("Failed to start pre-process program(%d) '%s', error code = %d"),listTrav, m_preProcessCommandLineList.at(listTrav).GetString(), nError); 
-				LOG_WRITER_INSTANCE.WriteLog( pTemp);
-				continue;
-			}
-		}
-		else
-		{
-			HANDLE hToken = NULL;
-			if(LogonUser(m_userName.GetString(),(m_domainName.GetLength()==0)?_T("."):m_domainName.GetString(),m_userPassword.GetString(),LOGON32_LOGON_SERVICE,LOGON32_PROVIDER_DEFAULT,&hToken))
-			{
-				if(CreateProcessAsUser(hToken,NULL,const_cast<TCHAR*>(m_preProcessCommandLineList.at(listTrav).GetString()),NULL,NULL,TRUE,NORMAL_PRIORITY_CLASS,NULL,NULL,&startUpInfo,&pProcInfo))
-				{
-					WaitForSingleObject(pProcInfo.hProcess,(DWORD)m_preProcessWaitTime);
-					continue;
-				}
-				long nError = GetLastError();
-				TCHAR pTemp[256];
-				_stprintf(pTemp,_T("Failed to start pre-process program(%d) '%s' as user '%s', error code = %d"),listTrav, m_preProcessCommandLineList.at(listTrav).GetString(), m_userName.GetString(), nError); 
-				LOG_WRITER_INSTANCE.WriteLog( pTemp);
-				continue;
-			}
-			long nError = GetLastError();
-			TCHAR pTemp[256];
-			_stprintf(pTemp,_T("Failed to logon as user '%s', error code = %d"), m_userName.GetString(), nError); 
-			LOG_WRITER_INSTANCE.WriteLog( pTemp);
-			continue;;
-		}
+		executeCommand(m_preProcessCommandLineList.at(listTrav),listTrav,m_preProcessWaitTime,EXECUTE_COMMAND_TYPE_PREPROCESS);
 	}
 
 }
@@ -220,56 +171,7 @@ void BaseManagementObject::postProcess()
 	for(int listTrav=0;listTrav<m_postProcessCommandLineList.size();listTrav++)
 	{
 		// start a process with given index
-		STARTUPINFO startUpInfo = { sizeof(STARTUPINFO),NULL,_T(""),NULL,0,0,0,0,0,0,0,STARTF_USESHOWWINDOW,0,0,NULL,0,0,0};  
-		PROCESS_INFORMATION	pProcInfo;
-		if(m_isUserInterface)
-			startUpInfo.wShowWindow = SW_SHOW;
-		else
-			startUpInfo.wShowWindow = SW_HIDE;
-		startUpInfo.lpDesktop = NULL;
-
-		// set the correct desktop for the process to be started
-		if(m_isImpersonate==false)
-		{
-
-			// create the process
-			if(CreateProcess(NULL, const_cast<TCHAR*>(m_postProcessCommandLineList.at(listTrav).GetString()),NULL,NULL,FALSE,NORMAL_PRIORITY_CLASS, NULL,NULL,&startUpInfo,&pProcInfo))
-			{
-				WaitForSingleObject(pProcInfo.hProcess,(DWORD)m_postProcessWaitTime);
-				continue;
-			}
-			else
-			{
-				TCHAR pTemp[256];
-				long nError = GetLastError();
-
-				_stprintf(pTemp,_T("Failed to start post-process program(%d) '%s', error code = %d"),listTrav, m_postProcessCommandLineList.at(listTrav).GetString(), nError); 
-				LOG_WRITER_INSTANCE.WriteLog( pTemp);
-				continue;
-			}
-		}
-		else
-		{
-			HANDLE hToken = NULL;
-			if(LogonUser(m_userName.GetString(),(m_domainName.GetLength()==0)?_T("."):m_domainName.GetString(),m_userPassword.GetString(),LOGON32_LOGON_SERVICE,LOGON32_PROVIDER_DEFAULT,&hToken))
-			{
-				if(CreateProcessAsUser(hToken,NULL,const_cast<TCHAR*>(m_postProcessCommandLineList.at(listTrav).GetString()),NULL,NULL,TRUE,NORMAL_PRIORITY_CLASS,NULL,NULL,&startUpInfo,&pProcInfo))
-				{
-					WaitForSingleObject(pProcInfo.hProcess,(DWORD)m_postProcessWaitTime);
-					continue;
-				}
-				long nError = GetLastError();
-				TCHAR pTemp[256];
-				_stprintf(pTemp,_T("Failed to start post-process program(%d) '%s' as user '%s', error code = %d"),listTrav, m_postProcessCommandLineList.at(listTrav).GetString(), m_userName.GetString(), nError); 
-				LOG_WRITER_INSTANCE.WriteLog( pTemp);
-				continue;
-			}
-			long nError = GetLastError();
-			TCHAR pTemp[256];
-			_stprintf(pTemp,_T("Failed to logon as user '%s', error code = %d"), m_userName.GetString(), nError); 
-			LOG_WRITER_INSTANCE.WriteLog( pTemp);
-			continue;
-		}
+		executeCommand(m_postProcessCommandLineList.at(listTrav),listTrav,m_postProcessWaitTime,EXECUTE_COMMAND_TYPE_POSTPROCESS);
 	}
 
 }
@@ -278,63 +180,9 @@ void BaseManagementObject::postProcess()
 void BaseManagementObject::CustomProcess(int waitTimeInMilliSec)
 {
 	LockObj lock(&m_lock);
-	CString cmd=_T("");
-
 	for(int listTrav=0;listTrav<m_customProcessCommandLineList.size();listTrav++)
 	{
-		cmd=m_customProcessCommandLineList.at(listTrav);
-
-		// start a process with given index
-		STARTUPINFO startUpInfo = { sizeof(STARTUPINFO),NULL,_T(""),NULL,0,0,0,0,0,0,0,STARTF_USESHOWWINDOW,0,0,NULL,0,0,0};  
-		PROCESS_INFORMATION	pProcInfo;
-		if(m_isUserInterface)
-			startUpInfo.wShowWindow = SW_SHOW;
-		else
-			startUpInfo.wShowWindow = SW_HIDE;
-		startUpInfo.lpDesktop = NULL;
-
-		// set the correct desktop for the process to be started
-		if(m_isImpersonate==false)
-		{
-
-			// create the process
-			if(CreateProcess(NULL, const_cast<TCHAR*>( cmd.GetString()),NULL,NULL,FALSE,NORMAL_PRIORITY_CLASS, NULL,NULL,&startUpInfo,&pProcInfo))
-			{
-				WaitForSingleObject(pProcInfo.hProcess,(DWORD)waitTimeInMilliSec);
-				continue;
-			}
-			else
-			{
-				TCHAR pTemp[256];
-				long nError = GetLastError();
-
-				_stprintf(pTemp,_T("Failed to start custom-process program(%d) '%s', error code = %d"),listTrav, cmd.GetString(), nError); 
-				LOG_WRITER_INSTANCE.WriteLog( pTemp);
-				continue;
-			}
-		}
-		else
-		{
-			HANDLE hToken = NULL;
-			if(LogonUser(m_userName.GetString(),(m_domainName.GetLength()==0)?_T("."):m_domainName.GetString(),m_userPassword.GetString(),LOGON32_LOGON_SERVICE,LOGON32_PROVIDER_DEFAULT,&hToken))
-			{
-				if(CreateProcessAsUser(hToken,NULL,const_cast<TCHAR*>(cmd.GetString()),NULL,NULL,TRUE,NORMAL_PRIORITY_CLASS,NULL,NULL,&startUpInfo,&pProcInfo))
-				{
-					WaitForSingleObject(pProcInfo.hProcess,(DWORD)waitTimeInMilliSec);
-					continue;
-				}
-				long nError = GetLastError();
-				TCHAR pTemp[256];
-				_stprintf(pTemp,_T("Failed to start custom-process program(%d) '%s' as user '%s', error code = %d"),listTrav,cmd.GetString(), m_userName.GetString(), nError); 
-				LOG_WRITER_INSTANCE.WriteLog( pTemp);
-				continue;
-			}
-			long nError = GetLastError();
-			TCHAR pTemp[256];
-			_stprintf(pTemp,_T("Failed to logon as user '%s', error code = %d"), m_userName.GetString(), nError); 
-			LOG_WRITER_INSTANCE.WriteLog( pTemp);
-			continue;;
-		}
+		executeCommand(m_customProcessCommandLineList.at(listTrav),listTrav,waitTimeInMilliSec,EXECUTE_COMMAND_TYPE_POSTPROCESS);
 	}
 
 
@@ -346,64 +194,104 @@ void BaseManagementObject::RunCommand(CString command, int waitTimeInMilliSec)
 	vector<CString> cmdList;
 	BaseManagementObject::ParseCommand(command,cmdList);
 
-	CString cmd=_T("");
-
 	for(int listTrav=0;listTrav<cmdList.size();listTrav++)
 	{
-		cmd=cmdList.at(listTrav);
+		executeCommand(cmdList.at(listTrav),listTrav,waitTimeInMilliSec,EXECUTE_COMMAND_TYPE_POSTPROCESS);
+	}
+}
 
-		// start a process with given index
-		STARTUPINFO startUpInfo = { sizeof(STARTUPINFO),NULL,_T(""),NULL,0,0,0,0,0,0,0,STARTF_USESHOWWINDOW,0,0,NULL,0,0,0};  
-		PROCESS_INFORMATION	pProcInfo;
-		if(m_isUserInterface)
-			startUpInfo.wShowWindow = SW_SHOW;
-		else
-			startUpInfo.wShowWindow = SW_HIDE;
-		startUpInfo.lpDesktop = NULL;
+void BaseManagementObject::executeCommand(CString command,unsigned int cmdIdx, int waitTimeInMilliSec,ExecuteCommandType execCommandType)
+{
+	CString objectTypeString=_T("");
+	if(m_objType==MANAGEMENT_OBJECT_TYPE_PROCESS)
+	{
+		objectTypeString=_T("ProcessObject");
+	}
+	else if(m_objType==MANAGEMENT_OBJECT_TYPE_SERVICE)
+	{
+		objectTypeString=_T("ServiceObject");
+	}
 
-		// set the correct desktop for the process to be started
-		if(m_isImpersonate==false)
+	CString exeCommandTypeString=_T("");
+	switch(execCommandType)
+	{
+	case EXECUTE_COMMAND_TYPE_PREPROCESS:
+		exeCommandTypeString=_T("pre-process");
+		break;
+	case EXECUTE_COMMAND_TYPE_POSTPROCESS:
+		exeCommandTypeString=_T("post-process");
+		break;
+	case EXECUTE_COMMAND_TYPE_CUSTOMPROCESS:
+		exeCommandTypeString=_T("custom-process");
+		break;
+	case EXECUTE_COMMAND_TYPE_RUNCOMMAND:
+		exeCommandTypeString=_T("run command");
+		break;
+	}
+
+	CString cmd=command;
+	replaceCommandArgument(cmd);
+
+	// start a process with given index
+	STARTUPINFO startUpInfo = { sizeof(STARTUPINFO),NULL,_T(""),NULL,0,0,0,0,0,0,0,STARTF_USESHOWWINDOW,0,0,NULL,0,0,0};  
+	PROCESS_INFORMATION	pProcInfo;
+	if(m_isUserInterface)
+		startUpInfo.wShowWindow = SW_SHOW;
+	else
+		startUpInfo.wShowWindow = SW_HIDE;
+	startUpInfo.lpDesktop = NULL;
+
+	// set the correct desktop for the process to be started
+	if(m_isImpersonate==false)
+	{
+
+		// create the process
+		if(CreateProcess(NULL, const_cast<TCHAR*>( cmd.GetString()),NULL,NULL,FALSE,NORMAL_PRIORITY_CLASS, NULL,NULL,&startUpInfo,&pProcInfo))
 		{
-
-			// create the process
-			if(CreateProcess(NULL, const_cast<TCHAR*>( cmd.GetString()),NULL,NULL,FALSE,NORMAL_PRIORITY_CLASS, NULL,NULL,&startUpInfo,&pProcInfo))
-			{
-				WaitForSingleObject(pProcInfo.hProcess,(DWORD)waitTimeInMilliSec);
-				continue;
-			}
-			else
-			{
-				TCHAR pTemp[256];
-				long nError = GetLastError();
-
-				_stprintf(pTemp,_T("Failed to run command(%d) '%s', error code = %d"),listTrav, cmd.GetString(), nError); 
-				LOG_WRITER_INSTANCE.WriteLog( pTemp);
-				continue;
-			}
+			WaitForSingleObject(pProcInfo.hProcess,(DWORD)waitTimeInMilliSec);
+			return;
 		}
 		else
 		{
-			HANDLE hToken = NULL;
-			if(LogonUser(m_userName.GetString(),(m_domainName.GetLength()==0)?_T("."):m_domainName.GetString(),m_userPassword.GetString(),LOGON32_LOGON_SERVICE,LOGON32_PROVIDER_DEFAULT,&hToken))
+			TCHAR pTemp[256];
+			long nError = GetLastError();
+
+			_stprintf(pTemp,_T("%s(%d) : Failed to %s(%d) '%s', error code = %d"),objectTypeString.GetString(),m_objIndex,exeCommandTypeString.GetString(),cmdIdx, cmd.GetString(), nError); 
+			LOG_WRITER_INSTANCE.WriteLog( pTemp);
+			return;
+		}
+	}
+	else
+	{
+		HANDLE hToken = NULL;
+		if(LogonUser(m_userName.GetString(),(m_domainName.GetLength()==0)?_T("."):m_domainName.GetString(),m_userPassword.GetString(),LOGON32_LOGON_SERVICE,LOGON32_PROVIDER_DEFAULT,&hToken))
+		{
+			if(CreateProcessAsUser(hToken,NULL,const_cast<TCHAR*>(cmd.GetString()),NULL,NULL,TRUE,NORMAL_PRIORITY_CLASS,NULL,NULL,&startUpInfo,&pProcInfo))
 			{
-				if(CreateProcessAsUser(hToken,NULL,const_cast<TCHAR*>(cmd.GetString()),NULL,NULL,TRUE,NORMAL_PRIORITY_CLASS,NULL,NULL,&startUpInfo,&pProcInfo))
-				{
-					WaitForSingleObject(pProcInfo.hProcess,(DWORD)waitTimeInMilliSec);
-					continue;
-				}
-				long nError = GetLastError();
-				TCHAR pTemp[256];
-				_stprintf(pTemp,_T("Failed to run command(%d) '%s' as user '%s', error code = %d"),listTrav,cmd.GetString(), m_userName.GetString(), nError); 
-				LOG_WRITER_INSTANCE.WriteLog( pTemp);
-				continue;
+				WaitForSingleObject(pProcInfo.hProcess,(DWORD)waitTimeInMilliSec);
+				return;
 			}
 			long nError = GetLastError();
 			TCHAR pTemp[256];
-			_stprintf(pTemp,_T("Failed to logon as user '%s', error code = %d"), m_userName.GetString(), nError); 
+			_stprintf(pTemp,_T("%s(%d) : Failed to %s(%d) '%s' as user '%s', error code = %d"),objectTypeString.GetString(),m_objIndex,exeCommandTypeString.GetString(),cmdIdx,cmd.GetString(), m_userName.GetString(), nError); 
 			LOG_WRITER_INSTANCE.WriteLog( pTemp);
-			continue;;
+			return;
 		}
+		long nError = GetLastError();
+		TCHAR pTemp[256];
+		_stprintf(pTemp,_T("%s(%d) : Failed to logon as user '%s', error code = %d"),objectTypeString.GetString(),m_objIndex, m_userName.GetString(), nError); 
+		LOG_WRITER_INSTANCE.WriteLog( pTemp);
+		return;
 	}
+}
+
+void BaseManagementObject::replaceCommandArgument(CString &cmd)
+{
+	CString dateTime=DateTimeHelper::DateTimeToString(DateTimeHelper::GetCurrentDateTime()).c_str();
+	if(cmd.Find(_T("%t"))>=0)
+		cmd.Replace(_T("%t"),dateTime.GetString());
+	if(cmd.Find(_T("%T"))>=0)
+		cmd.Replace(_T("%T"),dateTime.GetString());
 }
 
 void BaseManagementObject::PostProcess()
