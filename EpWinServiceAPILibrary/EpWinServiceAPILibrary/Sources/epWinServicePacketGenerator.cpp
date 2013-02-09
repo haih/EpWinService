@@ -106,7 +106,7 @@ void WinServicePacketGenerator::AddCommandProcessObj(CommandProcessObjectPacketT
 		break;
 	case COMMAND_PROCESS_OBJECT_PACKET_TYPE_RUN_COMMAND:
 		m_stream.WriteInt(waitTime);
-		m_stream.WriteBytes((unsigned char*)cmd.c_str(),sizeof(TCHAR)*(cmd.size()+1));
+		m_stream.WriteTString(cmd);
 		break;
 	default:
 		break;
@@ -127,7 +127,7 @@ void WinServicePacketGenerator::AddCommandServiceObj(CommandServiceObjectPacketT
 		break;
 	case COMMAND_PROCESS_OBJECT_PACKET_TYPE_RUN_COMMAND:
 		m_stream.WriteInt(waitTime);
-		m_stream.WriteBytes((unsigned char*)cmd.c_str(),sizeof(TCHAR)*(cmd.size()+1));
+		m_stream.WriteTString(cmd);
 		break;
 	default:
 		break;
@@ -148,7 +148,7 @@ void WinServicePacketGenerator::AddCommandMainService(CommandMainServicePackeTyp
 		break;
 	case COMMAND_MAIN_SERVICE_PACKET_TYPE_RUN_COMMAND:
 		m_stream.WriteInt(waitTime);
-		m_stream.WriteBytes((unsigned char*)cmd.c_str(),(cmd.size()+1)*sizeof(TCHAR));
+		m_stream.WriteTString(cmd);
 		break;
 	}
 }
@@ -176,7 +176,7 @@ void WinServicePacketGenerator::AddSetMainServiceInfo(MainServiceSetPacketType t
 		m_stream.WriteUInt(info.m_interval);
 		break;
 	case MAIN_SERVICE_SET_PACKET_TYPE_CUSTOMPROCESS_COMMANDLINE:
-		m_stream.WriteBytes((unsigned char*)info.m_command.c_str(),(info.m_command.size()+1)*sizeof(TCHAR));
+		m_stream.WriteTString(info.m_command);
 		break;
 	default:
 		break;
@@ -202,16 +202,16 @@ void WinServicePacketGenerator::AddSetServiceInfo(ServiceSetPacketType type, uns
 	switch(type)
 	{
 	case SERVICE_SET_PACKET_TYPE_SERVICENAME:
-		m_stream.WriteBytes(reinterpret_cast<const unsigned char*>(info.m_serviceName.c_str()),(info.m_serviceName.size()+1)*sizeof(TCHAR));
+		m_stream.WriteTString(info.m_serviceName);
 		break;
 	case SERVICE_SET_PACKET_TYPE_PREPROCESS_COMMANDLINE:
-		m_stream.WriteBytes(reinterpret_cast<const unsigned char*>(info.m_preProcessCommandLine.c_str()),(info.m_preProcessCommandLine.size()+1)*sizeof(TCHAR));
+		m_stream.WriteTString(info.m_preProcessCommandLine);
 		break;
 	case SERVICE_SET_PACKET_TYPE_POSTPROCESS_COMMANDLINE:
-		m_stream.WriteBytes(reinterpret_cast<const unsigned char*>(info.m_postProcessCommandLine.c_str()),(info.m_postProcessCommandLine.size()+1)*sizeof(TCHAR));
+		m_stream.WriteTString(info.m_postProcessCommandLine);
 		break;
 	case SERVICE_SET_PACKET_TYPE_CUSTOMPROCESS_COMMANDLINE:
-		m_stream.WriteBytes(reinterpret_cast<const unsigned char*>(info.m_customProcessCommandLine.c_str()),(info.m_customProcessCommandLine.size()+1)*sizeof(TCHAR));
+		m_stream.WriteTString(info.m_customProcessCommandLine);
 		break;
 	case SERVICE_SET_PACKET_TYPE_PREPROCESS_WAIT_TIME:
 		m_stream.WriteInt(info.m_preProcessWaitTime);
@@ -220,13 +220,13 @@ void WinServicePacketGenerator::AddSetServiceInfo(ServiceSetPacketType type, uns
 		m_stream.WriteInt(info.m_postProcessWaitTime);
 		break;
 	case SERVICE_SET_PACKET_TYPE_DOMAINNAME:
-		m_stream.WriteBytes(reinterpret_cast<const unsigned char*>(info.m_domainName.c_str()),(info.m_domainName.size()+1)*sizeof(TCHAR));
+		m_stream.WriteTString(info.m_domainName);
 		break;
 	case SERVICE_SET_PACKET_TYPE_USERNAME:
-		m_stream.WriteBytes(reinterpret_cast<const unsigned char*>(info.m_userName.c_str()),(info.m_userName.size()+1)*sizeof(TCHAR));
+		m_stream.WriteTString(info.m_userName);
 		break;
 	case SERVICE_SET_PACKET_TYPE_USERPASSWORD:
-		m_stream.WriteBytes(reinterpret_cast<const unsigned char*>(info.m_userPassword.c_str()),(info.m_userPassword.size()+1)*sizeof(TCHAR));
+		m_stream.WriteTString(info.m_userPassword);
 		break;
 
 
@@ -255,15 +255,15 @@ void WinServicePacketGenerator::AddSetServiceInfo(ServiceSetPacketType type, uns
 			m_stream.WriteUInt(0);
 		break;
 	case SERVICE_SET_PACKET_TYPE_ALL:
-		m_stream.WriteBytes(reinterpret_cast<const unsigned char*>(info.m_serviceName.c_str()),(info.m_serviceName.size()+1)*sizeof(TCHAR));
-		m_stream.WriteBytes(reinterpret_cast<const unsigned char*>(info.m_preProcessCommandLine.c_str()),(info.m_preProcessCommandLine.size()+1)*sizeof(TCHAR));
-		m_stream.WriteBytes(reinterpret_cast<const unsigned char*>(info.m_postProcessCommandLine.c_str()),(info.m_postProcessCommandLine.size()+1)*sizeof(TCHAR));
-		m_stream.WriteBytes(reinterpret_cast<const unsigned char*>(info.m_customProcessCommandLine.c_str()),(info.m_customProcessCommandLine.size()+1)*sizeof(TCHAR));
+		m_stream.WriteTString(info.m_serviceName);
+		m_stream.WriteTString(info.m_preProcessCommandLine);
+		m_stream.WriteTString(info.m_postProcessCommandLine);
+		m_stream.WriteTString(info.m_customProcessCommandLine);
 		m_stream.WriteInt(info.m_preProcessWaitTime);
 		m_stream.WriteInt(info.m_postProcessWaitTime);
-		m_stream.WriteBytes(reinterpret_cast<const unsigned char*>(info.m_domainName.c_str()),(info.m_domainName.size()+1)*sizeof(TCHAR));
-		m_stream.WriteBytes(reinterpret_cast<const unsigned char*>(info.m_userName.c_str()),(info.m_userName.size()+1)*sizeof(TCHAR));
-		m_stream.WriteBytes(reinterpret_cast<const unsigned char*>(info.m_userPassword.c_str()),(info.m_userPassword.size()+1)*sizeof(TCHAR));
+		m_stream.WriteTString(info.m_domainName);
+		m_stream.WriteTString(info.m_userName);
+		m_stream.WriteTString(info.m_userPassword);
 		m_stream.WriteUInt(info.m_delayStartTime);
 		m_stream.WriteUInt(info.m_delayPauseEndTime);
 		if(info.m_isRestart)
@@ -299,16 +299,16 @@ void WinServicePacketGenerator::AddSetProcessInfo(ProcessSetPacketType type, uns
 	switch(type)
 	{
 	case PROCESS_SET_PACKET_TYPE_COMMANDLINE:
-		m_stream.WriteBytes(reinterpret_cast<const unsigned char*>(info.m_commandLine.c_str()),(info.m_commandLine.size()+1)*sizeof(TCHAR));
+		m_stream.WriteTString(info.m_commandLine);
 		break;
 	case PROCESS_SET_PACKET_TYPE_PREPROCESS_COMMANDLINE:
-		m_stream.WriteBytes(reinterpret_cast<const unsigned char*>(info.m_preProcessCommandLine.c_str()),(info.m_preProcessCommandLine.size()+1)*sizeof(TCHAR));
+		m_stream.WriteTString(info.m_preProcessCommandLine);
 		break;
 	case PROCESS_SET_PACKET_TYPE_POSTPROCESS_COMMANDLINE:
-		m_stream.WriteBytes(reinterpret_cast<const unsigned char*>(info.m_postProcessCommandLine.c_str()),(info.m_postProcessCommandLine.size()+1)*sizeof(TCHAR));
+		m_stream.WriteTString(info.m_postProcessCommandLine);
 		break;
 	case PROCESS_SET_PACKET_TYPE_CUSTOMPROCESS_COMMANDLINE:
-		m_stream.WriteBytes(reinterpret_cast<const unsigned char*>(info.m_customProcessCommandLine.c_str()),(info.m_customProcessCommandLine.size()+1)*sizeof(TCHAR));
+		m_stream.WriteTString(info.m_customProcessCommandLine);
 		break;
 	case PROCESS_SET_PACKET_TYPE_PREPROCESS_WAIT_TIME:
 		m_stream.WriteInt(info.m_preProcessWaitTime);
@@ -317,13 +317,13 @@ void WinServicePacketGenerator::AddSetProcessInfo(ProcessSetPacketType type, uns
 		m_stream.WriteInt(info.m_postProcessWaitTime);
 		break;
 	case PROCESS_SET_PACKET_TYPE_DOMAINNAME:
-		m_stream.WriteBytes(reinterpret_cast<const unsigned char*>(info.m_domainName.c_str()),(info.m_domainName.size()+1)*sizeof(TCHAR));
+		m_stream.WriteTString(info.m_domainName);
 		break;
 	case PROCESS_SET_PACKET_TYPE_USERNAME:
-		m_stream.WriteBytes(reinterpret_cast<const unsigned char*>(info.m_userName.c_str()),(info.m_userName.size()+1)*sizeof(TCHAR));
+		m_stream.WriteTString(info.m_userName);
 		break;
 	case PROCESS_SET_PACKET_TYPE_USERPASSWORD:
-		m_stream.WriteBytes(reinterpret_cast<const unsigned char*>(info.m_userPassword.c_str()),(info.m_userPassword.size()+1)*sizeof(TCHAR));
+		m_stream.WriteTString(info.m_userPassword);
 		break;
 
 
@@ -352,15 +352,15 @@ void WinServicePacketGenerator::AddSetProcessInfo(ProcessSetPacketType type, uns
 			m_stream.WriteUInt(0);
 		break;
 	case PROCESS_SET_PACKET_TYPE_ALL:
-		m_stream.WriteBytes(reinterpret_cast<const unsigned char*>(info.m_commandLine.c_str()),(info.m_commandLine.size()+1)*sizeof(TCHAR));
-		m_stream.WriteBytes(reinterpret_cast<const unsigned char*>(info.m_preProcessCommandLine.c_str()),(info.m_preProcessCommandLine.size()+1)*sizeof(TCHAR));
-		m_stream.WriteBytes(reinterpret_cast<const unsigned char*>(info.m_postProcessCommandLine.c_str()),(info.m_postProcessCommandLine.size()+1)*sizeof(TCHAR));
-		m_stream.WriteBytes(reinterpret_cast<const unsigned char*>(info.m_customProcessCommandLine.c_str()),(info.m_customProcessCommandLine.size()+1)*sizeof(TCHAR));
+		m_stream.WriteTString(info.m_commandLine);
+		m_stream.WriteTString(info.m_preProcessCommandLine);
+		m_stream.WriteTString(info.m_postProcessCommandLine);
+		m_stream.WriteTString(info.m_customProcessCommandLine);
 		m_stream.WriteInt(info.m_preProcessWaitTime);
 		m_stream.WriteInt(info.m_postProcessWaitTime);
-		m_stream.WriteBytes(reinterpret_cast<const unsigned char*>(info.m_domainName.c_str()),(info.m_domainName.size()+1)*sizeof(TCHAR));
-		m_stream.WriteBytes(reinterpret_cast<const unsigned char*>(info.m_userName.c_str()),(info.m_userName.size()+1)*sizeof(TCHAR));
-		m_stream.WriteBytes(reinterpret_cast<const unsigned char*>(info.m_userPassword.c_str()),(info.m_userPassword.size()+1)*sizeof(TCHAR));
+		m_stream.WriteTString(info.m_domainName);
+		m_stream.WriteTString(info.m_userName);
+		m_stream.WriteTString(info.m_userPassword);
 		m_stream.WriteUInt(info.m_delayStartTime);
 		m_stream.WriteUInt(info.m_delayPauseEndTime);
 		if(info.m_isRestart)
@@ -387,7 +387,7 @@ void WinServicePacketGenerator::AddCommandService(ServiceCommandPacketType type,
 	m_count++;
 	m_stream.WriteUInt((unsigned int)PACKET_TYPE_SERVICE_COMMAND);
 	m_stream.WriteUInt((unsigned int)type);
-	m_stream.WriteBytes(reinterpret_cast<const unsigned char*>(serviceNameString.c_str()),(serviceNameString.size()+1)*sizeof(TCHAR));
+	m_stream.WriteTString(serviceNameString);
 
 	switch(type)
 	{
@@ -403,32 +403,32 @@ void WinServicePacketGenerator::AddCommandService(ServiceCommandPacketType type,
 		m_stream.WriteUInt((unsigned int)info.m_code);
 		break;
 	case SERVICE_COMMAND_PACKET_TYPE_INSTALL:
-		m_stream.WriteBytes(reinterpret_cast<const unsigned char*>(info.m_displayName.c_str()),(info.m_displayName.size()+1)*sizeof(TCHAR));
+		m_stream.WriteTString(info.m_displayName);
 		m_stream.WriteUInt((unsigned int)info.m_desiredAccess);
 		m_stream.WriteUInt((unsigned int)info.m_serviceType);
 		m_stream.WriteUInt((unsigned int)info.m_serviceStartType);
 		m_stream.WriteUInt((unsigned int)info.m_serviceErrorControl);
-		m_stream.WriteBytes(reinterpret_cast<const unsigned char*>(info.m_binaryPathName.c_str()),(info.m_binaryPathName.size()+1)*sizeof(TCHAR));
-		m_stream.WriteBytes(reinterpret_cast<const unsigned char*>(info.m_loadOrderGroup.c_str()),(info.m_loadOrderGroup.size()+1)*sizeof(TCHAR));
-		m_stream.WriteBytes(reinterpret_cast<const unsigned char*>(info.m_dependencies.c_str()),(info.m_dependencies.size()+1)*sizeof(TCHAR));
-		m_stream.WriteBytes(reinterpret_cast<const unsigned char*>(info.m_domainName.c_str()),(info.m_domainName.size()+1)*sizeof(TCHAR));
-		m_stream.WriteBytes(reinterpret_cast<const unsigned char*>(info.m_userName.c_str()),(info.m_userName.size()+1)*sizeof(TCHAR));
-		m_stream.WriteBytes(reinterpret_cast<const unsigned char*>(info.m_userPassword.c_str()),(info.m_userPassword.size()+1)*sizeof(TCHAR));
+		m_stream.WriteTString(info.m_binaryPathName);
+		m_stream.WriteTString(info.m_loadOrderGroup);
+		m_stream.WriteTString(info.m_dependencies);
+		m_stream.WriteTString(info.m_domainName);
+		m_stream.WriteTString(info.m_userName);
+		m_stream.WriteTString(info.m_userPassword);
 		break;
 	case SERVICE_COMMAND_PACKET_TYPE_UNINSTALL:
 		break;
 	case SERVICE_COMMAND_PACKET_TYPE_EDIT:
-		m_stream.WriteBytes(reinterpret_cast<const unsigned char*>(info.m_displayName.c_str()),(info.m_displayName.size()+1)*sizeof(TCHAR));
+		m_stream.WriteTString(info.m_displayName);
 		m_stream.WriteUInt((unsigned int)info.m_desiredAccess);
 		m_stream.WriteUInt((unsigned int)info.m_serviceType);
 		m_stream.WriteUInt((unsigned int)info.m_serviceStartType);
 		m_stream.WriteUInt((unsigned int)info.m_serviceErrorControl);
-		m_stream.WriteBytes(reinterpret_cast<const unsigned char*>(info.m_binaryPathName.c_str()),(info.m_binaryPathName.size()+1)*sizeof(TCHAR));
-		m_stream.WriteBytes(reinterpret_cast<const unsigned char*>(info.m_loadOrderGroup.c_str()),(info.m_loadOrderGroup.size()+1)*sizeof(TCHAR));
-		m_stream.WriteBytes(reinterpret_cast<const unsigned char*>(info.m_dependencies.c_str()),(info.m_dependencies.size()+1)*sizeof(TCHAR));
-		m_stream.WriteBytes(reinterpret_cast<const unsigned char*>(info.m_domainName.c_str()),(info.m_domainName.size()+1)*sizeof(TCHAR));
-		m_stream.WriteBytes(reinterpret_cast<const unsigned char*>(info.m_userName.c_str()),(info.m_userName.size()+1)*sizeof(TCHAR));
-		m_stream.WriteBytes(reinterpret_cast<const unsigned char*>(info.m_userPassword.c_str()),(info.m_userPassword.size()+1)*sizeof(TCHAR));
+		m_stream.WriteTString(info.m_binaryPathName);
+		m_stream.WriteTString(info.m_loadOrderGroup);
+		m_stream.WriteTString(info.m_dependencies);
+		m_stream.WriteTString(info.m_domainName);
+		m_stream.WriteTString(info.m_userName);
+		m_stream.WriteTString(info.m_userPassword);
 		m_stream.WriteUInt(info.m_editControlBits);
 		break;
 	case SERVICE_COMMAND_PACKET_TYPE_GET_STATUS:
