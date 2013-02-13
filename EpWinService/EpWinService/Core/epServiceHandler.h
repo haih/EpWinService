@@ -59,7 +59,7 @@ VOID ServiceMonitorThread(VOID *);
 */
 struct ServiceInfo{
 	/// Display Name
-	CString displayName;
+	EpTString displayName;
 	/// Desired Access
 	ServiceDesiredAccess desiredAccess;
 	/// Service Type
@@ -69,17 +69,17 @@ struct ServiceInfo{
 	/// Error Control
 	ServiceErrorControl errorControl;
 	/// BinaryPathName
-	CString binaryPathName;
+	EpTString binaryPathName;
 	/// LoadOrderGroup
-	CString loadOrderGroup;
+	EpTString loadOrderGroup;
 	/// Dependencies
-	CString dependencies;
+	EpTString dependencies;
 	/// Domain Name
-	CString domainName;
+	EpTString domainName;
 	/// User Name
-	CString userName;
+	EpTString userName;
 	/// UserPassword
-	CString password;
+	EpTString password;
 	/// Edit Control Bit
 	unsigned int editControlBit;
 };

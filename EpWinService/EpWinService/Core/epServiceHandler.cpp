@@ -337,10 +337,10 @@ ServiceHandlerError ServiceHandler::InstallService(const TCHAR *serviceName,Serv
 	if(m_scManager)
 	{
 
-		CString displayName=info.displayName;
-		CString domainName=info.domainName;
-		CString userName=info.userName;
-		CString dependencies=info.dependencies;
+		CString displayName=info.displayName.c_str();
+		CString domainName=info.domainName.c_str();
+		CString userName=info.userName.c_str();
+		CString dependencies=info.dependencies.c_str();
 		CString startUserName=_T("");
 		unsigned long desiredAccess=info.desiredAccess;
 		unsigned long serviceType=info.startType;
@@ -385,8 +385,8 @@ ServiceHandlerError ServiceHandler::InstallService(const TCHAR *serviceName,Serv
 				serviceType , /* service type            */ 
 				startType,      /* start type              */ 
 				errorControl,      /* error control type      */ 
-				info.binaryPathName.GetString(),			/* service's binary        */ 
-				info.loadOrderGroup.GetString(),                      /* no load ordering group  */ 
+				info.binaryPathName.c_str(),			/* service's binary        */ 
+				info.loadOrderGroup.c_str(),                      /* no load ordering group  */ 
 				NULL,                      /* no tag identifier       */ 
 				dependencies.GetString(),                      /* no dependencies         */ 
 				NULL,                      /* LocalSystem account     */ 
@@ -420,12 +420,12 @@ ServiceHandlerError ServiceHandler::InstallService(const TCHAR *serviceName,Serv
 				serviceType, /* service type            */ 
 				startType,      /* start type              */ 
 				errorControl,      /* error control type      */ 
-				info.binaryPathName.GetString(),			/* service's binary        */ 
-				info.loadOrderGroup.GetString(),                      /* no load ordering group  */ 
+				info.binaryPathName.c_str(),			/* service's binary        */ 
+				info.loadOrderGroup.c_str(),                      /* no load ordering group  */ 
 				NULL,                      /* no tag identifier       */ 
 				dependencies.GetString(),                      /* no dependencies         */ 
 				startUserName.GetString(),                      /* LocalSystem account     */ 
-				info.password.GetString()
+				info.password.c_str()
 				);                     /* no password             */ 
 
 		}
@@ -506,10 +506,10 @@ ServiceHandlerError ServiceHandler::EditService(const TCHAR *serviceName,Service
 		}
 		else
 		{
-			CString displayName=info.displayName;
-			CString domainName=info.domainName;
-			CString userName=info.userName;
-			CString dependencies=info.dependencies;
+			CString displayName=info.displayName.c_str();
+			CString domainName=info.domainName.c_str();
+			CString userName=info.userName.c_str();
+			CString dependencies=info.dependencies.c_str();
 			CString startUserName=_T("");
 			startUserName=_T("");
 
@@ -542,11 +542,11 @@ ServiceHandlerError ServiceHandler::EditService(const TCHAR *serviceName,Service
 
 			if((info.editControlBit&SERVICE_EDIT_CONTROL_BINARYPATHNAME)==SERVICE_EDIT_CONTROL_BINARYPATHNAME)
 			{
-				tBinaryPathName=info.binaryPathName;
+				tBinaryPathName=info.binaryPathName.c_str();
 			}
 			if((info.editControlBit&SERVICE_EDIT_CONTROL_LOADORDERGROUP)==SERVICE_EDIT_CONTROL_LOADORDERGROUP)
 			{
-				tLoadOrderGroup=info.loadOrderGroup;
+				tLoadOrderGroup=info.loadOrderGroup.c_str();
 			}
 			if((info.editControlBit&SERVICE_EDIT_CONTROL_DEPENDENCIES)==SERVICE_EDIT_CONTROL_DEPENDENCIES)
 			{
@@ -558,7 +558,7 @@ ServiceHandlerError ServiceHandler::EditService(const TCHAR *serviceName,Service
 			}
 			if((info.editControlBit&SERVICE_EDIT_CONTROL_USERPASSWORD)==SERVICE_EDIT_CONTROL_USERPASSWORD)
 			{
-				tUserPassword=info.password;
+				tUserPassword=info.password.c_str();
 			}
 
 			if((info.editControlBit&SERVICE_EDIT_CONTROL_DISPLAYNAME)==SERVICE_EDIT_CONTROL_DISPLAYNAME)
