@@ -36,10 +36,7 @@ An Interface for EpWinService API Library
 #include "epWinServiceResultInfo.h"
 
 #include "epWinServiceClient.h"
-#include "epWinServicePacketIDGenerator.h"
-#include "epWinServicePacketParser.h"
 #include "epWinServicePacketProcessor.h"
-#include "epWinServiceParserList.h"
 
 #include "epWinServiceClientPacketInfo.h"
 #include "epWinServiceDefines.h"
