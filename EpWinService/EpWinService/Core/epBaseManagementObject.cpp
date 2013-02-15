@@ -179,7 +179,7 @@ void BaseManagementObject::postProcess()
 
 void BaseManagementObject::CustomProcess(int waitTimeInMilliSec)
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_baseObjLock);
 	for(int listTrav=0;listTrav<m_customProcessCommandLineList.size();listTrav++)
 	{
 		executeCommand(m_customProcessCommandLineList.at(listTrav),listTrav,waitTimeInMilliSec,EXECUTE_COMMAND_TYPE_POSTPROCESS);
@@ -189,7 +189,7 @@ void BaseManagementObject::CustomProcess(int waitTimeInMilliSec)
 }
 void BaseManagementObject::RunCommand(CString command, int waitTimeInMilliSec)
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_baseObjLock);
 
 	vector<CString> cmdList;
 	BaseManagementObject::ParseCommand(command,cmdList);
@@ -318,19 +318,19 @@ void BaseManagementObject::replaceCommandArgument(CString &cmd)
 
 void BaseManagementObject::PostProcess()
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_baseObjLock);
 	postProcess();
 }
 
 
 bool BaseManagementObject::GetIsRestart()
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_baseObjLock);
 	return m_isRestart;
 }
 void BaseManagementObject::SetIsRestart(bool isRestart)
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_baseObjLock);
 	m_isRestart=isRestart;
 	if(m_isRestart)
 		WritePrivateProfileString(m_objectString.GetString(),_T("Restart"),_T("Y"),m_iniFileName.GetString());
@@ -340,13 +340,13 @@ void BaseManagementObject::SetIsRestart(bool isRestart)
 
 CString BaseManagementObject::GetPreProcessCommandLine()
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_baseObjLock);
 	return m_preProcessCommandLine;
 
 }
 void BaseManagementObject::SetPreProcessCommandLine(CString cmd)
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_baseObjLock);
 	cmd.Trim();
 	m_preProcessCommandLine=cmd;
 	WritePrivateProfileString(m_objectString.GetString(),_T("PreProcessCommandLine"),m_preProcessCommandLine.GetString(),m_iniFileName.GetString());
@@ -355,13 +355,13 @@ void BaseManagementObject::SetPreProcessCommandLine(CString cmd)
 
 CString BaseManagementObject::GetPostProcessCommandLine()
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_baseObjLock);
 	return m_postProcessCommandLine;
 
 }
 void BaseManagementObject::SetPostProcessCommandLine(CString cmd)
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_baseObjLock);
 	cmd.Trim();
 	m_postProcessCommandLine=cmd;
 	WritePrivateProfileString(m_objectString.GetString(),_T("PostProcessCommandLine"),m_postProcessCommandLine.GetString(),m_iniFileName.GetString());
@@ -370,13 +370,13 @@ void BaseManagementObject::SetPostProcessCommandLine(CString cmd)
 
 CString BaseManagementObject::GetCustomProcessCommandLine()
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_baseObjLock);
 	return m_customProcessCommandLine;
 
 }
 void BaseManagementObject::SetCustomProcessCommandLine(CString cmd)
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_baseObjLock);
 	cmd.Trim();
 	m_customProcessCommandLine=cmd;
 	WritePrivateProfileString(m_objectString.GetString(),_T("CustomProcessCommandLine"),m_customProcessCommandLine.GetString(),m_iniFileName.GetString());
@@ -385,25 +385,25 @@ void BaseManagementObject::SetCustomProcessCommandLine(CString cmd)
 
 bool BaseManagementObject::GetIsImpersonate()
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_baseObjLock);
 	return m_isImpersonate;
 }
 
 
 int BaseManagementObject::GetPreProcessWaitTime()
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_baseObjLock);
 	return m_preProcessWaitTime;
 }
 int BaseManagementObject::GetPostProcessWaitTime()
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_baseObjLock);
 	return m_postProcessWaitTime;
 }
 
 void BaseManagementObject::SetPreProcessWaitTime(int waitTimeinMilliSec)
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_baseObjLock);
 	m_preProcessWaitTime=waitTimeinMilliSec;
 	CString valueString=_T("");
 	valueString.AppendFormat(_T("%d"),m_preProcessWaitTime);
@@ -412,7 +412,7 @@ void BaseManagementObject::SetPreProcessWaitTime(int waitTimeinMilliSec)
 }
 void BaseManagementObject::SetPostProcessWaitTime(int waitTimeinMilliSec)
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_baseObjLock);
 	m_postProcessWaitTime=waitTimeinMilliSec;
 	CString valueString=_T("");
 	valueString.AppendFormat(_T("%d"),m_postProcessWaitTime);
@@ -422,7 +422,7 @@ void BaseManagementObject::SetPostProcessWaitTime(int waitTimeinMilliSec)
 
 void BaseManagementObject::SetIsImpersonate(bool isImpersonate)
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_baseObjLock);
 	m_isImpersonate=isImpersonate;
 	if(m_isImpersonate)
 		WritePrivateProfileString(m_objectString.GetString(),_T("Impersonate"),_T("Y"),m_iniFileName.GetString());
@@ -432,12 +432,12 @@ void BaseManagementObject::SetIsImpersonate(bool isImpersonate)
 
 bool BaseManagementObject::GetIsUserInterface()
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_baseObjLock);
 	return m_isUserInterface;
 }
 void BaseManagementObject::SetIsUserInterface(bool isUserInterface)
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_baseObjLock);
 	m_isUserInterface=(isUserInterface && (m_isImpersonate==false));
 	if(m_isUserInterface)
 		WritePrivateProfileString(m_objectString.GetString(),_T("UserInterface"),_T("Y"),m_iniFileName.GetString());
@@ -447,12 +447,12 @@ void BaseManagementObject::SetIsUserInterface(bool isUserInterface)
 
 CString BaseManagementObject::GetDomainName()
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_baseObjLock);
 	return m_domainName;
 }
 void BaseManagementObject::SetDomainName(CString domainName)
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_baseObjLock);
 	m_domainName=domainName;
 	WritePrivateProfileString(m_objectString.GetString(),_T("DomainName"),m_domainName.GetString(),m_iniFileName.GetString());
 
@@ -461,12 +461,12 @@ void BaseManagementObject::SetDomainName(CString domainName)
 CString BaseManagementObject::GetUserName()
 {
 
-	LockObj lock(&m_lock);
+	LockObj lock(&m_baseObjLock);
 	return m_userName;
 }
 void BaseManagementObject::SetUserName(CString userName)
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_baseObjLock);
 	m_userName=userName;
 	WritePrivateProfileString(m_objectString.GetString(),_T("UserName"),m_userName.GetString(),m_iniFileName.GetString());
 
@@ -474,12 +474,12 @@ void BaseManagementObject::SetUserName(CString userName)
 
 CString BaseManagementObject::GetUserPassword()
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_baseObjLock);
 	return m_userPassword;
 }
 void BaseManagementObject::SetUserPassword(CString userPassword)
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_baseObjLock);
 	m_userPassword=userPassword;
 	WritePrivateProfileString(m_objectString.GetString(),_T("Password"),m_userPassword.GetString(),m_iniFileName.GetString());
 
@@ -488,12 +488,12 @@ void BaseManagementObject::SetUserPassword(CString userPassword)
 
 unsigned int BaseManagementObject::GetDelayStartTime()
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_baseObjLock);
 	return m_delayStartTime;
 }
 void BaseManagementObject::SetDelayStartTime(unsigned int timeInMilli)
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_baseObjLock);
 	m_delayStartTime=timeInMilli;
 	CString valueString=_T("");
 	valueString.AppendFormat(_T("%d"),m_delayStartTime);
@@ -503,12 +503,12 @@ void BaseManagementObject::SetDelayStartTime(unsigned int timeInMilli)
 unsigned int BaseManagementObject::GetDelayPauseEndTime()
 {
 
-	LockObj lock(&m_lock);
+	LockObj lock(&m_baseObjLock);
 	return m_delayPauseEndTime;
 }
 void BaseManagementObject::SetDelayPauseEndTime(unsigned int timeInMilli)
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_baseObjLock);
 	m_delayPauseEndTime=timeInMilli;
 	CString valueString=_T("");
 	valueString.AppendFormat(_T("%d"),m_delayPauseEndTime);

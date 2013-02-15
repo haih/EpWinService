@@ -45,7 +45,7 @@ ProcessObject::~ProcessObject()
 
 bool ProcessObject::Start()
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_baseObjLock);
 	if(m_pProcInfo.hProcess)
 		return true;
 
@@ -106,7 +106,7 @@ bool ProcessObject::Start()
 
 void ProcessObject::Stop()
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_baseObjLock);
 	if(m_pProcInfo.hProcess)
 	{
 		// post a WM_QUIT message first
@@ -133,7 +133,7 @@ void ProcessObject::Stop()
 
 bool ProcessObject::IsStarted()
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_baseObjLock);
 	DWORD dwCode;
 	if(m_pProcInfo.hProcess && ::GetExitCodeProcess(m_pProcInfo.hProcess,&dwCode))
 	{
@@ -145,12 +145,12 @@ bool ProcessObject::IsStarted()
 
 BOOL ProcessObject::GetExitCodeProcess(DWORD *dwCode)
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_baseObjLock);
 	return ::GetExitCodeProcess(m_pProcInfo.hProcess,dwCode);
 }
 void ProcessObject::Reset()
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_baseObjLock);
 	try // close handles to avoid ERROR_NO_SYSTEM_RESOURCES
 	{
 		::CloseHandle(m_pProcInfo.hThread);
@@ -164,7 +164,7 @@ void ProcessObject::Reset()
 
 void ProcessObject::CustomProcess(int waitTimeInMilliSec)
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_baseObjLock);
 	CString pidString=_T("");
 	pidString.Format(_T("%d"),m_pProcInfo.dwProcessId);
 
@@ -178,7 +178,7 @@ void ProcessObject::CustomProcess(int waitTimeInMilliSec)
 
 void ProcessObject::RunCommand(CString command, int waitTimeInMilliSec)
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_baseObjLock);
 
 	vector<CString> cmdList;
 	BaseManagementObject::ParseCommand(command,cmdList);
@@ -193,13 +193,13 @@ void ProcessObject::RunCommand(CString command, int waitTimeInMilliSec)
 }
 CString ProcessObject::GetCommandLine()
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_baseObjLock);
 	return m_commandLine;
 
 }
 void ProcessObject::SetCommandLine(CString cmd)
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_baseObjLock);
 	m_commandLine=cmd;
 	WritePrivateProfileString(m_objectString.GetString(),_T("CommandLine"),m_commandLine.GetString(),m_iniFileName.GetString());
 }

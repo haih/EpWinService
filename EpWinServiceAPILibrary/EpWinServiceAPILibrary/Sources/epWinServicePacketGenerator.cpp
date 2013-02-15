@@ -26,23 +26,23 @@ WinServicePacketGenerator::WinServicePacketGenerator(LockPolicy lockPolicyType):
 	switch(lockPolicyType)
 	{
 	case LOCK_POLICY_CRITICALSECTION:
-		m_lock=EP_NEW CriticalSectionEx();
+		m_packetGeneratorLock=EP_NEW CriticalSectionEx();
 		break;
 	case LOCK_POLICY_MUTEX:
-		m_lock=EP_NEW Mutex();
+		m_packetGeneratorLock=EP_NEW Mutex();
 		break;
 	case LOCK_POLICY_NONE:
-		m_lock=EP_NEW NoLock();
+		m_packetGeneratorLock=EP_NEW NoLock();
 		break;
 	default:
-		m_lock=NULL;
+		m_packetGeneratorLock=NULL;
 		break;
 	}
 }
 WinServicePacketGenerator::~WinServicePacketGenerator()
 {
-	if(m_lock)
-		EP_DELETE m_lock;
+	if(m_packetGeneratorLock)
+		EP_DELETE m_packetGeneratorLock;
 }
 WinServicePacketGenerator::WinServicePacketGenerator(const WinServicePacketGenerator& b):SmartObject(b)
 {
@@ -52,16 +52,16 @@ WinServicePacketGenerator::WinServicePacketGenerator(const WinServicePacketGener
 	switch(m_lockPolicy)
 	{
 	case LOCK_POLICY_CRITICALSECTION:
-		m_lock=EP_NEW CriticalSectionEx();
+		m_packetGeneratorLock=EP_NEW CriticalSectionEx();
 		break;
 	case LOCK_POLICY_MUTEX:
-		m_lock=EP_NEW Mutex();
+		m_packetGeneratorLock=EP_NEW Mutex();
 		break;
 	case LOCK_POLICY_NONE:
-		m_lock=EP_NEW NoLock();
+		m_packetGeneratorLock=EP_NEW NoLock();
 		break;
 	default:
-		m_lock=NULL;
+		m_packetGeneratorLock=NULL;
 		break;
 	}
 
@@ -71,7 +71,7 @@ WinServicePacketGenerator & WinServicePacketGenerator::operator=(const WinServic
 	if(this!=&b)
 	{	
 		SmartObject::operator =(b);
-		LockObj lock(m_lock);
+		LockObj lock(m_packetGeneratorLock);
 		m_count=b.m_count;
 		m_stream=b.m_stream;
 
@@ -81,20 +81,20 @@ WinServicePacketGenerator & WinServicePacketGenerator::operator=(const WinServic
 
 unsigned int WinServicePacketGenerator::GetCount() const
 {
-	LockObj lock(m_lock);
+	LockObj lock(m_packetGeneratorLock);
 	return m_count;
 }
 
 void WinServicePacketGenerator::Clear()
 {
-	LockObj lock(m_lock);
+	LockObj lock(m_packetGeneratorLock);
 	m_stream.Clear();
 	m_stream.SetSeek(epl::Stream::STREAM_SEEK_TYPE_SEEK_SET);
 	m_count=0;
 }
 void WinServicePacketGenerator::AddCommandProcessObj(CommandProcessObjectPacketType type, int objIndex,int waitTime, EpTString cmd)
 {
-	LockObj lock(m_lock);
+	LockObj lock(m_packetGeneratorLock);
 	m_count++;
 	m_stream.WriteUInt((unsigned int)PACKET_TYPE_COMMAND_PROCESS_OBJECT);
 	m_stream.WriteUInt((unsigned int)type);
@@ -115,7 +115,7 @@ void WinServicePacketGenerator::AddCommandProcessObj(CommandProcessObjectPacketT
 }
 void WinServicePacketGenerator::AddCommandServiceObj(CommandServiceObjectPacketType type, int objIndex,int waitTime, EpTString cmd)
 {
-	LockObj lock(m_lock);
+	LockObj lock(m_packetGeneratorLock);
 	m_count++;
 	m_stream.WriteUInt((unsigned int)PACKET_TYPE_COMMAND_SERVICE_OBJECT);
 	m_stream.WriteUInt((unsigned int)type);
@@ -137,7 +137,7 @@ void WinServicePacketGenerator::AddCommandServiceObj(CommandServiceObjectPacketT
 
 void WinServicePacketGenerator::AddCommandMainService(CommandMainServicePackeType type,int waitTime, EpTString cmd)
 {
-	LockObj lock(m_lock);
+	LockObj lock(m_packetGeneratorLock);
 	m_count++;
 	m_stream.WriteUInt((unsigned int)PACKET_TYPE_MAIN_SERVICE_COMMAND);
 	m_stream.WriteUInt((unsigned int)type);
@@ -156,7 +156,7 @@ void WinServicePacketGenerator::AddCommandMainService(CommandMainServicePackeTyp
 
 void WinServicePacketGenerator::AddGetMainServiceInfo(MainServiceGetPacketType type)
 {
-	LockObj lock(m_lock);
+	LockObj lock(m_packetGeneratorLock);
 	m_count++;
 	m_stream.WriteUInt((unsigned int)PACKET_TYPE_MAIN_SERVICE_GET);
 	m_stream.WriteUInt((unsigned int)type);
@@ -164,7 +164,7 @@ void WinServicePacketGenerator::AddGetMainServiceInfo(MainServiceGetPacketType t
 
 void WinServicePacketGenerator::AddSetMainServiceInfo(MainServiceSetPacketType type,MainServiceInfo info)
 {
-	LockObj lock(m_lock);
+	LockObj lock(m_packetGeneratorLock);
 	m_count++;
 	m_stream.WriteUInt((unsigned int)PACKET_TYPE_MAIN_SERVICE_SET);
 	m_stream.WriteUInt((unsigned int)type);
@@ -186,7 +186,7 @@ void WinServicePacketGenerator::AddSetMainServiceInfo(MainServiceSetPacketType t
 
 void WinServicePacketGenerator::AddGetServiceInfo(ServiceGetPacketType type, unsigned int serviceIndex)
 {
-	LockObj lock(m_lock);
+	LockObj lock(m_packetGeneratorLock);
 	m_count++;
 	m_stream.WriteUInt((unsigned int)PACKET_TYPE_SERVICE_GET);
 	m_stream.WriteUInt((unsigned int)type);
@@ -194,7 +194,7 @@ void WinServicePacketGenerator::AddGetServiceInfo(ServiceGetPacketType type, uns
 }
 void WinServicePacketGenerator::AddSetServiceInfo(ServiceSetPacketType type, unsigned int serviceIndex, ServiceObjInfo info)
 {
-	LockObj lock(m_lock);
+	LockObj lock(m_packetGeneratorLock);
 	m_count++;
 	m_stream.WriteUInt((unsigned int)PACKET_TYPE_SERVICE_SET);
 	m_stream.WriteUInt((unsigned int)type);
@@ -283,7 +283,7 @@ void WinServicePacketGenerator::AddSetServiceInfo(ServiceSetPacketType type, uns
 }
 void WinServicePacketGenerator::AddGetProcessInfo(ProcessGetPacketType type, unsigned int procIndex)
 {
-	LockObj lock(m_lock);
+	LockObj lock(m_packetGeneratorLock);
 	m_count++;
 	m_stream.WriteUInt((unsigned int)PACKET_TYPE_PROCESS_GET);
 	m_stream.WriteUInt((unsigned int)type);
@@ -291,7 +291,7 @@ void WinServicePacketGenerator::AddGetProcessInfo(ProcessGetPacketType type, uns
 }
 void WinServicePacketGenerator::AddSetProcessInfo(ProcessSetPacketType type, unsigned int procIndex,ProcessObjInfo info)
 {
-	LockObj lock(m_lock);
+	LockObj lock(m_packetGeneratorLock);
 	m_count++;
 	m_stream.WriteUInt((unsigned int)PACKET_TYPE_PROCESS_SET);
 	m_stream.WriteUInt((unsigned int)type);
@@ -380,7 +380,7 @@ void WinServicePacketGenerator::AddSetProcessInfo(ProcessSetPacketType type, uns
 }
 void WinServicePacketGenerator::AddCommandService(ServiceCommandPacketType type, const TCHAR *serviceName, ServiceInfo info)
 {
-	LockObj lock(m_lock);
+	LockObj lock(m_packetGeneratorLock);
 	EpTString serviceNameString=serviceName;
 	if(serviceNameString.size()<=0)
 		serviceNameString=_T("");
@@ -440,11 +440,11 @@ void WinServicePacketGenerator::AddCommandService(ServiceCommandPacketType type,
 
 const unsigned char * WinServicePacketGenerator::GetStream() const
 {
-	LockObj lock(m_lock);
+	LockObj lock(m_packetGeneratorLock);
 	return m_stream.GetBuffer();
 }
 int WinServicePacketGenerator::GetStreamByteSize() const
 {
-	LockObj lock(m_lock);
+	LockObj lock(m_packetGeneratorLock);
 	return m_stream.GetStreamSize();
 }

@@ -46,7 +46,7 @@ ServiceObject::~ServiceObject()
 
 bool ServiceObject::Start()
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_baseObjLock);
 	m_isUserStopped=false;
 	SERVICE_STATUS status;
 	DWORD retCode;
@@ -69,7 +69,7 @@ bool ServiceObject::Start()
 
 void ServiceObject::Stop()
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_baseObjLock);
 	DWORD retCode;
 	SERVICE_HANDLER_INSTANCE.StopService(m_serviceName.GetString(),retCode);
 	::Sleep(m_delayPauseEndTime>0?m_delayPauseEndTime:50);
@@ -94,7 +94,7 @@ void ServiceObject::Continue()
 
 bool ServiceObject::IsStarted()
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_baseObjLock);
 	SERVICE_STATUS status;
 	DWORD retCode;
 	if(SERVICE_HANDLER_INSTANCE.ControlService(m_serviceName.GetString(),SERVICE_CONTROL_CODE_INTERROGATE,status,retCode)==SERVICE_HANDLER_ERROR_SUCCESS)
@@ -107,12 +107,12 @@ bool ServiceObject::IsStarted()
 
 void ServiceObject::Reset()
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_baseObjLock);
 }
 
 ServiceStatusType ServiceObject::GetStatus()
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_baseObjLock);
 	SERVICE_STATUS status;
 	DWORD retCode;
 	if(SERVICE_HANDLER_INSTANCE.ControlService(m_serviceName.GetString(),SERVICE_CONTROL_CODE_INTERROGATE,status,retCode)==SERVICE_HANDLER_ERROR_SUCCESS)
@@ -124,7 +124,7 @@ ServiceStatusType ServiceObject::GetStatus()
 
 void ServiceObject::CustomProcess(int waitTimeInMilliSec)
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_baseObjLock);
 
 	for(int listTrav=0;listTrav<m_customProcessCommandLineList.size();listTrav++)
 	{
@@ -136,7 +136,7 @@ void ServiceObject::CustomProcess(int waitTimeInMilliSec)
 
 void ServiceObject::RunCommand(CString command, int waitTimeInMilliSec)
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_baseObjLock);
 
 	vector<CString> cmdList;
 	BaseManagementObject::ParseCommand(command,cmdList);
@@ -151,26 +151,26 @@ void ServiceObject::RunCommand(CString command, int waitTimeInMilliSec)
 
 CString ServiceObject::GetServiceName()
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_baseObjLock);
 	return m_serviceName;
 
 }
 void ServiceObject::SetServiceName(CString cmd)
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_baseObjLock);
 	m_serviceName=cmd;
 	WritePrivateProfileString(m_objectString.GetString(),_T("ServiceName"),m_serviceName.GetString(),m_iniFileName.GetString());
 }
 
 bool ServiceObject::GetIsUserStopped()
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_baseObjLock);
 	return m_isUserStopped;
 
 }
 void ServiceObject::SetIsUserStopped(bool isUserStopped)
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_baseObjLock);
 	m_isUserStopped=isUserStopped;
 
 }

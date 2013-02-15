@@ -28,16 +28,16 @@ WinServiceCommunicator::WinServiceCommunicator(const TCHAR * hostName, const TCH
 	switch(lockPolicyType)
 	{
 	case LOCK_POLICY_CRITICALSECTION:
-		m_lock=EP_NEW CriticalSectionEx();
+		m_communicatorLock=EP_NEW CriticalSectionEx();
 		break;
 	case LOCK_POLICY_MUTEX:
-		m_lock=EP_NEW Mutex();
+		m_communicatorLock=EP_NEW Mutex();
 		break;
 	case LOCK_POLICY_NONE:
-		m_lock=EP_NEW NoLock();
+		m_communicatorLock=EP_NEW NoLock();
 		break;
 	default:
-		m_lock=NULL;
+		m_communicatorLock=NULL;
 		break;
 	}
 }
@@ -48,8 +48,8 @@ WinServiceCommunicator::~WinServiceCommunicator()
 	{
 		m_client.Disconnect();
 	}
-	if(m_lock)
-		EP_DELETE m_lock;
+	if(m_communicatorLock)
+		EP_DELETE m_communicatorLock;
 }
 
 WinServiceCommunicator::WinServiceCommunicator(const WinServiceCommunicator& b):SmartObject(b)
@@ -62,16 +62,16 @@ WinServiceCommunicator::WinServiceCommunicator(const WinServiceCommunicator& b):
 	switch(m_lockPolicy)
 	{
 	case LOCK_POLICY_CRITICALSECTION:
-		m_lock=EP_NEW CriticalSectionEx();
+		m_communicatorLock=EP_NEW CriticalSectionEx();
 		break;
 	case LOCK_POLICY_MUTEX:
-		m_lock=EP_NEW Mutex();
+		m_communicatorLock=EP_NEW Mutex();
 		break;
 	case LOCK_POLICY_NONE:
-		m_lock=EP_NEW NoLock();
+		m_communicatorLock=EP_NEW NoLock();
 		break;
 	default:
-		m_lock=NULL;
+		m_communicatorLock=NULL;
 		break;
 	}
 }
@@ -81,7 +81,7 @@ WinServiceCommunicator & WinServiceCommunicator::operator=(const WinServiceCommu
 	if(this!=&b)
 	{
 		SmartObject::operator =(b);
-		LockObj lock(m_lock);
+		LockObj lock(m_communicatorLock);
 		m_hostName=b.m_hostName;
 		m_port=b.m_port;
 		if(m_client.IsConnected())
@@ -95,19 +95,19 @@ WinServiceCommunicator & WinServiceCommunicator::operator=(const WinServiceCommu
 
 const TCHAR *WinServiceCommunicator::GetHostName() const
 {
-	LockObj lock(m_lock);
+	LockObj lock(m_communicatorLock);
 	return m_hostName.c_str();
 }
 
 const TCHAR *WinServiceCommunicator::GetPort() const
 {
-	LockObj lock(m_lock);
+	LockObj lock(m_communicatorLock);
 	return m_port.c_str();
 }
 
 void WinServiceCommunicator::SetServerInfo(const TCHAR *hostName, const TCHAR *port)
 {
-	LockObj lock(m_lock);
+	LockObj lock(m_communicatorLock);
 	if(m_client.IsConnected())
 		m_client.Disconnect();
 	m_hostName=hostName;
@@ -119,7 +119,7 @@ void WinServiceCommunicator::SetServerInfo(const TCHAR *hostName, const TCHAR *p
 
 WinServiceCommunicatorSendError WinServiceCommunicator::Send(const WinServicePacketGenerator& packetGenerator, WinServiceResult &retResult,unsigned int waitTimeMilliSec)
 {
-	LockObj lock(m_lock);
+	LockObj lock(m_communicatorLock);
 	retResult.Clear();
 	PacketContainer<SendPacket> packetContainer=PacketContainer<SendPacket>();
 	packetContainer.GetPacketPtr()->count=packetGenerator.GetCount();

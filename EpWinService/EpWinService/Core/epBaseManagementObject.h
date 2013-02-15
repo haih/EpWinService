@@ -347,7 +347,7 @@ protected:
 	unsigned int m_delayPauseEndTime;
 
 	/// Lock
-	CriticalSectionEx m_lock;
+	CriticalSectionEx m_baseObjLock;
 	/// INI Filename
 	CString m_iniFileName;
 	/// Object Name in INI File (Internal use)

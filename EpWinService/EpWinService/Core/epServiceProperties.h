@@ -184,7 +184,7 @@ private:
 	CString m_adminServerPort;
 
 	/// Lock
-	CriticalSectionEx m_lock;
+	CriticalSectionEx m_propertiesLock;
 	/// INI Filename
 	CString m_iniFileName;
 

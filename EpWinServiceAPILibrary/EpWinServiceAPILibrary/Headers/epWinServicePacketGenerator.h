@@ -194,7 +194,7 @@ namespace epws
 		/// packet count
 		unsigned int m_count;
 		/// the lock
-		BaseLock * m_lock;
+		BaseLock * m_packetGeneratorLock;
 		/// Lock Policy
 		LockPolicy m_lockPolicy;
 	};

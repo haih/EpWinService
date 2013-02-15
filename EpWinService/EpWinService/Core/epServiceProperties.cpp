@@ -85,7 +85,7 @@ ServiceProperties::~ServiceProperties()
 
 const TCHAR *ServiceProperties::GetServiceName()
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_propertiesLock);
 	if(m_serviceName.GetLength()==0 || m_serviceName.Compare(_T(""))==0)
 		return NULL;
 	return m_serviceName.GetString();
@@ -93,7 +93,7 @@ const TCHAR *ServiceProperties::GetServiceName()
 
 const TCHAR *ServiceProperties::GetDomainName()
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_propertiesLock);
 	if(m_domainName.GetLength()==0 || m_domainName.Compare(_T(""))==0)
 		return NULL;
 	return m_domainName.GetString();
@@ -101,7 +101,7 @@ const TCHAR *ServiceProperties::GetDomainName()
 
 const TCHAR * ServiceProperties::GetUserName()
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_propertiesLock);
 	if(m_userName.GetLength()==0 || m_userName.Compare(_T(""))==0)
 		return NULL;
 	return m_userName.GetString();
@@ -109,7 +109,7 @@ const TCHAR * ServiceProperties::GetUserName()
 
 const TCHAR * ServiceProperties::GetUserPassword()
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_propertiesLock);
 	if(m_userPassword.GetLength()==0 || m_userPassword.Compare(_T(""))==0)
 		return NULL;
 	return m_userPassword.GetString();
@@ -117,7 +117,7 @@ const TCHAR * ServiceProperties::GetUserPassword()
 
 const TCHAR * ServiceProperties::GetDependency()
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_propertiesLock);
 	if(m_dependency.GetLength()==0 ||m_dependency.Compare(_T(""))==0)
 		return NULL;
 	return m_dependency.GetString();
@@ -128,12 +128,12 @@ CString ServiceProperties::GetOriginalDependency()
 }
 bool ServiceProperties::GetUseAdminServer()
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_propertiesLock);
 	return m_useAdminServer;
 }
 const TCHAR *ServiceProperties::GetAdminServerPort()
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_propertiesLock);
 	if(m_adminServerPort.GetLength()==0 ||m_adminServerPort.Compare(_T(""))==0)
 		return NULL;
 	return m_adminServerPort.GetString();
@@ -142,13 +142,13 @@ const TCHAR *ServiceProperties::GetAdminServerPort()
 
 const unsigned int ServiceProperties::GetCheckProcessInterval()
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_propertiesLock);
 	return m_checkProcessInterval;
 }
 
 void ServiceProperties::SetCheckProcessInterval(unsigned int timeInMilli)
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_propertiesLock);
 	m_checkProcessInterval=timeInMilli;
 
 
@@ -161,13 +161,13 @@ void ServiceProperties::SetCheckProcessInterval(unsigned int timeInMilli)
 
 const unsigned int ServiceProperties::GetCheckServiceInterval()
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_propertiesLock);
 	return m_checkServiceInterval;
 }
 
 void ServiceProperties::SetCheckServiceInterval(unsigned int timeInMilli)
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_propertiesLock);
 	m_checkServiceInterval=timeInMilli;
 
 
@@ -179,13 +179,13 @@ void ServiceProperties::SetCheckServiceInterval(unsigned int timeInMilli)
 
 CString ServiceProperties::GetCustomProcessCommandLine()
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_propertiesLock);
 	return m_customProcessCommandLine;
 }
 
 void ServiceProperties::SetCustomProcessCommandLine(CString cmd)
 {
-	LockObj lock(&m_lock);
+	LockObj lock(&m_propertiesLock);
 	cmd.Trim();
 	m_customProcessCommandLine=cmd;
 	WritePrivateProfileString(_T("Settings"),_T("CustomProcessCommandLine"),m_customProcessCommandLine.GetString(),m_iniFileName.GetString());

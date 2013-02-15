@@ -130,7 +130,7 @@ namespace epws
 		/// Port Number
 		EpTString m_port;
 		/// the lock
-		BaseLock * m_lock;
+		BaseLock * m_communicatorLock;
 		/// Lock Policy
 		LockPolicy m_lockPolicy;
 
