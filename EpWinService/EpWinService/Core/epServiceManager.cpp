@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 VOID WINAPI ServiceMain(DWORD dwArgc, LPTSTR *lpszArgv);
 
-void MainServiceStart();
+bool MainServiceStart();
 
 #define SERVICE_CONTROL_PROCESS_START  0x80
 #define SERVICE_CONTROL_PROCESS_END    0xc0
@@ -271,10 +271,17 @@ void ServiceManager::ExecuteSubProcess()
 
 void ServiceManager::TestSubProcess()
 {
-	MainServiceStart();
-	while(1)
+	if(MainServiceStart())
 	{
-		Sleep(0);
+		_tprintf(_T("MainService started...\n"));
+		while(1)
+		{
+			Sleep(0);
+		}
+	}
+	else
+	{
+		_tprintf(_T("MainService failed to start...\n"));
 	}
 }
 
@@ -727,7 +734,7 @@ void WINAPI ServiceHandler(DWORD fdwControl)
 		LOG_WRITER_INSTANCE.WriteLog( pTemp);
 	} 
 }
-void MainServiceStart()
+bool MainServiceStart()
 {
 
 	if(_beginthread(ProcMonitorThread, 0, NULL) == -1)
@@ -736,6 +743,7 @@ void MainServiceStart()
 		TCHAR pTemp[121];
 		_stprintf(pTemp, _T("ProcMonitorThread failed, error code = %d"), nError);
 		LOG_WRITER_INSTANCE.WriteLog( pTemp);
+		return false;
 	}
 	else
 	{
@@ -749,6 +757,7 @@ void MainServiceStart()
 		TCHAR pTemp[121];
 		_stprintf(pTemp, _T("ServiceMonitorThread failed, error code = %d"), nError);
 		LOG_WRITER_INSTANCE.WriteLog( pTemp);
+		return false;
 	}
 	else
 	{
@@ -776,6 +785,7 @@ void MainServiceStart()
 			LOG_WRITER_INSTANCE.WriteLog( pTemp);
 		}
 	}
+	return true;
 }
 VOID WINAPI ServiceMain(DWORD dwArgc, LPTSTR *lpszArgv)
 {
