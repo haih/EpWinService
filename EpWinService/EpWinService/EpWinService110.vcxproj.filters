@@ -365,6 +365,9 @@
     <ClInclude Include="EpServerEngineHeaders\epParserList.h">
       <Filter>EpServerEngineHeaders</Filter>
     </ClInclude>
+    <ClInclude Include="EpLibraryHeaders\epCmdLineOptions.h">
+      <Filter>EpLibraryHeaders</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\LICENSE">

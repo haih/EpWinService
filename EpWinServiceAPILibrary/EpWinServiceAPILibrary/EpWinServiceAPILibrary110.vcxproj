@@ -482,6 +482,7 @@
     <ClInclude Include="EpLibraryHeaders\epBaseTextFile.h" />
     <ClInclude Include="EpLibraryHeaders\epBaseWorkerThread.h" />
     <ClInclude Include="EpLibraryHeaders\epBinarySearch.h" />
+    <ClInclude Include="EpLibraryHeaders\epCmdLineOptions.h" />
     <ClInclude Include="EpLibraryHeaders\epConsoleHelper.h" />
     <ClInclude Include="EpLibraryHeaders\epCriticalSectionEx.h" />
     <ClInclude Include="EpLibraryHeaders\epCStringEx.h" />
