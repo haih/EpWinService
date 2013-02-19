@@ -24,6 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 VOID WINAPI ServiceMain(DWORD dwArgc, LPTSTR *lpszArgv);
 
+void MainServiceStart();
+
 #define SERVICE_CONTROL_PROCESS_START  0x80
 #define SERVICE_CONTROL_PROCESS_END    0xc0
 #define SERVICE_CONTROL_CUSTOM_PROCESS 0xe0
@@ -267,6 +269,14 @@ void ServiceManager::ExecuteSubProcess()
 	LOG_WRITER_INSTANCE.WriteLog( pTemp);
 }
 
+void ServiceManager::TestSubProcess()
+{
+	MainServiceStart();
+	while(1)
+	{
+		Sleep(0);
+	}
+}
 
 bool ServiceManager::RunService()
 {
@@ -717,7 +727,56 @@ void WINAPI ServiceHandler(DWORD fdwControl)
 		LOG_WRITER_INSTANCE.WriteLog( pTemp);
 	} 
 }
+void MainServiceStart()
+{
 
+	if(_beginthread(ProcMonitorThread, 0, NULL) == -1)
+	{
+		long nError = GetLastError();
+		TCHAR pTemp[121];
+		_stprintf(pTemp, _T("ProcMonitorThread failed, error code = %d"), nError);
+		LOG_WRITER_INSTANCE.WriteLog( pTemp);
+	}
+	else
+	{
+		TCHAR pTemp[121];
+		_stprintf(pTemp, _T("ProcMonitorThread started"));
+		LOG_WRITER_INSTANCE.WriteLog( pTemp);
+	}
+	if(_beginthread(ServiceMonitorThread, 0, NULL) == -1)
+	{
+		long nError = GetLastError();
+		TCHAR pTemp[121];
+		_stprintf(pTemp, _T("ServiceMonitorThread failed, error code = %d"), nError);
+		LOG_WRITER_INSTANCE.WriteLog( pTemp);
+	}
+	else
+	{
+		TCHAR pTemp[121];
+		_stprintf(pTemp, _T("ServiceMonitorThread started"));
+		LOG_WRITER_INSTANCE.WriteLog( pTemp);
+	}
+
+	for(int procTrav=0;procTrav<PROCESS_HANDLER_INSTANCE.GetNumberOfProcesses();procTrav++)
+	{
+		if(PROCESS_HANDLER_INSTANCE.At(procTrav)->Start())
+		{
+			TCHAR pTemp[121];
+			_stprintf(pTemp, _T("Process%d started"),procTrav);
+			LOG_WRITER_INSTANCE.WriteLog( pTemp);
+		}
+	}
+
+	if(SERVICE_PROPERTIES_INSTANCE.GetUseAdminServer())
+	{
+		if(!SERVICE_MANAGER_INSTANCE.StartAdminServer())
+		{
+			TCHAR pTemp[121];
+			_stprintf(pTemp, _T("Unable to start the Admin Server"));
+			LOG_WRITER_INSTANCE.WriteLog( pTemp);
+		}
+	}
+}
 VOID WINAPI ServiceMain(DWORD dwArgc, LPTSTR *lpszArgv)
 {
 	DWORD   status = 0; 
@@ -754,53 +813,7 @@ VOID WINAPI ServiceMain(DWORD dwArgc, LPTSTR *lpszArgv)
 		LOG_WRITER_INSTANCE.WriteLog( pTemp);
 	} 
 
-
-	if(_beginthread(ProcMonitorThread, 0, NULL) == -1)
-	{
-		long nError = GetLastError();
-		TCHAR pTemp[121];
-		_stprintf(pTemp, _T("ProcMonitorThread failed, error code = %d"), nError);
-		LOG_WRITER_INSTANCE.WriteLog( pTemp);
-	}
-	else
-	{
-		TCHAR pTemp[121];
-		_stprintf(pTemp, _T("ProcMonitorThread started"));
-		LOG_WRITER_INSTANCE.WriteLog( pTemp);
-	}
-	if(_beginthread(ServiceMonitorThread, 0, NULL) == -1)
-	{
-		long nError = GetLastError();
-		TCHAR pTemp[121];
-		_stprintf(pTemp, _T("ServiceMonitorThread failed, error code = %d"), nError);
-		LOG_WRITER_INSTANCE.WriteLog( pTemp);
-	}
-	else
-	{
-		TCHAR pTemp[121];
-		_stprintf(pTemp, _T("ServiceMonitorThread started"));
-		LOG_WRITER_INSTANCE.WriteLog( pTemp);
-	}
-	
-	for(int procTrav=0;procTrav<PROCESS_HANDLER_INSTANCE.GetNumberOfProcesses();procTrav++)
-	{
-		if(PROCESS_HANDLER_INSTANCE.At(procTrav)->Start())
-		{
-			TCHAR pTemp[121];
-			_stprintf(pTemp, _T("Process%d started"),procTrav);
-			LOG_WRITER_INSTANCE.WriteLog( pTemp);
-		}
-	}
-
-	if(SERVICE_PROPERTIES_INSTANCE.GetUseAdminServer())
-	{
-		if(!SERVICE_MANAGER_INSTANCE.StartAdminServer())
-		{
-			TCHAR pTemp[121];
-			_stprintf(pTemp, _T("Unable to start the Admin Server"));
-			LOG_WRITER_INSTANCE.WriteLog( pTemp);
-		}
-	}
+	MainServiceStart();
 
 }
 

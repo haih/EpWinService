@@ -53,9 +53,14 @@ public:
 	friend SingletonHolder<ServiceManager>;
 
 	/*!
-	Start the process objects.
+	Start the Main Service.
 	*/
 	void ExecuteSubProcess();
+
+	/*!
+	Test the Main Service.
+	*/
+	void TestSubProcess();
 
 	/*!
 	Start the Custom-process CommandLine of process object at given index.
