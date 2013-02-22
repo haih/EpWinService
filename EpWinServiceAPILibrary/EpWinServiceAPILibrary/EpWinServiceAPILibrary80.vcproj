@@ -752,6 +752,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\EpLibraryHeaders\epEventEx.h"
+				>
+			</File>
+			<File
 				RelativePath=".\EpLibraryHeaders\epException.h"
 				>
 			</File>
@@ -940,7 +944,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\EpServerEngineHeaders\epBaseClientManual.h"
+				>
+			</File>
+			<File
 				RelativePath=".\EpServerEngineHeaders\epBaseClientUDP.h"
+				>
+			</File>
+			<File
+				RelativePath=".\EpServerEngineHeaders\epBaseClientUDPManual.h"
 				>
 			</File>
 			<File
@@ -997,6 +1009,10 @@
 			</File>
 			<File
 				RelativePath=".\EpServerEngineHeaders\epServerObjectList.h"
+				>
+			</File>
+			<File
+				RelativePath=".\EpServerEngineHeaders\epServerObjectRemover.h"
 				>
 			</File>
 		</Filter>

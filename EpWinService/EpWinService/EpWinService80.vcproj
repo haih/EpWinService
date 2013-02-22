@@ -448,6 +448,10 @@
 				RelativePath=".\EpServerEngineHeaders\epServerObjectList.h"
 				>
 			</File>
+			<File
+				RelativePath=".\EpServerEngineHeaders\epServerObjectRemover.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="EpLibraryHeaders"
@@ -518,6 +522,10 @@
 			</File>
 			<File
 				RelativePath=".\EpLibraryHeaders\epEndian.h"
+				>
+			</File>
+			<File
+				RelativePath=".\EpLibraryHeaders\epEventEx.h"
 				>
 			</File>
 			<File

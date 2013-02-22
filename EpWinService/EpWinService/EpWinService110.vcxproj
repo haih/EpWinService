@@ -227,6 +227,7 @@
     <ClInclude Include="EpLibraryHeaders\epDelegate.h" />
     <ClInclude Include="EpLibraryHeaders\epDynamicArray.h" />
     <ClInclude Include="EpLibraryHeaders\epEndian.h" />
+    <ClInclude Include="EpLibraryHeaders\epEventEx.h" />
     <ClInclude Include="EpLibraryHeaders\epException.h" />
     <ClInclude Include="EpLibraryHeaders\epFastLog.h" />
     <ClInclude Include="EpLibraryHeaders\epFastSqrt.h" />
@@ -290,6 +291,7 @@
     <ClInclude Include="EpServerEngineHeaders\epServerConf.h" />
     <ClInclude Include="EpServerEngineHeaders\epServerEngine.h" />
     <ClInclude Include="EpServerEngineHeaders\epServerObjectList.h" />
+    <ClInclude Include="EpServerEngineHeaders\epServerObjectRemover.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>

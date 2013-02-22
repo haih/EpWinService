@@ -490,6 +490,7 @@
     <ClInclude Include="EpLibraryHeaders\epDelegate.h" />
     <ClInclude Include="EpLibraryHeaders\epDynamicArray.h" />
     <ClInclude Include="EpLibraryHeaders\epEndian.h" />
+    <ClInclude Include="EpLibraryHeaders\epEventEx.h" />
     <ClInclude Include="EpLibraryHeaders\epException.h" />
     <ClInclude Include="EpLibraryHeaders\epFastLog.h" />
     <ClInclude Include="EpLibraryHeaders\epFastSqrt.h" />
@@ -536,7 +537,9 @@
     <ClInclude Include="EpLibraryHeaders\epXMLFile.h" />
     <ClInclude Include="EpLibraryHeaders\epXMLite.h" />
     <ClInclude Include="EpServerEngineHeaders\epBaseClient.h" />
+    <ClInclude Include="EpServerEngineHeaders\epBaseClientManual.h" />
     <ClInclude Include="EpServerEngineHeaders\epBaseClientUDP.h" />
+    <ClInclude Include="EpServerEngineHeaders\epBaseClientUDPManual.h" />
     <ClInclude Include="EpServerEngineHeaders\epBasePacketParser.h" />
     <ClInclude Include="EpServerEngineHeaders\epBaseServer.h" />
     <ClInclude Include="EpServerEngineHeaders\epBaseServerObject.h" />
@@ -551,6 +554,7 @@
     <ClInclude Include="EpServerEngineHeaders\epServerConf.h" />
     <ClInclude Include="EpServerEngineHeaders\epServerEngine.h" />
     <ClInclude Include="EpServerEngineHeaders\epServerObjectList.h" />
+    <ClInclude Include="EpServerEngineHeaders\epServerObjectRemover.h" />
     <ClInclude Include="Headers\epWinServiceAPILibrary.h" />
     <ClInclude Include="Headers\epWinServiceClient.h" />
     <ClInclude Include="Headers\epWinServiceClientPacketInfo.h" />
