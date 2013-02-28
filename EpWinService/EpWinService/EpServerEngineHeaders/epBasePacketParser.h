@@ -74,37 +74,16 @@ namespace epse
 		@param[in] b the second object
 		@return the new copied object
 		*/
-		BasePacketParser & operator=(const BasePacketParser&b)
-		{
-			if(this!=&b)
-			{
-				epl::LockObj lock(m_generalLock);
-				BaseServerObject::operator =(b);
-// 				m_owner=b.m_owner;
-// 				if(m_packetReceived)
-// 					m_packetReceived->ReleaseObj();
-// 				m_packetReceived=b.m_packetReceived;
-// 				m_packetReceived->RetainObj();
-				
-			}
-			return *this;
-		}
+		BasePacketParser & operator=(const BasePacketParser&b);
 
 		/*!
 		Send the packet to the client
 		@param[in] packet the packet to be sent
+		@param[in] waitTimeInMilliSec wait time for sending the packet in millisecond
 		@return sent byte size
+		@remark return -1 if error occurred
 		*/
-		int Send(const Packet &packet);
-
-		/*!
-		Get the owner object of this parser object.
-		@return the pointer to the owner object.
-		*/
-		BaseServerSendObject *GetOwnerObject() const
-		{
-			return m_owner;
-		}
+		int Send(const Packet &packet, unsigned int waitTimeInMilliSec=WAITTIME_INIFINITE);
 
 		/*!
 		Parse the given packet and do relevant operation
@@ -112,6 +91,33 @@ namespace epse
 		@param[in] packet the packet to parse
 		*/
 		virtual void ParsePacket(const Packet &packet)=0;
+
+
+		/*!
+		Get the owner object of this parser object.
+		@return the pointer to the owner object.
+		*/
+		BaseServerSendObject *GetOwner() const;
+
+		/*!
+		Return the packet received.
+		@return the packet received.
+		*/
+		const Packet* GetPacketReceived() const;
+
+
+		
+	protected:
+
+		/// Thread Stop Event
+		/// @remark if this is raised, the thread should quickly stop.
+		epl::EventEx m_threadStopEvent;
+
+	private:	
+		friend class BaseClient;
+		friend class BaseServerWorker;
+		friend class BaseClientUDP;
+		friend class BaseServerWorkerUDP;
 
 		/*! 
 		@struct PacketPassUnit epBasePacketParser.h
@@ -125,20 +131,6 @@ namespace epse
 		};
 
 		/*!
-		Return the packet received.
-		@return the packet received.
-		*/
-		const Packet* GetPacketReceived();
-		
-		
-
-
-	private:	
-		friend class BaseClient;
-		friend class BaseServerWorker;
-		friend class BaseClientUDP;
-		friend class BaseServerWorkerUDP;
-		/*!
 		Set PacketPassUnit
 		@param[in] packetPassUnit PacketPassUnit to set
 		*/
@@ -150,10 +142,18 @@ namespace epse
 		*/
 		virtual void execute();
 
+		/*!
+		Reset Parser
+		*/
+		void resetParser();
 
+
+	private:
 
         /// Owner
 		BaseServerSendObject *m_owner;
+
+
 
 		/// Packet received
 		Packet * m_packetReceived;
@@ -163,6 +163,7 @@ namespace epse
 
 		/// general lock
 		epl::BaseLock *m_generalLock;
+
 	};
 
 }

@@ -39,7 +39,48 @@ A Frame Interface for Thread Class.
 namespace epl
 {
 
-
+	/// Thread Priority Enumerator
+	typedef enum _threadPriority
+	{
+#if (_MSC_VER >=MSVC80) && (WINVER>=WINDOWS_XP) // Only for VS2005 and above and Windows XP and above
+		/// Priority 1 point above the priority class.
+		EP_THREAD_PRIORITY_ABOVE_NORMAL=THREAD_PRIORITY_ABOVE_NORMAL,
+		/// Priority 1 point below the priority class.
+		EP_THREAD_PRIORITY_BELOW_NORMAL=THREAD_PRIORITY_BELOW_NORMAL,
+#endif //(_MSC_VER >=MSVC80) && (WINVER>=WINDOWS_XP)
+		/// Priority 2 points above the priority class.
+		EP_THREAD_PRIORITY_HIGHEST=THREAD_PRIORITY_HIGHEST,
+		/// Base priority of 1 for IDLE_PRIORITY_CLASS, BELOW_NORMAL_PRIORITY_CLASS, <br/>
+		///    NORMAL_PRIORITY_CLASS, ABOVE_NORMAL_PRIORITY_CLASS, or HIGH_PRIORITY_CLASS processes,<br/>
+		///    and a base priority of 16 for REALTIME_PRIORITY_CLASS processes.
+		EP_THREAD_PRIORITY_IDLE=THREAD_PRIORITY_IDLE,
+		/// Priority 2 points below the priority class.
+		EP_THREAD_PRIORITY_LOWEST=THREAD_PRIORITY_LOWEST ,
+		/// Normal priority for the priority class.
+		EP_THREAD_PRIORITY_NORMAL=THREAD_PRIORITY_NORMAL,
+		/// Base priority of 15 for IDLE_PRIORITY_CLASS, BELOW_NORMAL_PRIORITY_CLASS,<br/>
+		///    NORMAL_PRIORITY_CLASS, ABOVE_NORMAL_PRIORITY_CLASS, or HIGH_PRIORITY_CLASS processes,<br/>
+		///    and a base priority of 31 for REALTIME_PRIORITY_CLASS processes.
+		EP_THREAD_PRIORITY_TIME_CRITICAL=THREAD_PRIORITY_TIME_CRITICAL,
+		/// Returns when GetThreadPriority fails
+		EP_THREAD_PRIORITY_ERROR_RETURN=THREAD_PRIORITY_ERROR_RETURN,
+#if (_MSC_VER >=MSVC90) && (WINVER>=WINDOWS_VISTA) // Only for VS2008 and above and Windows Vista and above
+		/// Begin background processing mode. <br/>
+		///    The system lowers the resource scheduling priorities of the thread so <br/>
+		///    that it can perform background work without significantly affecting activity in the foreground. <br/>
+		///    This value can be specified only if hThread is a handle to the current thread. <br/>
+		///    The function fails if the thread is already in background processing mode. <br/>
+		///    Windows Server 2003 and Windows XP:  This value is not supported.
+		EP_THREAD_PRIORITY_MODE_BACKGROUND_BEGIN=THREAD_MODE_BACKGROUND_BEGIN,
+		/// End background processing mode.<br/>
+		///    The system restores the resource scheduling priorities of the thread<br/>
+		///    as they were before the thread entered background processing mode.<br/>
+		///    This value can be specified only if hThread is a handle to the current thread.<br/>
+		///    The function fails if the thread is not in background processing mode.<br/>
+		///    Windows Server 2003 and Windows XP:  This value is not supported.<br/>
+		EP_THREAD_PRIORITY_MODE_BACKGROUND_END=THREAD_MODE_BACKGROUND_END,
+#endif //(_MSC_VER >=MSVC90) && (WINVER>=WINDOWS_VISTA)
+	}ThreadPriority;
 	
 
 	/*! 
@@ -54,9 +95,26 @@ namespace epl
 		Create a thread using given routine function with given parameter
 		@param[in] routineFunc The function to make thread.
 		@param[in] param The parameter for given function.
+		@param[in] priority The priority of the thread.
 		@return The handle to the thread created.
 		*/
-		static HANDLE CreateThread(LPTHREAD_START_ROUTINE routineFunc,LPVOID param);
+		static HANDLE CreateThread(LPTHREAD_START_ROUTINE routineFunc,LPVOID param, ThreadPriority priority = EP_THREAD_PRIORITY_NORMAL);
+
+		/*!
+		Return the current Thread Priority.
+		@param[in] threadHandle the thread handle to get the priority
+		@return the current Thread Priority.
+		@remark if the function fails, the return value is THREAD_PRIORITY_ERROR_RETURN.
+		*/
+		static ThreadPriority GetPriority(HANDLE threadHandle);
+
+		/*!
+		Set Priority of the thread
+		@param[in] threadHandle the thread handle to set the priority
+		@param[in] priority The priority of the thread
+		@return true if successfully set otherwise false
+		*/
+		static bool SetPriority(HANDLE threadHandle, ThreadPriority priority);
 
 		/// Enumerator for Thread Operation Code
 		enum ThreadOpCode{
@@ -95,18 +153,20 @@ namespace epl
 		Default Constructor
 
 		Initializes the thread class
+		@param[in] priority The priority of the thread.
 		@param[in] lockPolicyType The lock policy
 		*/
-		Thread(LockPolicy lockPolicyType=EP_LOCK_POLICY);
+		Thread(ThreadPriority priority=EP_THREAD_PRIORITY_NORMAL,LockPolicy lockPolicyType=EP_LOCK_POLICY);
 
 		/*!
 		Default Constructor
 
 		Initializes the thread class and start the thread with given function.
 		@param[in] threadFunc the function for the thread
+		@param[in] priority The priority of the thread.
 		@param[in] lockPolicyType The lock policy
 		*/
-		Thread(void (__cdecl *threadFunc)(),LockPolicy lockPolicyType=EP_LOCK_POLICY);
+		Thread(void (__cdecl *threadFunc)(), ThreadPriority priority=EP_THREAD_PRIORITY_NORMAL,LockPolicy lockPolicyType=EP_LOCK_POLICY);
 
 		/*!
 		Default Copy Constructor
@@ -242,6 +302,19 @@ namespace epl
 			return m_exitCode;
 		}
 
+		/*!
+		Return the current Thread Priority.
+		@return the current Thread Priority.
+		@remark if the function fails, the return value is THREAD_PRIORITY_ERROR_RETURN.
+		*/
+		ThreadPriority GetPriority();
+
+		/*!
+		Set Priority of the thread
+		@param[in] priority The priority of the thread
+		@return true if successfully set otherwise false
+		*/
+		bool SetPriority(ThreadPriority priority);
 
 
 	protected:
@@ -314,6 +387,8 @@ namespace epl
 		ThreadID m_threadId;
 		/// Thread Handle
 		ThreadHandle m_threadHandle;
+		/// ThreadPriority
+		ThreadPriority m_threadPriority;
 		
 		/// Parent Thread ID
 		ThreadID m_parentThreadId;

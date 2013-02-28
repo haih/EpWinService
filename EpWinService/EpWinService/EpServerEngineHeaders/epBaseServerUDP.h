@@ -73,10 +73,11 @@ namespace epse{
 		Initializes the Server
 		@param[in] port the port string
 		@param[in] syncPolicy Synchronous Policy
+		@param[in] maximumConnectionCount the maximum number of connection
 		@param[in] waitTimeMilliSec wait time for Server Thread to terminate
 		@param[in] lockPolicyType The lock policy
 		*/
-		BaseServerUDP(const TCHAR * port=_T(DEFAULT_PORT),SyncPolicy syncPolicy=SYNC_POLICY_ASYNCHRONOUS,unsigned int waitTimeMilliSec=WAITTIME_INIFINITE, epl::LockPolicy lockPolicyType=epl::EP_LOCK_POLICY);
+		BaseServerUDP(const TCHAR * port=_T(DEFAULT_PORT),SyncPolicy syncPolicy=SYNC_POLICY_ASYNCHRONOUS, unsigned int maximumConnectionCount=CONNECTION_LIMIT_INFINITE,unsigned int waitTimeMilliSec=WAITTIME_INIFINITE, epl::LockPolicy lockPolicyType=epl::EP_LOCK_POLICY);
 
 		/*!
 		Default Copy Constructor
@@ -97,16 +98,8 @@ namespace epse{
 		@param[in] b the second object
 		@return the new copied object
 		*/
-		BaseServerUDP & operator=(const BaseServerUDP&b)
-		{
-			if(this!=&b)
-			{
-				epl::LockObj lock(m_baseServerLock);
-				BaseServerObject::operator =(b);
-				m_port=b.m_port;
-			}
-			return *this;
-		}
+		BaseServerUDP & operator=(const BaseServerUDP&b);
+		
 
 		/*!
 		Get Worker List
@@ -126,6 +119,20 @@ namespace epse{
 		@return the port number in string
 		*/
 		epl::EpTString GetPort() const;
+
+		/*!
+		Set the Maximum Connection Count for the server.
+		@param[in] maxConnectionCount The Maximum Connection Count to set.
+		@remark 0 means there is no limit
+		*/
+		void GetMaximumConnectionCount(unsigned int maxConnectionCount);
+
+		/*!
+		Get the Maximum Connection Count of server
+		@return The Maximum Connection Count
+		@remark 0 means there is no limit
+		*/
+		unsigned int GetMaximumConnectionCount() const;
 	
 		/*!
 		Set Synchronous Policy
@@ -173,8 +180,28 @@ namespace epse{
 		/*!
 		Broadcast the packet
 		@param[in] packet
+		@param[in] waitTimeInMilliSec wait time for sending the packet in millisecond for each connection
 		*/
-		void Broadcast(const Packet& packet);
+		void Broadcast(const Packet& packet, unsigned int waitTimeInMilliSec=WAITTIME_INIFINITE);
+
+		/*!
+		Do the action given by input function for all workers
+		@param[in] DoFunc the action for each worker
+		@param[in] argCount the number of arguments
+		*/
+		void CommandWorkers(void (__cdecl *DoFunc)(BaseServerObject*,unsigned int,va_list),unsigned int argCount,...);
+
+		/*!
+		Find with given key by comparing worker with given function
+		@param[in] key the key to find
+		@param[in] EqualFunc the Compare Function
+		@return the found BaseServerObject
+		*/
+		template <typename T>
+		BaseServerObject  *FindWorker(T const & key, bool (__cdecl *EqualFunc)(T const &, const BaseServerObject *))
+		{
+			return m_workerList.Find(key,EqualFunc);
+		}
 
 	protected:
 		/*!
@@ -202,9 +229,11 @@ namespace epse{
 		Send the packet to the client
 		@param[in] packet the packet to be sent
 		@param[in] clientSockAddr the client socket address, which the packet will be delivered
+		@param[in] waitTimeInMilliSec wait time for sending the packet in millisecond
 		@return sent byte size
+		@remark return -1 if error occurred
 		*/
-		int send(const Packet &packet,const sockaddr &clientSockAddr);
+		int send(const Packet &packet,const sockaddr &clientSockAddr, unsigned int waitTimeInMilliSec=WAITTIME_INIFINITE);
 
 		/*!
 		Clean up the server initialization.
@@ -219,10 +248,38 @@ namespace epse{
 
 		/*!
 		Actually Stop the server
-		@param[in] fromInternal flag to check if the call is from internal or not
 		*/
-		void stopServer(bool fromInternal);
-	
+		void stopServer();
+
+		/*!
+		Kill connection from the client
+		@param[in] clientObj client object
+		@param[in] argCount the argument count
+		@param[in] args the argument list
+		*/
+		static void killConnection(BaseServerObject *clientObj,unsigned int argCount,va_list args);
+
+		/*!
+		Send packet to given client
+		@param[in] clientObj client object
+		@param[in] argCount the argument count
+		@param[in] args the argument list
+		*/
+		static void sendPacket(BaseServerObject *clientObj,unsigned int argCount,va_list args);
+
+		/*!
+		Compare given clientSocket with BaseServerObject's socket
+		@param[in] clientSocket socket to compare
+		@param[in] obj the BaseServerObject pointer
+		@return true if same socket otherwise false
+		*/
+		static bool socketCompare(sockaddr const & clientSocket, const BaseServerObject*obj );
+
+		/*!
+		Reset Server
+		*/
+		void resetServer();
+
 	private:
 		/// port number
 		epl::EpString m_port;
@@ -230,8 +287,7 @@ namespace epse{
 		SOCKET m_listenSocket;
 		/// internal use variable
 		struct addrinfo *m_result;
-		/// internal use variable2
-		struct addrinfo m_hints;
+
 		/// Maximum UDP Datagram byte size
 		unsigned int m_maxPacketSize;
 
@@ -239,8 +295,7 @@ namespace epse{
 		epl::BaseLock *m_baseServerLock;
 		/// send lock
 		epl::BaseLock *m_sendLock;
-		/// disconnect lock
-		epl::BaseLock *m_disconnectLock;
+
 
 		/// Lock Policy
 		epl::LockPolicy m_lockPolicy;
@@ -250,6 +305,9 @@ namespace epse{
 
 		/// Server Parser List
 		ParserList *m_parserList;
+
+		/// Maximum Connection Count
+		unsigned int m_maxConnectionCount;
 
 
 	};

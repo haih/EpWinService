@@ -47,7 +47,7 @@ namespace epse{
 	*/
 	class EP_SERVER_ENGINE ServerObjectRemover:protected epl::Thread, protected SmartObject{
 
-	protected:
+	private:
 		friend class ServerObjectList;
 		friend class ParserList;
 		/*!
@@ -98,12 +98,7 @@ namespace epse{
 		*/
 		void Push(BaseServerObject* obj);
 
-		/*!
-		Clear the remover list
-		*/
-		void Clear();
-
-	protected:
+	private:
 		/*!
 		Stop the Loop Function
 		*/
@@ -112,15 +107,16 @@ namespace epse{
 		Release Loop Function
 		*/
 		virtual void execute() ;
+	private:
 	
-		/// Thread Terminate
-		bool m_shouldTerminate;
-
 		/// wait time in millisecond for terminating thread
 		unsigned int m_waitTime;
 
 		/// list lock
 		epl::BaseLock *m_listLock;
+
+		/// stop lock
+		epl::BaseLock *m_stopLock;
 
 		/// parser thread list
 		queue<BaseServerObject*> m_objectList;
@@ -128,8 +124,9 @@ namespace epse{
 		/// Lock Policy
 		epl::LockPolicy m_lockPolicy;
 
-		/// Event
-		epl::EventEx m_event;
+		/// Thread Stop Event
+		/// @remark if this is raised, the thread should quickly stop.
+		epl::EventEx m_threadStopEvent;
 
 	};
 	

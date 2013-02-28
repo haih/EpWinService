@@ -97,17 +97,8 @@ namespace epse{
 		@param[in] b the second object
 		@return the new copied object
 		*/
-		BaseClientUDPManual & operator=(const BaseClientUDPManual&b)
-		{
-			if(this!=&b)
-			{				
-				epl::LockObj lock(m_generalLock);
-				BaseServerSendObject::operator =(b);
-				m_port=b.m_port;
-				m_hostName=b.m_hostName;
-			}
-			return *this;
-		}
+		BaseClientUDPManual & operator=(const BaseClientUDPManual&b);
+
 
 		/*!
 		Set the hostname for the server.
@@ -164,9 +155,12 @@ namespace epse{
 		/*!
 		Send the packet to the server
 		@param[in] packet the packet to be sent
+		@param[in] waitTimeInMilliSec wait time for sending the packet in millisecond
 		@return sent byte size
+		@remark return -1 if error occurred
 		*/
-		virtual int Send(const Packet &packet);
+		virtual int Send(const Packet &packet, unsigned int waitTimeInMilliSec=WAITTIME_INIFINITE);
+
 
 		/*!
 		Receive the packet from the server
@@ -179,6 +173,11 @@ namespace epse{
 	
 	
 	private:
+
+		/*!
+		Reset client
+		*/
+		void resetClient();
 		/*!
 		Actually set the hostname for the server.
 		@remark Cannot be changed while connected to server
@@ -208,10 +207,10 @@ namespace epse{
 
 		/*!
 		Actually Disconnect from the server
-		@param[in] fromInternal flag to check if the call is from internal or not
 		*/
-		void disconnect(bool fromInternal);
+		void disconnect();
 
+	private:
 		/// Flag for connection
 		bool m_isConnected;
 		/// port
@@ -224,16 +223,11 @@ namespace epse{
 		struct addrinfo *m_result;
 		/// internal variable2
 		struct addrinfo *m_ptr;
-		/// internal variable3
-		struct addrinfo m_hints;
 
 		/// send lock
 		epl::BaseLock *m_sendLock;
 		/// general lock
 		epl::BaseLock *m_generalLock;
-
-		/// disconnect lock
-		epl::BaseLock *m_disconnectLock;
 
 		/// Lock Policy
 		epl::LockPolicy m_lockPolicy;

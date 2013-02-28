@@ -199,28 +199,28 @@ namespace epl
 		*/
 		static __int64 AbsDiffInSec(const FILETIME &time1, const FILETIME &time2);
 
-				/*!
+		/*!
 		Translate the given SYSTEMTIME date part to Date String 
-		@param[in] date the date to translate
+		@param[in] fTime the file time's date to translate
 		@return the date string converted.
 		*/
 		static EpTString DateToString(const FILETIME &fTime);
 
 		/*!
 		Translate the given SYSTEMTIME time part to Time String 
-		@param[in] time the time to translate
+		@param[in] fTime the file time to translate
 		@return the time string converted.
 		*/
 		static EpTString TimeToString(const FILETIME &fTime);
 
 		/*!
 		Translate the given SYSTEMTIME's Date & Time to DateTime String 
-		@param[in] dateTime the DateTime to translate
+		@param[in] fTime the file time's DateTime to translate
 		@return the DateTime string converted.
 		*/
 		static EpTString DateTimeToString(const FILETIME &fTime);
 
-#if (_MSC_VER >=1500) // Only for VS2008 and above
+#if (_MSC_VER >=MSVC90) && (WINVER>=WINDOWS_VISTA) // Only for VS2008 and above and Windows Vista and above
 		/*!
 		Get Thread's actual CPU Cycle Count
 		@param[in] threadHandle the thread handle
@@ -234,7 +234,7 @@ namespace epl
 		@return the actual CPU Cycle Count ran by given process.
 		*/
 		static unsigned __int64 GetProcessCPUCycleCount(HANDLE processHandle);
-#endif //(_MSC_VER >=1500)
+#endif //(_MSC_VER >=MSVC90) && (WINVER>=WINDOWS_VISTA)
 
 		/*!
 		Get thread's creation time

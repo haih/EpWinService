@@ -55,6 +55,8 @@ using namespace std;
 
 namespace epse
 {
+	class BaseServer;
+
 	/*! 
 	@class BaseServerWorker epBaseServerWorker.h
 	@brief A class for Base Server Worker.
@@ -66,10 +68,11 @@ namespace epse
 		Default Constructor
 
 		Initializes the Worker
+		@param[in] maximumParserCount the maximum number of parser
 		@param[in] waitTimeMilliSec wait time for Worker Thread to terminate
 		@param[in] lockPolicyType The lock policy
 		*/
-		BaseServerWorker(unsigned int waitTimeMilliSec=WAITTIME_INIFINITE,epl::LockPolicy lockPolicyType=epl::EP_LOCK_POLICY);
+		BaseServerWorker(unsigned int maximumParserCount=PARSER_LIMIT_INFINITE,unsigned int waitTimeMilliSec=WAITTIME_INIFINITE,epl::LockPolicy lockPolicyType=epl::EP_LOCK_POLICY);
 
 		/*!
 		Default Copy Constructor
@@ -91,22 +94,8 @@ namespace epse
 		@param[in] b the second object
 		@return the new copied object
 		*/
-		BaseServerWorker & operator=(const BaseServerWorker&b)
-		{
-			if(this!=&b)
-			{
-				epl::LockObj lock(m_sendLock);
-				BaseServerSendObject::operator =(b);
-// 				m_clientSocket=b.m_clientSocket;
-// 
-// 				if(m_parserList)
-// 					m_parserList->ReleaseObj();
-// 				m_parserList=m_parserList;
-// 				if(m_parserList)
-// 					m_parserList->RetainObj();
-			}
-			return *this;
-		}	
+		BaseServerWorker & operator=(const BaseServerWorker&b);
+	
 
 		/*!
 		Send the packet to the client
@@ -116,6 +105,20 @@ namespace epse
 		@remark return -1 if error occurred
 		*/
 		virtual int Send(const Packet &packet, unsigned int waitTimeInMilliSec=WAITTIME_INIFINITE);
+
+		/*!
+		Set the Maximum Parser Count for the server.
+		@param[in] maxParserCount The Maximum Parser Count to set.
+		@remark 0 means there is no limit
+		*/
+		void GetMaximumParserCount(unsigned int maxParserCount);
+
+		/*!
+		Get the Maximum Parser Parser of server
+		@return The Maximum Connection Count
+		@remark 0 means there is no limit
+		*/
+		unsigned int GetMaximumParserCount() const;
 
 		/*!
 		Get Packet Parser List
@@ -133,6 +136,12 @@ namespace epse
 		Kill the connection
 		*/
 		void KillConnection();
+
+		/*!
+		Get the owner object of this worker object.
+		@return the pointer to the owner object.
+		*/
+		BaseServer *GetOwner() const;
 
 	protected:
 		/*!
@@ -153,13 +162,14 @@ namespace epse
 		*/
 		void setParserList(ParserList *parserList);
 	
-	
-	private:
+		/*!
+		Reset worker
+		*/
+		void resetWorker();
 		/*!
 		Actually Kill the connection
-		@param[in] fromInternal flag to check if the call is from internal or not
 		*/
-		void killConnection(bool fromInternal);
+		void killConnection();
 
 		/*!
 		thread loop function
@@ -180,15 +190,26 @@ namespace epse
 		*/
 		void setClientSocket(const SOCKET& clientSocket );
 
+		/*!
+		Set the owner for the base server worker thread.
+		@param[in] owner The owner of this worker.
+		*/
+		void setOwner(BaseServer * owner );
+	
+	private:
 
+	
 		/// client socket
 		SOCKET m_clientSocket;
+
+		/// Owner
+		BaseServer *m_owner;
 
 		/// send lock
 		epl::BaseLock *m_sendLock;
 
-		/// kill connection lock
-		epl::BaseLock *m_killConnectionLock;
+		/// general lock 
+		epl::BaseLock *m_baseWorkerLock;
 		
 		/// Lock Policy
 		epl::LockPolicy m_lockPolicy;
@@ -198,6 +219,9 @@ namespace epse
 
 		/// parser thread list
 		ParserList *m_parserList;
+
+		/// Maximum Parser Count
+		unsigned int m_maxParserCount;
 	};
 
 }

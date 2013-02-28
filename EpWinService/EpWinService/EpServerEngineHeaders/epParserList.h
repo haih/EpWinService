@@ -52,7 +52,7 @@ namespace epse{
 		friend class BaseServerWorker;
 		friend class BaseServerUDP;
 		friend class BaseServerWorkerUDP;
-	protected:
+	private:
 		/*!
 		Default Constructor
 
@@ -84,26 +84,7 @@ namespace epse{
 		*/
 		ParserList & operator=(const ParserList&b);
 
-		/*!
-		Set the wait time for the thread termination
-		@param[in] milliSec the time for waiting in millisecond
-		*/
-		void SetWaitTime(unsigned int milliSec);
-
-		/*!
-		Get the wait time for the parser thread termination
-		@return the current time for waiting in millisecond
-		*/
-		unsigned int GetWaitTime();
-
 		
-		/*!
-		Remove all object which its thread is terminated
-		@remark it also releases the object
-		@remark This function removes object only for SYNC_POLICY_ASYNCHRONOUS policy.
-		*/
-		virtual void RemoveTerminated();
-
 		/*!
 		Start Parse
 		@return true if successfully started otherwise false
@@ -134,17 +115,16 @@ namespace epse{
 
 	private:
 
-		/// Thread Terminate
-		bool m_shouldTerminate;
-
-		/// wait time in millisecond for terminating thread
-		unsigned int m_waitTime;
-
+		/// Stop Parse Lock
+		epl::BaseLock * m_stopLock;
 		/// Synchronous Policy
 		SyncPolicy m_syncPolicy;
+		/// Lock Policy
+		LockPolicy m_lockPolicy;
 
-		/// Event
-		epl::EventEx m_event;
+		/// Thread Stop Event
+		/// @remark if this is raised, the thread should quickly stop.
+		epl::EventEx m_threadStopEvent;
 
 	};
 	

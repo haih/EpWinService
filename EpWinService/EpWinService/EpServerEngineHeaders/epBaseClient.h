@@ -76,10 +76,11 @@ namespace epse{
 		@param[in] hostName the hostname string
 		@param[in] port the port string
 		@param[in] syncPolicy Synchronous Policy
+		@param[in] maximumParserCount the maximum number of parser
 		@param[in] waitTimeMilliSec wait time for Client Thread to terminate
 		@param[in] lockPolicyType The lock policy
 		*/
-		BaseClient(const TCHAR * hostName=_T(DEFAULT_HOSTNAME), const TCHAR * port=_T(DEFAULT_PORT),SyncPolicy syncPolicy=SYNC_POLICY_ASYNCHRONOUS,unsigned int waitTimeMilliSec=WAITTIME_INIFINITE,epl::LockPolicy lockPolicyType=epl::EP_LOCK_POLICY);
+		BaseClient(const TCHAR * hostName=_T(DEFAULT_HOSTNAME), const TCHAR * port=_T(DEFAULT_PORT),SyncPolicy syncPolicy=SYNC_POLICY_ASYNCHRONOUS,unsigned int maximumParserCount=PARSER_LIMIT_INFINITE,unsigned int waitTimeMilliSec=WAITTIME_INIFINITE,epl::LockPolicy lockPolicyType=epl::EP_LOCK_POLICY);
 
 		/*!
 		Default Copy Constructor
@@ -100,18 +101,8 @@ namespace epse{
 		@param[in] b the second object
 		@return the new copied object
 		*/
-		BaseClient & operator=(const BaseClient&b)
-		{
-			if(this!=&b)
-			{
-				epl::LockObj lock(m_generalLock);
-				BaseServerSendObject::operator =(b);
-				m_port=b.m_port;
-				m_hostName=b.m_hostName;
-				
-			}
-			return *this;
-		}
+		BaseClient & operator=(const BaseClient&b);
+	
 
 		/*!
 		Set the hostname for the server.
@@ -138,6 +129,20 @@ namespace epse{
 		@return the port number in string
 		*/
 		epl::EpTString GetPort() const;
+
+		/*!
+		Set the Maximum Parser Count for the server.
+		@param[in] maxParserCount The Maximum Parser Count to set.
+		@remark 0 means there is no limit
+		*/
+		void GetMaximumParserCount(unsigned int maxParserCount);
+
+		/*!
+		Get the Maximum Parser Parser of server
+		@return The Maximum Connection Count
+		@remark 0 means there is no limit
+		*/
+		unsigned int GetMaximumParserCount() const;
 
 		/*!
 		Set Synchronous Policy
@@ -203,6 +208,11 @@ namespace epse{
 		virtual BasePacketParser* createNewPacketParser()=0;
 
 	private:
+
+		/*!
+		Reset Client
+		*/
+		void resetClient();
 		/*!
 		Actually set the hostname for the server.
 		@remark Cannot be changed while connected to server
@@ -238,11 +248,11 @@ namespace epse{
 
 		/*!
 		Actually Disconnect from the server
-		@param[in] fromInternal flag to check if the call is from internal or not
 		*/
-		void disconnect(bool fromInternal);
+		void disconnect();
 
 
+	private:
 		/// port
 		epl::EpString m_port;
 		/// hostname
@@ -251,17 +261,11 @@ namespace epse{
 		SOCKET m_connectSocket;
 		/// internal variable
 		struct addrinfo *m_result;
-		/// internal variable2
-		struct addrinfo *m_ptr;
-		/// internal variable3
-		struct addrinfo m_hints;
 	
 		/// send lock
 		epl::BaseLock *m_sendLock;
 		/// general lock
 		epl::BaseLock *m_generalLock;
-		/// disconnect lock
-		epl::BaseLock *m_disconnectLock;
 
 		/// Lock Policy
 		epl::LockPolicy m_lockPolicy;
@@ -271,6 +275,9 @@ namespace epse{
 
 		/// Parser list
 		ParserList m_parserList;
+
+		/// Maximum Parser Count
+		unsigned int m_maxParserCount;
 
 	};
 }

@@ -66,10 +66,11 @@ namespace epse
 		Default Constructor
 
 		Initializes the Worker
+		@param[in] maximumParserCount the maximum number of parser
 		@param[in] waitTimeMilliSec wait time for Worker Thread to terminate
 		@param[in] lockPolicyType The lock policy
 		*/
-		BaseServerWorkerUDP(unsigned int waitTimeMilliSec=WAITTIME_INIFINITE,epl::LockPolicy lockPolicyType=epl::EP_LOCK_POLICY);
+		BaseServerWorkerUDP(unsigned int maximumParserCount=PARSER_LIMIT_INFINITE,unsigned int waitTimeMilliSec=WAITTIME_INIFINITE,epl::LockPolicy lockPolicyType=epl::EP_LOCK_POLICY);
 
 		/*!
 		Default Copy Constructor
@@ -91,45 +92,36 @@ namespace epse
 		@param[in] b the second object
 		@return the new copied object
 		*/
-		BaseServerWorkerUDP & operator=(const BaseServerWorkerUDP&b)
-		{
-			if(this!=&b)
-			{
-				epl::LockObj lock(m_baseWorkerLock);
-				BaseServerSendObject::operator =(b);
-// 				m_clientSocket=b.m_clientSocket;
-// 				m_server=b.m_server;
-// 
-// 				if(m_packet)
-// 					m_packet->ReleaseObj();
-// 				m_packet=b.m_packet;
-// 				if(m_packet)
-// 					m_packet->RetainObj();
-// 
-// 				if(m_parser)
-// 					m_parser->ReleaseObj();
-// 				m_parser=b.m_parser;
-// 				if(m_parser)
-// 					m_parser->RetainObj();
-// 
-// 				if(m_parserList)
-// 					m_parserList->ReleaseObj();
-// 				m_parserList=m_parserList;
-// 				if(m_parserList)
-// 					m_parserList->RetainObj();
+		BaseServerWorkerUDP & operator=(const BaseServerWorkerUDP&b);
 
-				m_maxPacketSize=b.m_maxPacketSize;
+		/*!
+		Set the Maximum Parser Count for the server.
+		@param[in] maxParserCount The Maximum Parser Count to set.
+		@remark 0 means there is no limit
+		*/
+		void GetMaximumParserCount(unsigned int maxParserCount);
 
-			}
-			return *this;
-		}
+		/*!
+		Get the Maximum Parser Parser of server
+		@return The Maximum Connection Count
+		@remark 0 means there is no limit
+		*/
+		unsigned int GetMaximumParserCount() const;
 
 		/*!
 		Send the packet to the client
 		@param[in] packet the packet to be sent
+		@param[in] waitTimeInMilliSec wait time for sending the packet in millisecond
 		@return sent byte size
+		@remark return -1 if error occurred
 		*/
-		virtual int Send(const Packet &packet);
+		virtual int Send(const Packet &packet, unsigned int waitTimeInMilliSec=WAITTIME_INIFINITE);
+
+		/*!
+		Get Packet Parser List
+		@return the list of the packet parser
+		*/
+		vector<BaseServerObject*> GetPacketParserList() const;
 
 		/*!
 		Check if the connection is alive
@@ -141,6 +133,13 @@ namespace epse
 		Kill the connection
 		*/
 		void KillConnection();
+
+
+		/*!
+		Get the owner object of this worker object.
+		@return the pointer to the owner object.
+		*/
+		BaseServerUDP *GetOwner() const;
 
 		/*!
 		Get the maximum packet byte size
@@ -164,14 +163,21 @@ namespace epse
 		@param[in] parserList the parser list to set
 		*/
 		void setParserList(ParserList *parserList);
+
+		/*!
+		Add new packet received from client
+		@param[in] packet the new packet received from client
+		*/
+		void addPacket(Packet *packet);
 	
-	
-	private:	
+		/*!
+		Reset worker
+		*/
+		void resetWorker();
 		/*!
 		Actually Kill the connection
-		@param[in] fromInternal flag to check if the call is from internal or not
 		*/
-		void killConnection(bool fromInternal);
+		void killConnection();
 
 		/*! 
 		@struct PacketPassUnit epBaseServerWorkerUDP.h
@@ -180,8 +186,6 @@ namespace epse
 		struct PacketPassUnit{
 			/// BaseServerUDP Object
 			BaseServerUDP *m_server;
-			/// Packet to parse
-			Packet *m_packet;
 			/// client socket
 			sockaddr m_clientSocket;
 		};
@@ -202,6 +206,9 @@ namespace epse
 		@param[in] packetPassUnit PacketPassUnit to set
 		*/
 		void setPacketPassUnit(const PacketPassUnit& packetPassUnit);	
+
+	
+	private:
 	
 		/// client socket
 		sockaddr m_clientSocket;
@@ -209,8 +216,8 @@ namespace epse
 		/// server object
 		BaseServerUDP *m_server;
 
-		/// packet received
-		Packet *m_packet;
+		/// Packet List
+		vector<Packet*> m_packetList;
 
 		/// Maximum UDP Datagram byte size
 		unsigned int m_maxPacketSize;
@@ -218,17 +225,21 @@ namespace epse
 		/// general lock 
 		epl::BaseLock *m_baseWorkerLock;
 
-		/// kill connection lock
-		epl::BaseLock *m_killConnectionLock;
+		/// list lock 
+		epl::BaseLock *m_listLock;
 
 		/// Lock Policy
 		epl::LockPolicy m_lockPolicy;
-		
-		/// Parser pointer
-		BasePacketParser *m_parser;
 
 		/// parser thread list
 		ParserList *m_parserList;
+
+		/// Maximum Parser Count
+		unsigned int m_maxParserCount;
+
+		/// Thread Stop Event
+		/// @remark if this is raised, the thread should quickly stop.
+		epl::EventEx m_threadStopEvent;
 	};
 
 }

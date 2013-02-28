@@ -35,7 +35,7 @@ An Interface for Server Object List.
 #include "epBaseServerObject.h"
 #include "epServerObjectRemover.h"
 #include <vector>
-
+#include "epPacket.h"
 
 using namespace std;
 
@@ -55,13 +55,16 @@ namespace epse{
 		friend class BaseServerWorker;
 		friend class BaseServerUDP;
 		friend class BaseServerWorkerUDP;
+		
+		friend class BaseServerObject;
 		/*!
 		Default Constructor
 
 		Initializes the List
+		@param[in] waitTimeMilliSec the wait time in millisecond for terminating
 		@param[in] lockPolicyType The lock policy
 		*/
-		ServerObjectList(epl::LockPolicy lockPolicyType=epl::EP_LOCK_POLICY);
+		ServerObjectList(unsigned int waitTimeMilliSec=WAITTIME_INIFINITE, epl::LockPolicy lockPolicyType=epl::EP_LOCK_POLICY);
 
 		/*!
 		Default Copy Constructor
@@ -85,10 +88,25 @@ namespace epse{
 		ServerObjectList & operator=(const ServerObjectList&b);
 
 		/*!
-		Remove all object which its thread is terminated
+		Set the wait time for the thread termination
+		@param[in] milliSec the time for waiting in millisecond
+		*/
+		void SetWaitTime(unsigned int milliSec);
+
+		/*!
+		Get the wait time for the parser thread termination
+		@return the current time for waiting in millisecond
+		*/
+		unsigned int GetWaitTime();
+
+		
+
+		/*!
+		Remove the given object from the list
+		@param[in] serverObj the server object to remove
 		@remark it also releases the object
 		*/
-		virtual void RemoveTerminated();
+		virtual bool Remove(const BaseServerObject* serverObj);
 
 	
 		/*!
@@ -109,7 +127,58 @@ namespace epse{
 		*/
 		vector<BaseServerObject*> GetList() const;
 
+		/*!
+		Returns the number of element in the list
+		@return the number of element in the list
+		*/
+		unsigned int Count() const;
+
+		/*!
+		Do the action given by input function for all elements
+		@param[in] DoFunc the action for each element
+		@param[in] argCount the number of arguments
+		*/
+		void Do(void (__cdecl *DoFunc)(BaseServerObject*,unsigned int,va_list),unsigned int argCount,...);
+
+		/*!
+		Do the action given by input function for all elements
+		@param[in] DoFunc the action for each element
+		@param[in] argCount the number of arguments
+		@param[in] args the argument list
+		*/
+		void Do(void (__cdecl *DoFunc)(BaseServerObject*,unsigned int,va_list),unsigned int argCount,va_list args);
+
+		/*!
+		Find with given key by comparing with given function
+		@param[in] key the key to find
+		@param[in] EqualFunc the Compare Function
+		@return the found BaseServerObject
+		*/
+		template <typename T>
+		BaseServerObject  *Find(T const & key, bool (__cdecl *EqualFunc)(T const &, const BaseServerObject *))
+		{
+			epl::LockObj lock(m_listLock);
+			vector<BaseServerObject*>::iterator iter;
+			for(iter=m_objectList.begin();iter!=m_objectList.end();iter++)
+			{
+				if(EqualFunc(key,*iter))
+				{
+					return *iter;
+				}
+			}
+			return NULL;
+		}
+
+		/*!
+		Wait infinitely for the list size to be decreased
+		*/
+		void WaitForListSizeDecrease();
+
 	protected:
+		/*!
+		Reset the list
+		*/
+		void resetList();
 	
 		/// list lock
 		epl::BaseLock *m_listLock;
@@ -117,11 +186,17 @@ namespace epse{
 		/// parser thread list
 		vector<BaseServerObject*> m_objectList;
 
+		/// wait time in millisecond for terminating thread
+		/// @remark for ParserList and ServerObjectRemover
+		unsigned int m_waitTime;
+
 		/// Lock Policy
 		epl::LockPolicy m_lockPolicy;
 
 		/// Object Remover
 		ServerObjectRemover m_serverObjRemover;
+
+		epl::EventEx m_sizeEvent;
 
 	};
 	
