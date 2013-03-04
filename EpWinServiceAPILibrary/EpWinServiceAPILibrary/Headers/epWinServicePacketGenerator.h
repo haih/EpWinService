@@ -187,7 +187,7 @@ namespace epws
 		Return the byte size of the stream
 		@return the byte size of the stream
 		*/
-		int GetStreamByteSize() const;
+		unsigned int GetStreamByteSize() const;
 
 		/// stream
 		epl::Stream m_stream;

@@ -189,7 +189,7 @@ public:
 	*/
 	unsigned int GetNumberOfServices() const
 	{
-		return m_serviceList.size();
+		return static_cast<unsigned int>(m_serviceList.size());
 	}
 private:
 

@@ -83,7 +83,7 @@ public:
 	*/
 	unsigned int GetNumberOfProcesses() const
 	{
-		return m_processList.size();
+		return static_cast<unsigned int>(m_processList.size());
 	}
 
 private:

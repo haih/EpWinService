@@ -443,8 +443,8 @@ const unsigned char * WinServicePacketGenerator::GetStream() const
 	LockObj lock(m_packetGeneratorLock);
 	return m_stream.GetBuffer();
 }
-int WinServicePacketGenerator::GetStreamByteSize() const
+unsigned int WinServicePacketGenerator::GetStreamByteSize() const
 {
 	LockObj lock(m_packetGeneratorLock);
-	return m_stream.GetStreamSize();
+	return static_cast<unsigned int>(m_stream.GetStreamSize());
 }
