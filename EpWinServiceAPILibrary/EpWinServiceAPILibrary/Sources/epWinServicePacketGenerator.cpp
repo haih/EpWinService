@@ -154,7 +154,7 @@ void WinServicePacketGenerator::AddCommandMainService(CommandMainServicePackeTyp
 }
 
 
-void WinServicePacketGenerator::AddGetMainServiceInfo(MainServiceGetPacketType type)
+void WinServicePacketGenerator::AddGetMainServiceInfo(MainServiceInfoGetPacketType type)
 {
 	LockObj lock(m_packetGeneratorLock);
 	m_count++;
@@ -162,7 +162,7 @@ void WinServicePacketGenerator::AddGetMainServiceInfo(MainServiceGetPacketType t
 	m_stream.WriteUInt((unsigned int)type);
 }
 
-void WinServicePacketGenerator::AddSetMainServiceInfo(MainServiceSetPacketType type,MainServiceInfo info)
+void WinServicePacketGenerator::AddSetMainServiceInfo(MainServiceInfoSetPacketType type,MainServiceInfo info)
 {
 	LockObj lock(m_packetGeneratorLock);
 	m_count++;
@@ -171,11 +171,11 @@ void WinServicePacketGenerator::AddSetMainServiceInfo(MainServiceSetPacketType t
 	
 	switch(type)
 	{
-	case MAIN_SERVICE_SET_PACKET_TYPE_CHECKPROCESSINTERVAL:
-	case MAIN_SERVICE_SET_PACKET_TYPE_CHECKSERVICESINTERVAL:
+	case MAIN_SERVICE_INFO_SET_PACKET_TYPE_CHECKPROCESSINTERVAL:
+	case MAIN_SERVICE_INFO_SET_PACKET_TYPE_CHECKSERVICESINTERVAL:
 		m_stream.WriteUInt(info.m_interval);
 		break;
-	case MAIN_SERVICE_SET_PACKET_TYPE_CUSTOMPROCESS_COMMANDLINE:
+	case MAIN_SERVICE_INFO_SET_PACKET_TYPE_CUSTOMPROCESS_COMMANDLINE:
 		m_stream.WriteTString(info.m_command);
 		break;
 	default:
@@ -184,7 +184,7 @@ void WinServicePacketGenerator::AddSetMainServiceInfo(MainServiceSetPacketType t
 	}
 }
 
-void WinServicePacketGenerator::AddGetServiceInfo(ServiceGetPacketType type, unsigned int serviceIndex)
+void WinServicePacketGenerator::AddGetServiceInfo(ServiceObjectInfoGetPacketType type, unsigned int serviceIndex)
 {
 	LockObj lock(m_packetGeneratorLock);
 	m_count++;
@@ -192,7 +192,7 @@ void WinServicePacketGenerator::AddGetServiceInfo(ServiceGetPacketType type, uns
 	m_stream.WriteUInt((unsigned int)type);
 	m_stream.WriteUInt(serviceIndex);
 }
-void WinServicePacketGenerator::AddSetServiceInfo(ServiceSetPacketType type, unsigned int serviceIndex, ServiceObjInfo info)
+void WinServicePacketGenerator::AddSetServiceInfo(ServiceObjectInfoSetPacketType type, unsigned int serviceIndex, ServiceObjInfo info)
 {
 	LockObj lock(m_packetGeneratorLock);
 	m_count++;
@@ -201,60 +201,60 @@ void WinServicePacketGenerator::AddSetServiceInfo(ServiceSetPacketType type, uns
 	m_stream.WriteUInt(serviceIndex);
 	switch(type)
 	{
-	case SERVICE_SET_PACKET_TYPE_SERVICENAME:
+	case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_SERVICENAME:
 		m_stream.WriteTString(info.m_serviceName);
 		break;
-	case SERVICE_SET_PACKET_TYPE_PREPROCESS_COMMANDLINE:
+	case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_PREPROCESS_COMMANDLINE:
 		m_stream.WriteTString(info.m_preProcessCommandLine);
 		break;
-	case SERVICE_SET_PACKET_TYPE_POSTPROCESS_COMMANDLINE:
+	case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_POSTPROCESS_COMMANDLINE:
 		m_stream.WriteTString(info.m_postProcessCommandLine);
 		break;
-	case SERVICE_SET_PACKET_TYPE_CUSTOMPROCESS_COMMANDLINE:
+	case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_CUSTOMPROCESS_COMMANDLINE:
 		m_stream.WriteTString(info.m_customProcessCommandLine);
 		break;
-	case SERVICE_SET_PACKET_TYPE_PREPROCESS_WAIT_TIME:
+	case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_PREPROCESS_WAIT_TIME:
 		m_stream.WriteInt(info.m_preProcessWaitTime);
 		break;
-	case SERVICE_SET_PACKET_TYPE_POSTPROCESS_WAIT_TIME:
+	case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_POSTPROCESS_WAIT_TIME:
 		m_stream.WriteInt(info.m_postProcessWaitTime);
 		break;
-	case SERVICE_SET_PACKET_TYPE_DOMAINNAME:
+	case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_DOMAINNAME:
 		m_stream.WriteTString(info.m_domainName);
 		break;
-	case SERVICE_SET_PACKET_TYPE_USERNAME:
+	case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_USERNAME:
 		m_stream.WriteTString(info.m_userName);
 		break;
-	case SERVICE_SET_PACKET_TYPE_USERPASSWORD:
+	case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_USERPASSWORD:
 		m_stream.WriteTString(info.m_userPassword);
 		break;
 
 
-	case SERVICE_SET_PACKET_TYPE_DELAY_START_TIME:
+	case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_DELAY_START_TIME:
 		m_stream.WriteUInt(info.m_delayStartTime);
 		break;
-	case SERVICE_SET_PACKET_TYPE_DELAY_PAUSE_END_TIME:
+	case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_DELAY_PAUSE_END_TIME:
 		m_stream.WriteUInt(info.m_delayPauseEndTime);
 		break;
-	case SERVICE_SET_PACKET_TYPE_IS_SERVICE_RESTART:
+	case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_IS_SERVICE_RESTART:
 		if(info.m_isRestart)
 			m_stream.WriteUInt(1);
 		else
 			m_stream.WriteUInt(0);
 		break;
-	case SERVICE_SET_PACKET_TYPE_IS_IMPERSONATE:
+	case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_IS_IMPERSONATE:
 		if(info.m_isImpersonate)
 			m_stream.WriteUInt(1);
 		else
 			m_stream.WriteUInt(0);
 		break;
-	case SERVICE_SET_PACKET_TYPE_IS_USER_INTERFACE:
+	case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_IS_USER_INTERFACE:
 		if(info.m_isUserInterface)
 			m_stream.WriteUInt(1);
 		else
 			m_stream.WriteUInt(0);
 		break;
-	case SERVICE_SET_PACKET_TYPE_ALL:
+	case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_ALL:
 		m_stream.WriteTString(info.m_serviceName);
 		m_stream.WriteTString(info.m_preProcessCommandLine);
 		m_stream.WriteTString(info.m_postProcessCommandLine);
@@ -281,7 +281,7 @@ void WinServicePacketGenerator::AddSetServiceInfo(ServiceSetPacketType type, uns
 		break;
 	}
 }
-void WinServicePacketGenerator::AddGetProcessInfo(ProcessGetPacketType type, unsigned int procIndex)
+void WinServicePacketGenerator::AddGetProcessInfo(ProcessObjectInfoGetPacketType type, unsigned int procIndex)
 {
 	LockObj lock(m_packetGeneratorLock);
 	m_count++;
@@ -289,7 +289,7 @@ void WinServicePacketGenerator::AddGetProcessInfo(ProcessGetPacketType type, uns
 	m_stream.WriteUInt((unsigned int)type);
 	m_stream.WriteUInt(procIndex);
 }
-void WinServicePacketGenerator::AddSetProcessInfo(ProcessSetPacketType type, unsigned int procIndex,ProcessObjInfo info)
+void WinServicePacketGenerator::AddSetProcessInfo(ProcessObjectInfoSetPacketType type, unsigned int procIndex,ProcessObjInfo info)
 {
 	LockObj lock(m_packetGeneratorLock);
 	m_count++;
@@ -298,60 +298,60 @@ void WinServicePacketGenerator::AddSetProcessInfo(ProcessSetPacketType type, uns
 	m_stream.WriteUInt(procIndex);
 	switch(type)
 	{
-	case PROCESS_SET_PACKET_TYPE_COMMANDLINE:
+	case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_COMMANDLINE:
 		m_stream.WriteTString(info.m_commandLine);
 		break;
-	case PROCESS_SET_PACKET_TYPE_PREPROCESS_COMMANDLINE:
+	case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_PREPROCESS_COMMANDLINE:
 		m_stream.WriteTString(info.m_preProcessCommandLine);
 		break;
-	case PROCESS_SET_PACKET_TYPE_POSTPROCESS_COMMANDLINE:
+	case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_POSTPROCESS_COMMANDLINE:
 		m_stream.WriteTString(info.m_postProcessCommandLine);
 		break;
-	case PROCESS_SET_PACKET_TYPE_CUSTOMPROCESS_COMMANDLINE:
+	case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_CUSTOMPROCESS_COMMANDLINE:
 		m_stream.WriteTString(info.m_customProcessCommandLine);
 		break;
-	case PROCESS_SET_PACKET_TYPE_PREPROCESS_WAIT_TIME:
+	case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_PREPROCESS_WAIT_TIME:
 		m_stream.WriteInt(info.m_preProcessWaitTime);
 		break;
-	case PROCESS_SET_PACKET_TYPE_POSTPROCESS_WAIT_TIME:
+	case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_POSTPROCESS_WAIT_TIME:
 		m_stream.WriteInt(info.m_postProcessWaitTime);
 		break;
-	case PROCESS_SET_PACKET_TYPE_DOMAINNAME:
+	case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_DOMAINNAME:
 		m_stream.WriteTString(info.m_domainName);
 		break;
-	case PROCESS_SET_PACKET_TYPE_USERNAME:
+	case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_USERNAME:
 		m_stream.WriteTString(info.m_userName);
 		break;
-	case PROCESS_SET_PACKET_TYPE_USERPASSWORD:
+	case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_USERPASSWORD:
 		m_stream.WriteTString(info.m_userPassword);
 		break;
 
 
-	case PROCESS_SET_PACKET_TYPE_DELAY_START_TIME:
+	case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_DELAY_START_TIME:
 		m_stream.WriteUInt(info.m_delayStartTime);
 		break;
-	case PROCESS_SET_PACKET_TYPE_DELAY_PAUSE_END_TIME:
+	case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_DELAY_PAUSE_END_TIME:
 		m_stream.WriteUInt(info.m_delayPauseEndTime);
 		break;
-	case PROCESS_SET_PACKET_TYPE_IS_PROCESS_RESTART:
+	case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_IS_PROCESS_RESTART:
 		if(info.m_isRestart)
 			m_stream.WriteUInt(1);
 		else
 			m_stream.WriteUInt(0);
 		break;
-	case PROCESS_SET_PACKET_TYPE_IS_IMPERSONATE:
+	case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_IS_IMPERSONATE:
 		if(info.m_isImpersonate)
 			m_stream.WriteUInt(1);
 		else
 			m_stream.WriteUInt(0);
 		break;
-	case PROCESS_SET_PACKET_TYPE_IS_USER_INTERFACE:
+	case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_IS_USER_INTERFACE:
 		if(info.m_isUserInterface)
 			m_stream.WriteUInt(1);
 		else
 			m_stream.WriteUInt(0);
 		break;
-	case PROCESS_SET_PACKET_TYPE_ALL:
+	case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_ALL:
 		m_stream.WriteTString(info.m_commandLine);
 		m_stream.WriteTString(info.m_preProcessCommandLine);
 		m_stream.WriteTString(info.m_postProcessCommandLine);

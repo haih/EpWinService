@@ -203,63 +203,70 @@ RetrieveStatus WinServicePacketProcessor::getMainServiceInfo(unsigned int subPac
 		case PACKET_PROCESS_STATUS_SUCCESS:
 			switch(subPacketType)
 			{
-			case MAIN_SERVICE_GET_PACKET_TYPE_SERVICE_NAME:
+			case MAIN_SERVICE_INFO_GET_PACKET_TYPE_SERVICE_NAME:
 				if(!stream.ReadTString(val))
 				{
 					return RETRIEVE_STATUS_FAIL_ARGUMENT;
 				}
 				(*retInfo)=val;
 				break;
-			case MAIN_SERVICE_GET_PACKET_TYPE_DOMAIN_NAME:
+			case MAIN_SERVICE_INFO_GET_PACKET_TYPE_DOMAIN_NAME:
 				if(!stream.ReadTString(val))
 				{
 					return RETRIEVE_STATUS_FAIL_ARGUMENT;
 				}
 				(*retInfo)=val;
 				break;
-			case MAIN_SERVICE_GET_PACKET_TYPE_USERNAME:
+			case MAIN_SERVICE_INFO_GET_PACKET_TYPE_USERNAME:
 				if(!stream.ReadTString(val))
 				{
 					return RETRIEVE_STATUS_FAIL_ARGUMENT;
 				}
 				(*retInfo)=val;
 				break;
-			case MAIN_SERVICE_GET_PACKET_TYPE_USERPASSWORD:
+			case MAIN_SERVICE_INFO_GET_PACKET_TYPE_USERPASSWORD:
 				if(!stream.ReadTString(val))
 				{
 					return RETRIEVE_STATUS_FAIL_ARGUMENT;
 				}
 				(*retInfo)=val;
 				break;
-			case MAIN_SERVICE_GET_PACKET_TYPE_DEPENDENCY:
+			case MAIN_SERVICE_INFO_GET_PACKET_TYPE_DEPENDENCY:
 				if(!stream.ReadTString(val))
 				{
 					return RETRIEVE_STATUS_FAIL_ARGUMENT;
 				}
 				(*retInfo)=val;
 				break;
-			case MAIN_SERVICE_GET_PACKET_TYPE_NUM_OF_PROCESSES:
+			case MAIN_SERVICE_INFO_GET_PACKET_TYPE_NUM_OF_PROCESSES:
 				if(!stream.ReadUInt(uintVal))
 				{
 					return RETRIEVE_STATUS_FAIL_ARGUMENT;
 				}
 				(*retInfo)=uintVal;
 				break;
-			case MAIN_SERVICE_GET_PACKET_TYPE_CHECKPROCESSINTERVAL:
+			case MAIN_SERVICE_INFO_GET_PACKET_TYPE_NUM_OF_SERVICES:
 				if(!stream.ReadUInt(uintVal))
 				{
 					return RETRIEVE_STATUS_FAIL_ARGUMENT;
 				}
 				(*retInfo)=uintVal;
 				break;
-			case MAIN_SERVICE_GET_PACKET_TYPE_CHECKSERVICEINTERVAL:
+			case MAIN_SERVICE_INFO_GET_PACKET_TYPE_CHECKPROCESSINTERVAL:
 				if(!stream.ReadUInt(uintVal))
 				{
 					return RETRIEVE_STATUS_FAIL_ARGUMENT;
 				}
 				(*retInfo)=uintVal;
 				break;
-			case MAIN_SERVICE_GET_PACKET_TYPE_CUSTOMPROCESS_COMMANDLINE:
+			case MAIN_SERVICE_INFO_GET_PACKET_TYPE_CHECKSERVICEINTERVAL:
+				if(!stream.ReadUInt(uintVal))
+				{
+					return RETRIEVE_STATUS_FAIL_ARGUMENT;
+				}
+				(*retInfo)=uintVal;
+				break;
+			case MAIN_SERVICE_INFO_GET_PACKET_TYPE_CUSTOMPROCESS_COMMANDLINE:
 				if(stream.ReadTString(val))
 				{
 					return RETRIEVE_STATUS_FAIL_ARGUMENT;
@@ -291,11 +298,11 @@ RetrieveStatus WinServicePacketProcessor::setMainServiceInfo(unsigned int subPac
 		case PACKET_PROCESS_STATUS_SUCCESS:
 			switch(subPacketType)
 			{
-			case MAIN_SERVICE_SET_PACKET_TYPE_CHECKPROCESSINTERVAL:
+			case MAIN_SERVICE_INFO_SET_PACKET_TYPE_CHECKPROCESSINTERVAL:
 				break;
-			case MAIN_SERVICE_SET_PACKET_TYPE_CHECKSERVICESINTERVAL:
+			case MAIN_SERVICE_INFO_SET_PACKET_TYPE_CHECKSERVICESINTERVAL:
 				break;
-			case MAIN_SERVICE_SET_PACKET_TYPE_CUSTOMPROCESS_COMMANDLINE:
+			case MAIN_SERVICE_INFO_SET_PACKET_TYPE_CUSTOMPROCESS_COMMANDLINE:
 				break;
 			}
 			break;
@@ -362,7 +369,7 @@ RetrieveStatus WinServicePacketProcessor::getProcessInfo(unsigned int subPacketT
 
 			switch(subPacketType)
 			{
-			case PROCESS_GET_PACKET_TYPE_ALL:
+			case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_ALL:
 				if(!stream.ReadUInt(tempUInt))
 				{
 					return RETRIEVE_STATUS_FAIL_ARGUMENT;
@@ -445,7 +452,7 @@ RetrieveStatus WinServicePacketProcessor::getProcessInfo(unsigned int subPacketT
 				}
 				(*retInfo)=procObjInfo;
 				break;
-			case PROCESS_GET_PACKET_TYPE_STATUS:
+			case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_STATUS:
 				if(!stream.ReadUInt(tempUInt))
 				{
 					return RETRIEVE_STATUS_FAIL_ARGUMENT;
@@ -454,84 +461,84 @@ RetrieveStatus WinServicePacketProcessor::getProcessInfo(unsigned int subPacketT
 				(*retInfo)=procStatus;
 
 				break;
-			case PROCESS_GET_PACKET_TYPE_COMMANDLINE:
+			case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_COMMANDLINE:
 				if(!stream.ReadTString(commandLine))
 				{
 					return RETRIEVE_STATUS_FAIL_ARGUMENT;
 				}
 				(*retInfo)=commandLine;
 				break;
-			case PROCESS_GET_PACKET_TYPE_PREPROCESS_COMMANDLINE:
+			case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_PREPROCESS_COMMANDLINE:
 				if(!stream.ReadTString(preProcessCommandLine))
 				{
 					return RETRIEVE_STATUS_FAIL_ARGUMENT;
 				}
 				(*retInfo)=preProcessCommandLine;
 				break;
-			case PROCESS_GET_PACKET_TYPE_POSTPROCESS_COMMANDLINE:
+			case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_POSTPROCESS_COMMANDLINE:
 				if(!stream.ReadTString(postProcessCommandLine))
 				{
 					return RETRIEVE_STATUS_FAIL_ARGUMENT;
 				}
 				(*retInfo)=postProcessCommandLine;
 				break;
-			case PROCESS_GET_PACKET_TYPE_CUSTOMPROCESS_COMMANDLINE:
+			case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_CUSTOMPROCESS_COMMANDLINE:
 				if(!stream.ReadTString(customProcessCommandLine))
 				{
 					return RETRIEVE_STATUS_FAIL_ARGUMENT;
 				}
 				(*retInfo)=customProcessCommandLine;
 				break;
-			case PROCESS_GET_PACKET_TYPE_PREPROCESS_WAIT_TIME:
+			case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_PREPROCESS_WAIT_TIME:
 				if(!stream.ReadInt(preProcessWaitTime))
 				{
 					return RETRIEVE_STATUS_FAIL_ARGUMENT;
 				}
 				(*retInfo)=preProcessWaitTime;
 				break;
-			case PROCESS_GET_PACKET_TYPE_POSTPROCESS_WAIT_TIME:
+			case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_POSTPROCESS_WAIT_TIME:
 				if(!stream.ReadInt(postProcessWaitTime))
 				{
 					return RETRIEVE_STATUS_FAIL_ARGUMENT;
 				}
 				(*retInfo)=postProcessWaitTime;
 				break;
-			case PROCESS_GET_PACKET_TYPE_DOMAINNAME:
+			case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_DOMAINNAME:
 				if(!stream.ReadTString(domainName))
 				{
 					return RETRIEVE_STATUS_FAIL_ARGUMENT;
 				}
 				(*retInfo)=domainName;
 				break;
-			case PROCESS_GET_PACKET_TYPE_USERNAME:
+			case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_USERNAME:
 				if(!stream.ReadTString(userName))
 				{
 					return RETRIEVE_STATUS_FAIL_ARGUMENT;
 				}
 				(*retInfo)=userName;
 				break;
-			case PROCESS_GET_PACKET_TYPE_USERPASSWORD:
+			case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_USERPASSWORD:
 				if(!stream.ReadTString(userPassword))
 				{
 					return RETRIEVE_STATUS_FAIL_ARGUMENT;
 				}
 				(*retInfo)=userPassword;
 				break;
-			case PROCESS_GET_PACKET_TYPE_DELAY_START_TIME:
+			case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_DELAY_START_TIME:
 				if(!stream.ReadUInt(delayStartTime))
 				{
 					return RETRIEVE_STATUS_FAIL_ARGUMENT;
 				}
 				(*retInfo)=delayStartTime;
 				break;
-			case PROCESS_GET_PACKET_TYPE_DELAY_PAUSE_END_TIME:
+			case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_DELAY_PAUSE_END_TIME:
 				if(!stream.ReadUInt(delayPauseEndTime))
 				{
 					return RETRIEVE_STATUS_FAIL_ARGUMENT;
 				}
 				(*retInfo)=delayPauseEndTime;
 				break;
-			case PROCESS_GET_PACKET_TYPE_IS_PROCESS_RESTART:
+			case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_IS_PROCESS_RESTART:
 				if(!stream.ReadUInt(tempUInt))
 				{
 					return RETRIEVE_STATUS_FAIL_ARGUMENT;
@@ -542,7 +549,7 @@ RetrieveStatus WinServicePacketProcessor::getProcessInfo(unsigned int subPacketT
 					isProcessRestart=false;
 				(*retInfo)=isProcessRestart;
 				break;
-			case PROCESS_GET_PACKET_TYPE_IS_IMPERSONATE:
+			case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_IS_IMPERSONATE:
 				if(!stream.ReadUInt(tempUInt))
 				{
 					return RETRIEVE_STATUS_FAIL_ARGUMENT;
@@ -553,7 +560,7 @@ RetrieveStatus WinServicePacketProcessor::getProcessInfo(unsigned int subPacketT
 					isImpersonate=false;
 				(*retInfo)=isImpersonate;
 				break;
-			case PROCESS_GET_PACKET_TYPE_IS_USER_INTERFACE:
+			case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_IS_USER_INTERFACE:
 				if(!stream.ReadUInt(tempUInt))
 				{
 					return RETRIEVE_STATUS_FAIL_ARGUMENT;
@@ -669,7 +676,7 @@ RetrieveStatus WinServicePacketProcessor::getServiceInfo(unsigned int subPacketT
 
 			switch(subPacketType)
 			{
-			case SERVICE_GET_PACKET_TYPE_ALL:
+			case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_ALL:
 				if(!stream.ReadUInt(tempUInt))
 				{
 					return RETRIEVE_STATUS_FAIL_ARGUMENT;
@@ -753,7 +760,7 @@ RetrieveStatus WinServicePacketProcessor::getServiceInfo(unsigned int subPacketT
 				(*retInfo)=serviceObjInfo;
 
 				break;
-			case SERVICE_GET_PACKET_TYPE_STATUS:
+			case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_STATUS:
 				if(!stream.ReadUInt(tempUInt))
 				{
 					return RETRIEVE_STATUS_FAIL_ARGUMENT;
@@ -761,84 +768,84 @@ RetrieveStatus WinServicePacketProcessor::getServiceInfo(unsigned int subPacketT
 				serviceStatus=(ServiceStatusType)tempUInt;
 				(*retInfo)=serviceStatus;
 				break;
-			case SERVICE_GET_PACKET_TYPE_SERVICENAME:
+			case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_SERVICENAME:
 				if(!stream.ReadTString(serviceName))
 				{
 					return RETRIEVE_STATUS_FAIL_ARGUMENT;
 				}
 				(*retInfo)=serviceName;
 				break;
-			case SERVICE_GET_PACKET_TYPE_PREPROCESS_COMMANDLINE:
+			case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_PREPROCESS_COMMANDLINE:
 				if(!stream.ReadTString(preProcessCommandLine))
 				{
 					return RETRIEVE_STATUS_FAIL_ARGUMENT;
 				}
 				(*retInfo)=preProcessCommandLine;
 				break;
-			case SERVICE_GET_PACKET_TYPE_POSTPROCESS_COMMANDLINE:
+			case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_POSTPROCESS_COMMANDLINE:
 				if(!stream.ReadTString(postProcessCommandLine))
 				{
 					return RETRIEVE_STATUS_FAIL_ARGUMENT;
 				}
 				(*retInfo)=postProcessCommandLine;
 				break;
-			case SERVICE_GET_PACKET_TYPE_CUSTOMPROCESS_COMMANDLINE:
+			case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_CUSTOMPROCESS_COMMANDLINE:
 				if(!stream.ReadTString(customProcessCommandLine))
 				{
 					return RETRIEVE_STATUS_FAIL_ARGUMENT;
 				}
 				(*retInfo)=customProcessCommandLine;
 				break;
-			case SERVICE_GET_PACKET_TYPE_PREPROCESS_WAIT_TIME:
+			case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_PREPROCESS_WAIT_TIME:
 				if(!stream.ReadInt(preProcessWaitTime))
 				{
 					return RETRIEVE_STATUS_FAIL_ARGUMENT;
 				}
 				(*retInfo)=preProcessWaitTime;
 				break;
-			case SERVICE_GET_PACKET_TYPE_POSTPROCESS_WAIT_TIME:
+			case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_POSTPROCESS_WAIT_TIME:
 				if(!stream.ReadInt(postProcessWaitTime))
 				{
 					return RETRIEVE_STATUS_FAIL_ARGUMENT;
 				}
 				(*retInfo)=postProcessWaitTime;
 				break;
-			case SERVICE_GET_PACKET_TYPE_DOMAINNAME:
+			case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_DOMAINNAME:
 				if(!stream.ReadTString(domainName))
 				{
 					return RETRIEVE_STATUS_FAIL_ARGUMENT;
 				}
 				(*retInfo)=domainName;
 				break;
-			case SERVICE_GET_PACKET_TYPE_USERNAME:
+			case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_USERNAME:
 				if(!stream.ReadTString(userName))
 				{
 					return RETRIEVE_STATUS_FAIL_ARGUMENT;
 				}
 				(*retInfo)=userName;
 				break;
-			case SERVICE_GET_PACKET_TYPE_USERPASSWORD:
+			case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_USERPASSWORD:
 				if(!stream.ReadTString(userPassword))
 				{
 					return RETRIEVE_STATUS_FAIL_ARGUMENT;
 				}
 				(*retInfo)=userPassword;
 				break;
-			case SERVICE_GET_PACKET_TYPE_DELAY_START_TIME:
+			case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_DELAY_START_TIME:
 				if(!stream.ReadUInt(delayStartTime))
 				{
 					return RETRIEVE_STATUS_FAIL_ARGUMENT;
 				}
 				(*retInfo)=delayStartTime;
 				break;
-			case SERVICE_GET_PACKET_TYPE_DELAY_PAUSE_END_TIME:
+			case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_DELAY_PAUSE_END_TIME:
 				if(!stream.ReadUInt(delayPauseEndTime))
 				{
 					return RETRIEVE_STATUS_FAIL_ARGUMENT;
 				}
 				(*retInfo)=delayPauseEndTime;
 				break;
-			case SERVICE_GET_PACKET_TYPE_IS_SERVICE_RESTART:
+			case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_IS_SERVICE_RESTART:
 				if(!stream.ReadUInt(tempUInt))
 				{
 					return RETRIEVE_STATUS_FAIL_ARGUMENT;
@@ -849,7 +856,7 @@ RetrieveStatus WinServicePacketProcessor::getServiceInfo(unsigned int subPacketT
 					isServiceRestart=false;
 				(*retInfo)=isServiceRestart;
 				break;
-			case SERVICE_GET_PACKET_TYPE_IS_IMPERSONATE:
+			case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_IS_IMPERSONATE:
 				if(!stream.ReadUInt(tempUInt))
 				{
 					return RETRIEVE_STATUS_FAIL_ARGUMENT;
@@ -860,7 +867,7 @@ RetrieveStatus WinServicePacketProcessor::getServiceInfo(unsigned int subPacketT
 					isImpersonate=false;
 				(*retInfo)=isImpersonate;
 				break;
-			case SERVICE_GET_PACKET_TYPE_IS_USER_INTERFACE:
+			case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_IS_USER_INTERFACE:
 				if(!stream.ReadUInt(tempUInt))
 				{
 					return RETRIEVE_STATUS_FAIL_ARGUMENT;

@@ -356,47 +356,50 @@ void AdminServerProcessor::getMainServiceInfo(unsigned int subPacketType,Stream 
 	
 	switch(subPacketType)
 	{
-	case MAIN_SERVICE_GET_PACKET_TYPE_SERVICE_NAME:
+	case MAIN_SERVICE_INFO_GET_PACKET_TYPE_SERVICE_NAME:
 		strLen=System::TcsLen(SERVICE_PROPERTIES_INSTANCE.GetServiceName());
 		if(strLen)
 			retOutStream.WriteTString(SERVICE_PROPERTIES_INSTANCE.GetServiceName());
 		else
 			retOutStream.WriteTString(_T("\0"));
 		break;
-	case MAIN_SERVICE_GET_PACKET_TYPE_DOMAIN_NAME:
+	case MAIN_SERVICE_INFO_GET_PACKET_TYPE_DOMAIN_NAME:
 		strLen=System::TcsLen(SERVICE_PROPERTIES_INSTANCE.GetDomainName());
 		if(strLen)
 			retOutStream.WriteTString(SERVICE_PROPERTIES_INSTANCE.GetDomainName());
 		else
 			retOutStream.WriteTString(_T("\0"));
 		break;
-	case MAIN_SERVICE_GET_PACKET_TYPE_USERNAME:
+	case MAIN_SERVICE_INFO_GET_PACKET_TYPE_USERNAME:
 		strLen=System::TcsLen(SERVICE_PROPERTIES_INSTANCE.GetUserName());
 		if(strLen)
 			retOutStream.WriteTString(SERVICE_PROPERTIES_INSTANCE.GetUserName());
 		else
 			retOutStream.WriteTString(_T("\0"));
 		break;
-	case MAIN_SERVICE_GET_PACKET_TYPE_USERPASSWORD:
+	case MAIN_SERVICE_INFO_GET_PACKET_TYPE_USERPASSWORD:
 		strLen=System::TcsLen(SERVICE_PROPERTIES_INSTANCE.GetUserPassword());
 		if(strLen)
 			retOutStream.WriteTString(SERVICE_PROPERTIES_INSTANCE.GetUserPassword());
 		else
 			retOutStream.WriteTString(_T("\0"));
 		break;
-	case MAIN_SERVICE_GET_PACKET_TYPE_DEPENDENCY:
+	case MAIN_SERVICE_INFO_GET_PACKET_TYPE_DEPENDENCY:
 		retOutStream.WriteTString(SERVICE_PROPERTIES_INSTANCE.GetOriginalDependency().GetString());		
 		break;
-	case MAIN_SERVICE_GET_PACKET_TYPE_NUM_OF_PROCESSES:
+	case MAIN_SERVICE_INFO_GET_PACKET_TYPE_NUM_OF_PROCESSES:
 		retOutStream.WriteUInt(PROCESS_HANDLER_INSTANCE.GetNumberOfProcesses());
 		break;
-	case MAIN_SERVICE_GET_PACKET_TYPE_CHECKPROCESSINTERVAL:
+	case MAIN_SERVICE_INFO_GET_PACKET_TYPE_NUM_OF_SERVICES:
+		retOutStream.WriteUInt(SERVICE_HANDLER_INSTANCE.GetNumberOfServices());
+		break;
+	case MAIN_SERVICE_INFO_GET_PACKET_TYPE_CHECKPROCESSINTERVAL:
 		retOutStream.WriteUInt(SERVICE_PROPERTIES_INSTANCE.GetCheckProcessInterval());
 		break;
-	case MAIN_SERVICE_GET_PACKET_TYPE_CHECKSERVICEINTERVAL:
+	case MAIN_SERVICE_INFO_GET_PACKET_TYPE_CHECKSERVICEINTERVAL:
 		retOutStream.WriteUInt(SERVICE_PROPERTIES_INSTANCE.GetCheckServiceInterval());
 		break;
-	case MAIN_SERVICE_GET_PACKET_TYPE_CUSTOMPROCESS_COMMANDLINE:
+	case MAIN_SERVICE_INFO_GET_PACKET_TYPE_CUSTOMPROCESS_COMMANDLINE:
 		retOutStream.WriteTString(SERVICE_PROPERTIES_INSTANCE.GetCustomProcessCommandLine().GetString());
 		break;
 
@@ -412,8 +415,8 @@ void AdminServerProcessor::setMainServiceInfo(unsigned int subPacketType,Stream 
 
 	switch(subPacketType)
 	{
-	case MAIN_SERVICE_SET_PACKET_TYPE_CHECKPROCESSINTERVAL:
-	case MAIN_SERVICE_SET_PACKET_TYPE_CHECKSERVICESINTERVAL:
+	case MAIN_SERVICE_INFO_SET_PACKET_TYPE_CHECKPROCESSINTERVAL:
+	case MAIN_SERVICE_INFO_SET_PACKET_TYPE_CHECKSERVICESINTERVAL:
 		if(!stream.ReadUInt(interval))
 		{
 			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL);
@@ -421,7 +424,7 @@ void AdminServerProcessor::setMainServiceInfo(unsigned int subPacketType,Stream 
 		}
 		break;
 
-	case MAIN_SERVICE_SET_PACKET_TYPE_CUSTOMPROCESS_COMMANDLINE:
+	case MAIN_SERVICE_INFO_SET_PACKET_TYPE_CUSTOMPROCESS_COMMANDLINE:
 		if(!stream.ReadTString(retString))
 		{
 			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
@@ -435,14 +438,14 @@ void AdminServerProcessor::setMainServiceInfo(unsigned int subPacketType,Stream 
 
 	switch(subPacketType)
 	{
-	case MAIN_SERVICE_SET_PACKET_TYPE_CHECKPROCESSINTERVAL:
+	case MAIN_SERVICE_INFO_SET_PACKET_TYPE_CHECKPROCESSINTERVAL:
 		SERVICE_PROPERTIES_INSTANCE.SetCheckProcessInterval(interval);
 		break;
-	case MAIN_SERVICE_SET_PACKET_TYPE_CHECKSERVICESINTERVAL:
+	case MAIN_SERVICE_INFO_SET_PACKET_TYPE_CHECKSERVICESINTERVAL:
 		SERVICE_PROPERTIES_INSTANCE.SetCheckServiceInterval(interval);
 		break;
 
-	case MAIN_SERVICE_SET_PACKET_TYPE_CUSTOMPROCESS_COMMANDLINE:
+	case MAIN_SERVICE_INFO_SET_PACKET_TYPE_CUSTOMPROCESS_COMMANDLINE:
 		SERVICE_PROPERTIES_INSTANCE.SetCustomProcessCommandLine(retString.c_str());
 		break;
 
@@ -466,7 +469,7 @@ void AdminServerProcessor::getProcessInfo(unsigned int subPacketType,Stream &str
 		retOutStream.WriteInt(procIdx);
 		switch(subPacketType)
 		{
-		case PROCESS_GET_PACKET_TYPE_ALL:
+		case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_ALL:
 			if(PROCESS_HANDLER_INSTANCE.At(procIdx)->IsStarted())
 				retOutStream.WriteUInt(PROCESS_STATUS_TYPE_RUNNING);
 			else
@@ -486,52 +489,52 @@ void AdminServerProcessor::getProcessInfo(unsigned int subPacketType,Stream &str
 			retOutStream.WriteTString(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetUserName().GetString());
 			retOutStream.WriteTString(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetUserPassword().GetString());
 			break;
-		case PROCESS_GET_PACKET_TYPE_STATUS:
+		case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_STATUS:
 			if(PROCESS_HANDLER_INSTANCE.At(procIdx)->IsStarted())
 				retOutStream.WriteUInt(PROCESS_STATUS_TYPE_RUNNING);
 			else
 				retOutStream.WriteUInt(PROCESS_STATUS_TYPE_STOPPED);
 			break;
-		case PROCESS_GET_PACKET_TYPE_COMMANDLINE:
+		case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_COMMANDLINE:
 			retOutStream.WriteTString(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetCommandLine().GetString());
 			break;
-		case PROCESS_GET_PACKET_TYPE_PREPROCESS_COMMANDLINE:
+		case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_PREPROCESS_COMMANDLINE:
 			retOutStream.WriteTString(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetPreProcessCommandLine().GetString());
 			break;
-		case PROCESS_GET_PACKET_TYPE_POSTPROCESS_COMMANDLINE:
+		case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_POSTPROCESS_COMMANDLINE:
 			retOutStream.WriteTString(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetPostProcessCommandLine().GetString());
 			break;
-		case PROCESS_GET_PACKET_TYPE_CUSTOMPROCESS_COMMANDLINE:
+		case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_CUSTOMPROCESS_COMMANDLINE:
 			retOutStream.WriteTString(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetCustomProcessCommandLine().GetString());
 			break;
-		case PROCESS_GET_PACKET_TYPE_PREPROCESS_WAIT_TIME:
+		case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_PREPROCESS_WAIT_TIME:
 			retOutStream.WriteInt(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetPreProcessWaitTime());
 			break;
-		case PROCESS_GET_PACKET_TYPE_POSTPROCESS_WAIT_TIME:
+		case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_POSTPROCESS_WAIT_TIME:
 			retOutStream.WriteInt(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetPostProcessWaitTime());
 			break;
-		case PROCESS_GET_PACKET_TYPE_DOMAINNAME:
+		case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_DOMAINNAME:
 			retOutStream.WriteTString(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetDomainName().GetString());
 			break;
-		case PROCESS_GET_PACKET_TYPE_USERNAME:
+		case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_USERNAME:
 			retOutStream.WriteTString(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetUserName().GetString());
 			break;
-		case PROCESS_GET_PACKET_TYPE_USERPASSWORD:
+		case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_USERPASSWORD:
 			retOutStream.WriteTString(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetUserPassword().GetString());
 			break;
-		case PROCESS_GET_PACKET_TYPE_DELAY_START_TIME:
+		case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_DELAY_START_TIME:
 			retOutStream.WriteUInt(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetDelayStartTime());
 			break;
-		case PROCESS_GET_PACKET_TYPE_DELAY_PAUSE_END_TIME:
+		case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_DELAY_PAUSE_END_TIME:
 			retOutStream.WriteUInt(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetDelayPauseEndTime());
 			break;
-		case PROCESS_GET_PACKET_TYPE_IS_PROCESS_RESTART:
+		case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_IS_PROCESS_RESTART:
 			retOutStream.WriteUInt(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetIsRestart());
 			break;
-		case PROCESS_GET_PACKET_TYPE_IS_IMPERSONATE:
+		case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_IS_IMPERSONATE:
 			retOutStream.WriteUInt(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetIsImpersonate());
 			break;
-		case PROCESS_GET_PACKET_TYPE_IS_USER_INTERFACE:
+		case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_IS_USER_INTERFACE:
 			retOutStream.WriteUInt(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetIsUserInterface());
 			break;
 		}
@@ -563,7 +566,7 @@ void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &str
 		unsigned int val;
 		switch(subPacketType)
 		{
-		case PROCESS_SET_PACKET_TYPE_COMMANDLINE:
+		case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_COMMANDLINE:
 			if(stream.ReadTString(retString))
 			{
 				PROCESS_HANDLER_INSTANCE.At(procIdx)->SetCommandLine(retString.c_str());
@@ -577,7 +580,7 @@ void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &str
 			}
 
 			break;
-		case PROCESS_SET_PACKET_TYPE_PREPROCESS_COMMANDLINE:
+		case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_PREPROCESS_COMMANDLINE:
 			if(stream.ReadTString(retString))
 			{
 				PROCESS_HANDLER_INSTANCE.At(procIdx)->SetPreProcessCommandLine(retString.c_str());
@@ -591,7 +594,7 @@ void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &str
 				return;
 			}
 			break;
-		case PROCESS_SET_PACKET_TYPE_POSTPROCESS_COMMANDLINE:
+		case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_POSTPROCESS_COMMANDLINE:
 			if(stream.ReadTString(retString))
 			{
 				PROCESS_HANDLER_INSTANCE.At(procIdx)->SetPostProcessCommandLine(retString.c_str());
@@ -605,7 +608,7 @@ void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &str
 				return;
 			}
 			break;
-		case PROCESS_SET_PACKET_TYPE_CUSTOMPROCESS_COMMANDLINE:
+		case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_CUSTOMPROCESS_COMMANDLINE:
 			if(stream.ReadTString(retString))
 			{
 				PROCESS_HANDLER_INSTANCE.At(procIdx)->SetCustomProcessCommandLine(retString.c_str());
@@ -621,7 +624,7 @@ void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &str
 			break;
 
 
-		case PROCESS_SET_PACKET_TYPE_PREPROCESS_WAIT_TIME:
+		case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_PREPROCESS_WAIT_TIME:
 			if(stream.ReadInt(waitTime))
 			{
 				PROCESS_HANDLER_INSTANCE.At(procIdx)->SetPreProcessWaitTime(waitTime);
@@ -635,7 +638,7 @@ void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &str
 				return;
 			}
 			break;
-		case PROCESS_SET_PACKET_TYPE_POSTPROCESS_WAIT_TIME:
+		case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_POSTPROCESS_WAIT_TIME:
 			if(stream.ReadInt(waitTime))
 			{
 
@@ -651,7 +654,7 @@ void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &str
 			}
 			break;
 
-		case PROCESS_SET_PACKET_TYPE_DOMAINNAME:
+		case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_DOMAINNAME:
 			if(stream.ReadTString(retString))
 			{
 				PROCESS_HANDLER_INSTANCE.At(procIdx)->SetDomainName(retString.c_str());
@@ -665,7 +668,7 @@ void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &str
 				return;
 			}
 			break;
-		case PROCESS_SET_PACKET_TYPE_USERNAME:
+		case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_USERNAME:
 			if(stream.ReadTString(retString))
 			{
 				PROCESS_HANDLER_INSTANCE.At(procIdx)->SetUserName(retString.c_str());
@@ -679,7 +682,7 @@ void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &str
 				return;
 			}
 			break;
-		case PROCESS_SET_PACKET_TYPE_USERPASSWORD:
+		case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_USERPASSWORD:
 			if(stream.ReadTString(retString))
 			{
 				PROCESS_HANDLER_INSTANCE.At(procIdx)->SetUserPassword(retString.c_str());
@@ -695,7 +698,7 @@ void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &str
 			break;
 
 
-		case PROCESS_SET_PACKET_TYPE_DELAY_START_TIME:
+		case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_DELAY_START_TIME:
 			if(stream.ReadUInt(val))
 			{
 				PROCESS_HANDLER_INSTANCE.At(procIdx)->SetDelayStartTime(val);
@@ -709,7 +712,7 @@ void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &str
 				return;
 			}
 			break;
-		case PROCESS_SET_PACKET_TYPE_DELAY_PAUSE_END_TIME:
+		case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_DELAY_PAUSE_END_TIME:
 			if(stream.ReadUInt(val))
 			{
 				PROCESS_HANDLER_INSTANCE.At(procIdx)->SetDelayPauseEndTime(val);
@@ -723,7 +726,7 @@ void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &str
 				return;
 			}
 			break;
-		case PROCESS_SET_PACKET_TYPE_IS_PROCESS_RESTART:
+		case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_IS_PROCESS_RESTART:
 			if(stream.ReadUInt(val))
 			{
 				if(val)
@@ -740,7 +743,7 @@ void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &str
 				return;
 			}
 			break;
-		case PROCESS_SET_PACKET_TYPE_IS_IMPERSONATE:
+		case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_IS_IMPERSONATE:
 			if(stream.ReadUInt(val))
 			{
 				if(val)
@@ -757,7 +760,7 @@ void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &str
 				return;
 			}
 			break;
-		case PROCESS_SET_PACKET_TYPE_IS_USER_INTERFACE:
+		case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_IS_USER_INTERFACE:
 			if(stream.ReadUInt(val))
 			{
 				if(val)
@@ -774,7 +777,7 @@ void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &str
 				return;
 			}
 			break;
-		case PROCESS_SET_PACKET_TYPE_ALL:
+		case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_ALL:
 			if(stream.ReadTString(retString))
 			{
 				PROCESS_HANDLER_INSTANCE.At(procIdx)->SetCommandLine(retString.c_str());
@@ -954,7 +957,7 @@ void AdminServerProcessor::getServiceInfo(unsigned int subPacketType,Stream &str
 		retOutStream.WriteInt(serviceIdx);
 		switch(subPacketType)
 		{
-		case SERVICE_GET_PACKET_TYPE_ALL:
+		case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_ALL:
 
 			
 			retOutStream.WriteUInt(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetStatus());
@@ -973,51 +976,51 @@ void AdminServerProcessor::getServiceInfo(unsigned int subPacketType,Stream &str
 			retOutStream.WriteTString(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetUserName().GetString());
 			retOutStream.WriteTString(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetUserPassword().GetString());
 			break;
-		case SERVICE_GET_PACKET_TYPE_STATUS:
+		case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_STATUS:
 			retOutStream.WriteUInt(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetStatus());
 			break;
-		case SERVICE_GET_PACKET_TYPE_SERVICENAME:
+		case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_SERVICENAME:
 			retOutStream.WriteTString(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetServiceName().GetString());
 			break;
-		case SERVICE_GET_PACKET_TYPE_PREPROCESS_COMMANDLINE:
+		case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_PREPROCESS_COMMANDLINE:
 			retOutStream.WriteTString(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetPreProcessCommandLine().GetString());
 			break;
-		case SERVICE_GET_PACKET_TYPE_POSTPROCESS_COMMANDLINE:
+		case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_POSTPROCESS_COMMANDLINE:
 			retOutStream.WriteTString(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetPostProcessCommandLine().GetString());
 			break;
-		case SERVICE_GET_PACKET_TYPE_CUSTOMPROCESS_COMMANDLINE:
+		case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_CUSTOMPROCESS_COMMANDLINE:
 			retOutStream.WriteTString(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetCustomProcessCommandLine().GetString());
 			break;
 
-		case SERVICE_GET_PACKET_TYPE_PREPROCESS_WAIT_TIME:
+		case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_PREPROCESS_WAIT_TIME:
 			retOutStream.WriteInt(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetPreProcessWaitTime());
 			break;
-		case SERVICE_GET_PACKET_TYPE_POSTPROCESS_WAIT_TIME:
+		case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_POSTPROCESS_WAIT_TIME:
 			retOutStream.WriteInt(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetPostProcessWaitTime());
 			break;
 
-		case SERVICE_GET_PACKET_TYPE_DOMAINNAME:
+		case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_DOMAINNAME:
 			retOutStream.WriteTString(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetDomainName().GetString());
 			break;
-		case SERVICE_GET_PACKET_TYPE_USERNAME:
+		case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_USERNAME:
 			retOutStream.WriteTString(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetUserName().GetString());
 			break;
-		case SERVICE_GET_PACKET_TYPE_USERPASSWORD:
+		case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_USERPASSWORD:
 			retOutStream.WriteTString(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetUserPassword().GetString());
 			break;
-		case SERVICE_GET_PACKET_TYPE_DELAY_START_TIME:
+		case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_DELAY_START_TIME:
 			retOutStream.WriteUInt(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetDelayStartTime());
 			break;
-		case SERVICE_GET_PACKET_TYPE_DELAY_PAUSE_END_TIME:
+		case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_DELAY_PAUSE_END_TIME:
 			retOutStream.WriteUInt(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetDelayPauseEndTime());
 			break;
-		case SERVICE_GET_PACKET_TYPE_IS_SERVICE_RESTART:
+		case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_IS_SERVICE_RESTART:
 			retOutStream.WriteUInt(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetIsRestart());
 			break;
-		case SERVICE_GET_PACKET_TYPE_IS_IMPERSONATE:
+		case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_IS_IMPERSONATE:
 			retOutStream.WriteUInt(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetIsImpersonate());
 			break;
-		case SERVICE_GET_PACKET_TYPE_IS_USER_INTERFACE:
+		case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_IS_USER_INTERFACE:
 			retOutStream.WriteUInt(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetIsUserInterface());
 			break;
 		}
@@ -1045,7 +1048,7 @@ void AdminServerProcessor::setServiceInfo(unsigned int subPacketType,Stream &str
 		int waitTime;
 		switch(subPacketType)
 		{
-		case SERVICE_SET_PACKET_TYPE_SERVICENAME:
+		case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_SERVICENAME:
 			if(stream.ReadTString(retString))
 			{
 				SERVICE_HANDLER_INSTANCE.At(serviceIdx)->SetServiceName(retString.c_str());
@@ -1059,7 +1062,7 @@ void AdminServerProcessor::setServiceInfo(unsigned int subPacketType,Stream &str
 			}
 
 			break;
-		case SERVICE_SET_PACKET_TYPE_PREPROCESS_COMMANDLINE:
+		case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_PREPROCESS_COMMANDLINE:
 			if(stream.ReadTString(retString))
 			{
 				SERVICE_HANDLER_INSTANCE.At(serviceIdx)->SetPreProcessCommandLine(retString.c_str());
@@ -1073,7 +1076,7 @@ void AdminServerProcessor::setServiceInfo(unsigned int subPacketType,Stream &str
 				return;
 			}
 			break;
-		case SERVICE_SET_PACKET_TYPE_POSTPROCESS_COMMANDLINE:
+		case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_POSTPROCESS_COMMANDLINE:
 			if(stream.ReadTString(retString))
 			{
 				SERVICE_HANDLER_INSTANCE.At(serviceIdx)->SetPostProcessCommandLine(retString.c_str());
@@ -1087,7 +1090,7 @@ void AdminServerProcessor::setServiceInfo(unsigned int subPacketType,Stream &str
 				return;
 			}
 			break;
-		case SERVICE_SET_PACKET_TYPE_CUSTOMPROCESS_COMMANDLINE:
+		case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_CUSTOMPROCESS_COMMANDLINE:
 			if(stream.ReadTString(retString))
 			{
 				SERVICE_HANDLER_INSTANCE.At(serviceIdx)->SetCustomProcessCommandLine(retString.c_str());
@@ -1102,7 +1105,7 @@ void AdminServerProcessor::setServiceInfo(unsigned int subPacketType,Stream &str
 			}	
 			break;
 
-		case SERVICE_SET_PACKET_TYPE_PREPROCESS_WAIT_TIME:
+		case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_PREPROCESS_WAIT_TIME:
 			if(stream.ReadInt(waitTime))
 			{
 				SERVICE_HANDLER_INSTANCE.At(serviceIdx)->SetPreProcessWaitTime(waitTime);
@@ -1116,7 +1119,7 @@ void AdminServerProcessor::setServiceInfo(unsigned int subPacketType,Stream &str
 				return;
 			}
 			break;
-		case SERVICE_SET_PACKET_TYPE_POSTPROCESS_WAIT_TIME:
+		case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_POSTPROCESS_WAIT_TIME:
 			if(stream.ReadInt(waitTime))
 			{
 				SERVICE_HANDLER_INSTANCE.At(serviceIdx)->SetPostProcessWaitTime(waitTime);
@@ -1130,7 +1133,7 @@ void AdminServerProcessor::setServiceInfo(unsigned int subPacketType,Stream &str
 				return;
 			}
 			break;
-	case SERVICE_SET_PACKET_TYPE_DOMAINNAME:
+	case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_DOMAINNAME:
 			if(stream.ReadTString(retString))
 			{
 				SERVICE_HANDLER_INSTANCE.At(serviceIdx)->SetDomainName(retString.c_str());
@@ -1144,7 +1147,7 @@ void AdminServerProcessor::setServiceInfo(unsigned int subPacketType,Stream &str
 				return;
 			}
 			break;
-		case SERVICE_SET_PACKET_TYPE_USERNAME:
+		case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_USERNAME:
 			if(stream.ReadTString(retString))
 			{
 				SERVICE_HANDLER_INSTANCE.At(serviceIdx)->SetUserName(retString.c_str());
@@ -1158,7 +1161,7 @@ void AdminServerProcessor::setServiceInfo(unsigned int subPacketType,Stream &str
 				return;
 			}
 			break;
-		case SERVICE_SET_PACKET_TYPE_USERPASSWORD:
+		case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_USERPASSWORD:
 			if(stream.ReadTString(retString))
 			{
 				SERVICE_HANDLER_INSTANCE.At(serviceIdx)->SetUserPassword(retString.c_str());
@@ -1174,7 +1177,7 @@ void AdminServerProcessor::setServiceInfo(unsigned int subPacketType,Stream &str
 			break;
 
 
-		case SERVICE_SET_PACKET_TYPE_DELAY_START_TIME:
+		case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_DELAY_START_TIME:
 			if(stream.ReadUInt(val))
 			{
 				SERVICE_HANDLER_INSTANCE.At(serviceIdx)->SetDelayStartTime(val);
@@ -1188,7 +1191,7 @@ void AdminServerProcessor::setServiceInfo(unsigned int subPacketType,Stream &str
 				return;
 			}
 			break;
-		case SERVICE_SET_PACKET_TYPE_DELAY_PAUSE_END_TIME:
+		case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_DELAY_PAUSE_END_TIME:
 			if(stream.ReadUInt(val))
 			{
 				SERVICE_HANDLER_INSTANCE.At(serviceIdx)->SetDelayPauseEndTime(val);
@@ -1202,7 +1205,7 @@ void AdminServerProcessor::setServiceInfo(unsigned int subPacketType,Stream &str
 				return;
 			}
 			break;
-		case SERVICE_SET_PACKET_TYPE_IS_SERVICE_RESTART:
+		case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_IS_SERVICE_RESTART:
 			if(stream.ReadUInt(val))
 			{
 				if(val)
@@ -1219,7 +1222,7 @@ void AdminServerProcessor::setServiceInfo(unsigned int subPacketType,Stream &str
 				return;
 			}
 			break;
-		case SERVICE_SET_PACKET_TYPE_IS_IMPERSONATE:
+		case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_IS_IMPERSONATE:
 			if(stream.ReadUInt(val))
 			{
 				if(val)
@@ -1236,7 +1239,7 @@ void AdminServerProcessor::setServiceInfo(unsigned int subPacketType,Stream &str
 				return;
 			}
 			break;
-		case SERVICE_SET_PACKET_TYPE_IS_USER_INTERFACE:
+		case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_IS_USER_INTERFACE:
 			if(stream.ReadUInt(val))
 			{
 				if(val)
@@ -1253,7 +1256,7 @@ void AdminServerProcessor::setServiceInfo(unsigned int subPacketType,Stream &str
 				return;
 			}
 			break;
-		case SERVICE_SET_PACKET_TYPE_ALL:
+		case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_ALL:
 			if(stream.ReadTString(retString))
 			{
 				SERVICE_HANDLER_INSTANCE.At(serviceIdx)->SetServiceName(retString.c_str());

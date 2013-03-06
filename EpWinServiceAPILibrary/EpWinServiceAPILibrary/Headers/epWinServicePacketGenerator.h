@@ -104,14 +104,14 @@ namespace epws
 		Add Get Main Service Info frame to the packet
 		@param[in] type type of the information getting
 		*/
-		void AddGetMainServiceInfo(MainServiceGetPacketType type);
+		void AddGetMainServiceInfo(MainServiceInfoGetPacketType type);
 
 		/*!
 		Add Set Main Service Info frame to the packet
 		@param[in] type type of the information setting
 		@param[in] info the information to set
 		*/
-		void AddSetMainServiceInfo(MainServiceSetPacketType type,MainServiceInfo info);
+		void AddSetMainServiceInfo(MainServiceInfoSetPacketType type,MainServiceInfo info);
 
 		/*!
 		Add Command Service Object frame to the packet
@@ -129,7 +129,7 @@ namespace epws
 		@param[in] type type of the information getting
 		@param[in] serviceIndex the index of the service object to get info
 		*/
-		void AddGetServiceInfo(ServiceGetPacketType type, unsigned int serviceIndex);
+		void AddGetServiceInfo(ServiceObjectInfoGetPacketType type, unsigned int serviceIndex);
 
 		/*!
 		Add Set Service Object Info frame to the packet
@@ -137,7 +137,7 @@ namespace epws
 		@param[in] serviceIndex the index of the service object to get info
 		@param[in] info the information to set
 		*/
-		void AddSetServiceInfo(ServiceSetPacketType type, unsigned int serviceIndex, ServiceObjInfo info);
+		void AddSetServiceInfo(ServiceObjectInfoSetPacketType type, unsigned int serviceIndex, ServiceObjInfo info);
 
 		/*!
 		Add Command Process Object frame to the packet
@@ -155,7 +155,7 @@ namespace epws
 		@param[in] type type of the information getting
 		@param[in] procIndex the index of the process object to get info
 		*/
-		void AddGetProcessInfo(ProcessGetPacketType type, unsigned int procIndex);
+		void AddGetProcessInfo(ProcessObjectInfoGetPacketType type, unsigned int procIndex);
 
 		/*!
 		Add Set Process Object Info frame to the packet
@@ -163,7 +163,7 @@ namespace epws
 		@param[in] procIndex the index of the process object to get info
 		@param[in] info the information to set
 		*/
-		void AddSetProcessInfo(ProcessSetPacketType type, unsigned int procIndex,ProcessObjInfo info);
+		void AddSetProcessInfo(ProcessObjectInfoSetPacketType type, unsigned int procIndex,ProcessObjInfo info);
 
 		/*!
 		Add Command Service frame to the packet
