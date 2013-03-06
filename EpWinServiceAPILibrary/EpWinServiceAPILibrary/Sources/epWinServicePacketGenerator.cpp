@@ -158,7 +158,7 @@ void WinServicePacketGenerator::AddGetMainServiceInfo(MainServiceGetPacketType t
 {
 	LockObj lock(m_packetGeneratorLock);
 	m_count++;
-	m_stream.WriteUInt((unsigned int)PACKET_TYPE_MAIN_SERVICE_GET);
+	m_stream.WriteUInt((unsigned int)PACKET_TYPE_MAIN_SERVICE_INFO_GET);
 	m_stream.WriteUInt((unsigned int)type);
 }
 
@@ -166,7 +166,7 @@ void WinServicePacketGenerator::AddSetMainServiceInfo(MainServiceSetPacketType t
 {
 	LockObj lock(m_packetGeneratorLock);
 	m_count++;
-	m_stream.WriteUInt((unsigned int)PACKET_TYPE_MAIN_SERVICE_SET);
+	m_stream.WriteUInt((unsigned int)PACKET_TYPE_MAIN_SERVICE_INFO_SET);
 	m_stream.WriteUInt((unsigned int)type);
 	
 	switch(type)
@@ -188,7 +188,7 @@ void WinServicePacketGenerator::AddGetServiceInfo(ServiceGetPacketType type, uns
 {
 	LockObj lock(m_packetGeneratorLock);
 	m_count++;
-	m_stream.WriteUInt((unsigned int)PACKET_TYPE_SERVICE_GET);
+	m_stream.WriteUInt((unsigned int)PACKET_TYPE_SERVICE_OBJECT_INFO_GET);
 	m_stream.WriteUInt((unsigned int)type);
 	m_stream.WriteUInt(serviceIndex);
 }
@@ -196,7 +196,7 @@ void WinServicePacketGenerator::AddSetServiceInfo(ServiceSetPacketType type, uns
 {
 	LockObj lock(m_packetGeneratorLock);
 	m_count++;
-	m_stream.WriteUInt((unsigned int)PACKET_TYPE_SERVICE_SET);
+	m_stream.WriteUInt((unsigned int)PACKET_TYPE_SERVICE_OBJECT_INFO_SET);
 	m_stream.WriteUInt((unsigned int)type);
 	m_stream.WriteUInt(serviceIndex);
 	switch(type)
@@ -285,7 +285,7 @@ void WinServicePacketGenerator::AddGetProcessInfo(ProcessGetPacketType type, uns
 {
 	LockObj lock(m_packetGeneratorLock);
 	m_count++;
-	m_stream.WriteUInt((unsigned int)PACKET_TYPE_PROCESS_GET);
+	m_stream.WriteUInt((unsigned int)PACKET_TYPE_PROCESS_OBJECT_INFO_GET);
 	m_stream.WriteUInt((unsigned int)type);
 	m_stream.WriteUInt(procIndex);
 }
@@ -293,7 +293,7 @@ void WinServicePacketGenerator::AddSetProcessInfo(ProcessSetPacketType type, uns
 {
 	LockObj lock(m_packetGeneratorLock);
 	m_count++;
-	m_stream.WriteUInt((unsigned int)PACKET_TYPE_PROCESS_SET);
+	m_stream.WriteUInt((unsigned int)PACKET_TYPE_PROCESS_OBJECT_INFO_SET);
 	m_stream.WriteUInt((unsigned int)type);
 	m_stream.WriteUInt(procIndex);
 	switch(type)

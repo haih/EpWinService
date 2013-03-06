@@ -52,28 +52,28 @@ void AdminServerProcessor::Process(AdminServerPacketParser *curClient,const Pack
 		case PACKET_TYPE_MAIN_SERVICE_COMMAND:
 			commandMainServiceObject(subPacketType,stream,outStream);
 			break;
-		case PACKET_TYPE_MAIN_SERVICE_GET:
+		case PACKET_TYPE_MAIN_SERVICE_INFO_GET:
 			getMainServiceInfo(subPacketType,stream,outStream);
 			break;
-		case PACKET_TYPE_MAIN_SERVICE_SET:
+		case PACKET_TYPE_MAIN_SERVICE_INFO_SET:
 			setMainServiceInfo(subPacketType,stream,outStream);
 			break;
 		case PACKET_TYPE_COMMAND_PROCESS_OBJECT:
 			commandProcessObject(subPacketType,stream,outStream);
 			break;
-		case PACKET_TYPE_PROCESS_GET:
+		case PACKET_TYPE_PROCESS_OBJECT_INFO_GET:
 			getProcessInfo(subPacketType,stream,outStream);
 			break;
-		case PACKET_TYPE_PROCESS_SET:
+		case PACKET_TYPE_PROCESS_OBJECT_INFO_SET:
 			setProcessInfo(subPacketType,stream,outStream);
 			break;
 		case PACKET_TYPE_COMMAND_SERVICE_OBJECT:
 			commandServiceObject(subPacketType,stream,outStream);
 			break;
-		case PACKET_TYPE_SERVICE_GET:
+		case PACKET_TYPE_SERVICE_OBJECT_INFO_GET:
 			getServiceInfo(subPacketType,stream,outStream);
 			break;
-		case PACKET_TYPE_SERVICE_SET:
+		case PACKET_TYPE_SERVICE_OBJECT_INFO_SET:
 			setServiceInfo(subPacketType,stream,outStream);
 			break;
 		case PACKET_TYPE_SERVICE_COMMAND:

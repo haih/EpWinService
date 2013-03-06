@@ -50,28 +50,28 @@ void WinServicePacketProcessor::Process(const epse::Packet *packet, WinServiceRe
 		case PACKET_TYPE_MAIN_SERVICE_COMMAND:
 			info->m_retrieveStatus=commandMainService(subPacketType,stream,info);
 			break;
-		case PACKET_TYPE_MAIN_SERVICE_GET:
+		case PACKET_TYPE_MAIN_SERVICE_INFO_GET:
 			info->m_retrieveStatus=getMainServiceInfo(subPacketType,stream,info);
 			break;
-		case PACKET_TYPE_MAIN_SERVICE_SET:
+		case PACKET_TYPE_MAIN_SERVICE_INFO_SET:
 			info->m_retrieveStatus=setMainServiceInfo(subPacketType,stream,info);
 			break;
 		case PACKET_TYPE_COMMAND_PROCESS_OBJECT:
 			info->m_retrieveStatus=commandProcessObject(subPacketType,stream,info);
 			break;
-		case PACKET_TYPE_PROCESS_GET:
+		case PACKET_TYPE_PROCESS_OBJECT_INFO_GET:
 			info->m_retrieveStatus=getProcessInfo(subPacketType,stream,info);
 			break;
-		case PACKET_TYPE_PROCESS_SET:
+		case PACKET_TYPE_PROCESS_OBJECT_INFO_SET:
 			info->m_retrieveStatus=setProcessInfo(subPacketType,stream,info);
 			break;
 		case PACKET_TYPE_COMMAND_SERVICE_OBJECT:
 			info->m_retrieveStatus=commandServiceObject(subPacketType,stream,info);
 			break;
-		case PACKET_TYPE_SERVICE_GET:
+		case PACKET_TYPE_SERVICE_OBJECT_INFO_GET:
 			info->m_retrieveStatus=getServiceInfo(subPacketType,stream,info);
 			break;
-		case PACKET_TYPE_SERVICE_SET:
+		case PACKET_TYPE_SERVICE_OBJECT_INFO_SET:
 			info->m_retrieveStatus=setServiceInfo(subPacketType,stream,info);
 			break;
 		case PACKET_TYPE_SERVICE_COMMAND:
