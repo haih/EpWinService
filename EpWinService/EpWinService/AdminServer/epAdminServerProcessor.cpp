@@ -58,7 +58,7 @@ void AdminServerProcessor::Process(AdminServerPacketParser *curClient,const Pack
 		case PACKET_TYPE_MAIN_SERVICE_INFO_SET:
 			setMainServiceInfo(subPacketType,stream,outStream);
 			break;
-		case PACKET_TYPE_COMMAND_PROCESS_OBJECT:
+		case PACKET_TYPE_PROCESS_OBJECT_COMMAND:
 			commandProcessObject(subPacketType,stream,outStream);
 			break;
 		case PACKET_TYPE_PROCESS_OBJECT_INFO_GET:
@@ -67,7 +67,7 @@ void AdminServerProcessor::Process(AdminServerPacketParser *curClient,const Pack
 		case PACKET_TYPE_PROCESS_OBJECT_INFO_SET:
 			setProcessInfo(subPacketType,stream,outStream);
 			break;
-		case PACKET_TYPE_COMMAND_SERVICE_OBJECT:
+		case PACKET_TYPE_SERVICE_OBJECT_COMMAND:
 			commandServiceObject(subPacketType,stream,outStream);
 			break;
 		case PACKET_TYPE_SERVICE_OBJECT_INFO_GET:
@@ -104,7 +104,7 @@ void AdminServerProcessor::commandProcessObject(unsigned int subPacketType,Strea
 	EpTString cmd=_T("");
 	switch(subPacketType)
 	{
-	case COMMAND_PROCESS_OBJECT_PACKET_TYPE_CUSTOM_PROCESS:
+	case PROCESS_OBJECT_COMMAND_PACKET_TYPE_CUSTOM_PROCESS:
 		if(!stream.ReadInt(waitTime))
 		{
 			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
@@ -112,7 +112,7 @@ void AdminServerProcessor::commandProcessObject(unsigned int subPacketType,Strea
 			return;
 		}
 		break;
-	case COMMAND_PROCESS_OBJECT_PACKET_TYPE_RUN_COMMAND:
+	case PROCESS_OBJECT_COMMAND_PACKET_TYPE_RUN_COMMAND:
 		if(!stream.ReadInt(waitTime))
 		{
 			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
@@ -139,20 +139,20 @@ void AdminServerProcessor::commandProcessObject(unsigned int subPacketType,Strea
 		{
 			switch(subPacketType)
 			{
-			case COMMAND_PROCESS_OBJECT_PACKET_TYPE_START:
+			case PROCESS_OBJECT_COMMAND_PACKET_TYPE_START:
 				PROCESS_HANDLER_INSTANCE.At(procTrav)->Start();			
 				break;
-			case COMMAND_PROCESS_OBJECT_PACKET_TYPE_END:
+			case PROCESS_OBJECT_COMMAND_PACKET_TYPE_END:
 				PROCESS_HANDLER_INSTANCE.At(procTrav)->Stop();
 				break;
-			case COMMAND_PROCESS_OBJECT_PACKET_TYPE_BOUNCE:
+			case PROCESS_OBJECT_COMMAND_PACKET_TYPE_BOUNCE:
 				PROCESS_HANDLER_INSTANCE.At(procTrav)->Stop();
 				PROCESS_HANDLER_INSTANCE.At(procTrav)->Start();
 				break;
-			case COMMAND_PROCESS_OBJECT_PACKET_TYPE_CUSTOM_PROCESS:
+			case PROCESS_OBJECT_COMMAND_PACKET_TYPE_CUSTOM_PROCESS:
 				PROCESS_HANDLER_INSTANCE.At(procTrav)->CustomProcess(waitTime);
 				break;
-			case COMMAND_PROCESS_OBJECT_PACKET_TYPE_RUN_COMMAND:
+			case PROCESS_OBJECT_COMMAND_PACKET_TYPE_RUN_COMMAND:
 				PROCESS_HANDLER_INSTANCE.At(procTrav)->RunCommand(cmd.c_str(),waitTime);
 				break;
 			}
@@ -165,20 +165,20 @@ void AdminServerProcessor::commandProcessObject(unsigned int subPacketType,Strea
 		{
 			switch(subPacketType)
 			{
-			case COMMAND_PROCESS_OBJECT_PACKET_TYPE_START:
+			case PROCESS_OBJECT_COMMAND_PACKET_TYPE_START:
 				PROCESS_HANDLER_INSTANCE.At(objIdx)->Start();			
 				break;
-			case COMMAND_PROCESS_OBJECT_PACKET_TYPE_END:
+			case PROCESS_OBJECT_COMMAND_PACKET_TYPE_END:
 				PROCESS_HANDLER_INSTANCE.At(objIdx)->Stop();
 				break;
-			case COMMAND_PROCESS_OBJECT_PACKET_TYPE_BOUNCE:
+			case PROCESS_OBJECT_COMMAND_PACKET_TYPE_BOUNCE:
 				PROCESS_HANDLER_INSTANCE.At(objIdx)->Stop();
 				PROCESS_HANDLER_INSTANCE.At(objIdx)->Start();
 				break;
-			case COMMAND_PROCESS_OBJECT_PACKET_TYPE_CUSTOM_PROCESS:
+			case PROCESS_OBJECT_COMMAND_PACKET_TYPE_CUSTOM_PROCESS:
 				PROCESS_HANDLER_INSTANCE.At(objIdx)->CustomProcess(waitTime);
 				break;
-			case COMMAND_PROCESS_OBJECT_PACKET_TYPE_RUN_COMMAND:
+			case PROCESS_OBJECT_COMMAND_PACKET_TYPE_RUN_COMMAND:
 				PROCESS_HANDLER_INSTANCE.At(objIdx)->RunCommand(cmd.c_str(),waitTime);
 				break;
 
@@ -213,7 +213,7 @@ void AdminServerProcessor::commandServiceObject(unsigned int subPacketType,Strea
 	EpTString cmd=_T("");
 	switch(subPacketType)
 	{
-	case COMMAND_SERVICE_OBJECT_PACKET_TYPE_CUSTOM_PROCESS:
+	case SERVICE_OBJECT_COMMAND_PACKET_TYPE_CUSTOM_PROCESS:
 		if(!stream.ReadInt(waitTime))
 		{
 			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
@@ -221,7 +221,7 @@ void AdminServerProcessor::commandServiceObject(unsigned int subPacketType,Strea
 			return;
 		}
 		break;
-	case COMMAND_SERVICE_OBJECT_PACKET_TYPE_RUN_COMMAND:
+	case SERVICE_OBJECT_COMMAND_PACKET_TYPE_RUN_COMMAND:
 		if(!stream.ReadInt(waitTime))
 		{
 			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
@@ -246,27 +246,27 @@ void AdminServerProcessor::commandServiceObject(unsigned int subPacketType,Strea
 		{
 			switch(subPacketType)
 			{
-			case COMMAND_SERVICE_OBJECT_PACKET_TYPE_START:
+			case SERVICE_OBJECT_COMMAND_PACKET_TYPE_START:
 				SERVICE_HANDLER_INSTANCE.At(serviceTrav)->Start();			
 				break;
-			case COMMAND_SERVICE_OBJECT_PACKET_TYPE_END:
+			case SERVICE_OBJECT_COMMAND_PACKET_TYPE_END:
 				SERVICE_HANDLER_INSTANCE.At(serviceTrav)->SetIsUserStopped(true);
 				SERVICE_HANDLER_INSTANCE.At(serviceTrav)->Stop();
 				break;
-			case COMMAND_SERVICE_OBJECT_PACKET_TYPE_PAUSE:
+			case SERVICE_OBJECT_COMMAND_PACKET_TYPE_PAUSE:
 				SERVICE_HANDLER_INSTANCE.At(serviceTrav)->Pause();
 				break;
-			case COMMAND_SERVICE_OBJECT_PACKET_TYPE_CONTINUE:
+			case SERVICE_OBJECT_COMMAND_PACKET_TYPE_CONTINUE:
 				SERVICE_HANDLER_INSTANCE.At(serviceTrav)->Continue();
 				break;
-			case COMMAND_SERVICE_OBJECT_PACKET_TYPE_BOUNCE:
+			case SERVICE_OBJECT_COMMAND_PACKET_TYPE_BOUNCE:
 				SERVICE_HANDLER_INSTANCE.At(serviceTrav)->Stop();
 				SERVICE_HANDLER_INSTANCE.At(serviceTrav)->Start();
 				break;
-			case COMMAND_SERVICE_OBJECT_PACKET_TYPE_CUSTOM_PROCESS:
+			case SERVICE_OBJECT_COMMAND_PACKET_TYPE_CUSTOM_PROCESS:
 				SERVICE_HANDLER_INSTANCE.At(serviceTrav)->CustomProcess(waitTime);
 				break;
-			case COMMAND_SERVICE_OBJECT_PACKET_TYPE_RUN_COMMAND:
+			case SERVICE_OBJECT_COMMAND_PACKET_TYPE_RUN_COMMAND:
 				SERVICE_HANDLER_INSTANCE.At(serviceTrav)->RunCommand(cmd.c_str(),waitTime);
 				break;
 			}
@@ -279,27 +279,27 @@ void AdminServerProcessor::commandServiceObject(unsigned int subPacketType,Strea
 		{
 			switch(subPacketType)
 			{
-			case COMMAND_SERVICE_OBJECT_PACKET_TYPE_START:
+			case SERVICE_OBJECT_COMMAND_PACKET_TYPE_START:
 				SERVICE_HANDLER_INSTANCE.At(objIdx)->Start();			
 				break;
-			case COMMAND_SERVICE_OBJECT_PACKET_TYPE_END:
+			case SERVICE_OBJECT_COMMAND_PACKET_TYPE_END:
 				SERVICE_HANDLER_INSTANCE.At(objIdx)->SetIsUserStopped(true);
 				SERVICE_HANDLER_INSTANCE.At(objIdx)->Stop();
 				break;
-			case COMMAND_SERVICE_OBJECT_PACKET_TYPE_PAUSE:
+			case SERVICE_OBJECT_COMMAND_PACKET_TYPE_PAUSE:
 				SERVICE_HANDLER_INSTANCE.At(objIdx)->Pause();
 				break;
-			case COMMAND_SERVICE_OBJECT_PACKET_TYPE_CONTINUE:
+			case SERVICE_OBJECT_COMMAND_PACKET_TYPE_CONTINUE:
 				SERVICE_HANDLER_INSTANCE.At(objIdx)->Continue();
 				break;
-			case COMMAND_SERVICE_OBJECT_PACKET_TYPE_BOUNCE:
+			case SERVICE_OBJECT_COMMAND_PACKET_TYPE_BOUNCE:
 				SERVICE_HANDLER_INSTANCE.At(objIdx)->Stop();
 				SERVICE_HANDLER_INSTANCE.At(objIdx)->Start();
 				break;
-			case COMMAND_SERVICE_OBJECT_PACKET_TYPE_CUSTOM_PROCESS:
+			case SERVICE_OBJECT_COMMAND_PACKET_TYPE_CUSTOM_PROCESS:
 				SERVICE_HANDLER_INSTANCE.At(objIdx)->CustomProcess(waitTime);
 				break;
-			case COMMAND_SERVICE_OBJECT_PACKET_TYPE_RUN_COMMAND:
+			case SERVICE_OBJECT_COMMAND_PACKET_TYPE_RUN_COMMAND:
 				SERVICE_HANDLER_INSTANCE.At(objIdx)->RunCommand(cmd.c_str(),waitTime);
 				break;
 			}
@@ -322,7 +322,7 @@ void AdminServerProcessor::commandMainServiceObject(unsigned int subPacketType,S
 	EpTString cmd=_T("");
 	switch(subPacketType)
 	{
-	case COMMAND_MAIN_SERVICE_PACKET_TYPE_CUSTOM_PROCESS:
+	case MAIN_SERVICE_COMMAND_PACKET_TYPE_CUSTOM_PROCESS:
 		if(!stream.ReadInt(waitTime))
 		{
 			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
@@ -330,7 +330,7 @@ void AdminServerProcessor::commandMainServiceObject(unsigned int subPacketType,S
 		}
 		SERVICE_MANAGER_INSTANCE.RunCustomProcess(waitTime);
 		break;
-	case COMMAND_MAIN_SERVICE_PACKET_TYPE_RUN_COMMAND:
+	case MAIN_SERVICE_COMMAND_PACKET_TYPE_RUN_COMMAND:
 		if(!stream.ReadInt(waitTime))
 		{
 			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);

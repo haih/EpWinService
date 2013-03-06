@@ -98,7 +98,7 @@ namespace epws
 		@remark waitTime is for RunCommand/CustomProcess command type
 		@remark cmd is only for RunCommand command type
 		*/
-		void AddCommandMainService(CommandMainServicePackeType type,int waitTime=WAITTIME_INIFINITE, EpTString cmd =_T(""));
+		void AddCommandMainService(MainServiceCommandPackeType type,int waitTime=WAITTIME_INIFINITE, EpTString cmd =_T(""));
 
 		/*!
 		Add Get Main Service Info frame to the packet
@@ -122,7 +122,7 @@ namespace epws
 		@remark waitTime is for RunCommand/CustomProcess command type
 		@remark cmd is only for RunCommand command type
 		*/
-		void AddCommandServiceObj(CommandServiceObjectPacketType type, int objIndex,int waitTime=WAITTIME_INIFINITE, EpTString cmd =_T(""));
+		void AddCommandServiceObj(ServiceObjectCommandPacketType type, int objIndex,int waitTime=WAITTIME_INIFINITE, EpTString cmd =_T(""));
 
 		/*!
 		Add Get Service Object Info frame to the packet
@@ -148,7 +148,7 @@ namespace epws
 		@remark waitTime is for RunCommand/CustomProcess command type
 		@remark cmd is only for RunCommand command type
 		*/
-		void AddCommandProcessObj(CommandProcessObjectPacketType type, int objIndex,int waitTime=WAITTIME_INIFINITE, EpTString cmd =_T(""));
+		void AddCommandProcessObj(ProcessObjectCommandPacketType type, int objIndex,int waitTime=WAITTIME_INIFINITE, EpTString cmd =_T(""));
 
 		/*!
 		Add Get Process Object Info frame to the packet

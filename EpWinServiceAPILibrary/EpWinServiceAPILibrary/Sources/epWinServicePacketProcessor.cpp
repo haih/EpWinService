@@ -56,7 +56,7 @@ void WinServicePacketProcessor::Process(const epse::Packet *packet, WinServiceRe
 		case PACKET_TYPE_MAIN_SERVICE_INFO_SET:
 			info->m_retrieveStatus=setMainServiceInfo(subPacketType,stream,info);
 			break;
-		case PACKET_TYPE_COMMAND_PROCESS_OBJECT:
+		case PACKET_TYPE_PROCESS_OBJECT_COMMAND:
 			info->m_retrieveStatus=commandProcessObject(subPacketType,stream,info);
 			break;
 		case PACKET_TYPE_PROCESS_OBJECT_INFO_GET:
@@ -65,7 +65,7 @@ void WinServicePacketProcessor::Process(const epse::Packet *packet, WinServiceRe
 		case PACKET_TYPE_PROCESS_OBJECT_INFO_SET:
 			info->m_retrieveStatus=setProcessInfo(subPacketType,stream,info);
 			break;
-		case PACKET_TYPE_COMMAND_SERVICE_OBJECT:
+		case PACKET_TYPE_SERVICE_OBJECT_COMMAND:
 			info->m_retrieveStatus=commandServiceObject(subPacketType,stream,info);
 			break;
 		case PACKET_TYPE_SERVICE_OBJECT_INFO_GET:

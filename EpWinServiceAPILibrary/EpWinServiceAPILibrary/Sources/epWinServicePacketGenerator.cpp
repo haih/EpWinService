@@ -92,19 +92,19 @@ void WinServicePacketGenerator::Clear()
 	m_stream.SetSeek(epl::Stream::STREAM_SEEK_TYPE_SEEK_SET);
 	m_count=0;
 }
-void WinServicePacketGenerator::AddCommandProcessObj(CommandProcessObjectPacketType type, int objIndex,int waitTime, EpTString cmd)
+void WinServicePacketGenerator::AddCommandProcessObj(ProcessObjectCommandPacketType type, int objIndex,int waitTime, EpTString cmd)
 {
 	LockObj lock(m_packetGeneratorLock);
 	m_count++;
-	m_stream.WriteUInt((unsigned int)PACKET_TYPE_COMMAND_PROCESS_OBJECT);
+	m_stream.WriteUInt((unsigned int)PACKET_TYPE_PROCESS_OBJECT_COMMAND);
 	m_stream.WriteUInt((unsigned int)type);
 	m_stream.WriteInt(objIndex);
 	switch(type)
 	{
-	case COMMAND_PROCESS_OBJECT_PACKET_TYPE_CUSTOM_PROCESS:
+	case PROCESS_OBJECT_COMMAND_PACKET_TYPE_CUSTOM_PROCESS:
 		m_stream.WriteInt(waitTime);
 		break;
-	case COMMAND_PROCESS_OBJECT_PACKET_TYPE_RUN_COMMAND:
+	case PROCESS_OBJECT_COMMAND_PACKET_TYPE_RUN_COMMAND:
 		m_stream.WriteInt(waitTime);
 		m_stream.WriteTString(cmd);
 		break;
@@ -113,19 +113,19 @@ void WinServicePacketGenerator::AddCommandProcessObj(CommandProcessObjectPacketT
 
 	}
 }
-void WinServicePacketGenerator::AddCommandServiceObj(CommandServiceObjectPacketType type, int objIndex,int waitTime, EpTString cmd)
+void WinServicePacketGenerator::AddCommandServiceObj(ServiceObjectCommandPacketType type, int objIndex,int waitTime, EpTString cmd)
 {
 	LockObj lock(m_packetGeneratorLock);
 	m_count++;
-	m_stream.WriteUInt((unsigned int)PACKET_TYPE_COMMAND_SERVICE_OBJECT);
+	m_stream.WriteUInt((unsigned int)PACKET_TYPE_SERVICE_OBJECT_COMMAND);
 	m_stream.WriteUInt((unsigned int)type);
 	m_stream.WriteInt(objIndex);
 	switch(type)
 	{
-	case COMMAND_PROCESS_OBJECT_PACKET_TYPE_CUSTOM_PROCESS:
+	case PROCESS_OBJECT_COMMAND_PACKET_TYPE_CUSTOM_PROCESS:
 		m_stream.WriteInt(waitTime);
 		break;
-	case COMMAND_PROCESS_OBJECT_PACKET_TYPE_RUN_COMMAND:
+	case PROCESS_OBJECT_COMMAND_PACKET_TYPE_RUN_COMMAND:
 		m_stream.WriteInt(waitTime);
 		m_stream.WriteTString(cmd);
 		break;
@@ -135,7 +135,7 @@ void WinServicePacketGenerator::AddCommandServiceObj(CommandServiceObjectPacketT
 	}
 }
 
-void WinServicePacketGenerator::AddCommandMainService(CommandMainServicePackeType type,int waitTime, EpTString cmd)
+void WinServicePacketGenerator::AddCommandMainService(MainServiceCommandPackeType type,int waitTime, EpTString cmd)
 {
 	LockObj lock(m_packetGeneratorLock);
 	m_count++;
@@ -143,10 +143,10 @@ void WinServicePacketGenerator::AddCommandMainService(CommandMainServicePackeTyp
 	m_stream.WriteUInt((unsigned int)type);
 	switch(type)
 	{
-	case COMMAND_MAIN_SERVICE_PACKET_TYPE_CUSTOM_PROCESS:
+	case MAIN_SERVICE_COMMAND_PACKET_TYPE_CUSTOM_PROCESS:
 		m_stream.WriteInt(waitTime);
 		break;
-	case COMMAND_MAIN_SERVICE_PACKET_TYPE_RUN_COMMAND:
+	case MAIN_SERVICE_COMMAND_PACKET_TYPE_RUN_COMMAND:
 		m_stream.WriteInt(waitTime);
 		m_stream.WriteTString(cmd);
 		break;

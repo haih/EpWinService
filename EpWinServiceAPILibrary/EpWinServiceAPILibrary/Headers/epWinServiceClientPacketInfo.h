@@ -55,13 +55,13 @@ namespace epws
 		/// Set Main Service Info Type
 		PACKET_TYPE_MAIN_SERVICE_INFO_SET,	
 		/// Command Process Object Type
-		PACKET_TYPE_COMMAND_PROCESS_OBJECT,
+		PACKET_TYPE_PROCESS_OBJECT_COMMAND,
 		/// Get Process Info type
 		PACKET_TYPE_PROCESS_OBJECT_INFO_GET,
 		/// Set Process Info Type
 		PACKET_TYPE_PROCESS_OBJECT_INFO_SET,
 		/// Command Service Object Type
-		PACKET_TYPE_COMMAND_SERVICE_OBJECT,
+		PACKET_TYPE_SERVICE_OBJECT_COMMAND,
 		/// Get Service Info type
 		PACKET_TYPE_SERVICE_OBJECT_INFO_GET,
 		/// Set Service Info Type
@@ -72,44 +72,44 @@ namespace epws
 	}PacketType;
 
 	/// Sub-type for Command Process Object Packet
-	typedef enum _commandProcessObjectPacketType{
+	typedef enum _processObjectCommandPacketType{
 		/// Start the Process
-		COMMAND_PROCESS_OBJECT_PACKET_TYPE_START=0,
+		PROCESS_OBJECT_COMMAND_PACKET_TYPE_START=0,
 		/// End the Process
-		COMMAND_PROCESS_OBJECT_PACKET_TYPE_END,
+		PROCESS_OBJECT_COMMAND_PACKET_TYPE_END,
 		/// Restart the Process
-		COMMAND_PROCESS_OBJECT_PACKET_TYPE_BOUNCE,
+		PROCESS_OBJECT_COMMAND_PACKET_TYPE_BOUNCE,
 		/// Start the Custom Process
-		COMMAND_PROCESS_OBJECT_PACKET_TYPE_CUSTOM_PROCESS,
+		PROCESS_OBJECT_COMMAND_PACKET_TYPE_CUSTOM_PROCESS,
 		/// Run Command for Process
-		COMMAND_PROCESS_OBJECT_PACKET_TYPE_RUN_COMMAND,
-	}CommandProcessObjectPacketType;
+		PROCESS_OBJECT_COMMAND_PACKET_TYPE_RUN_COMMAND,
+	}ProcessObjectCommandPacketType;
 
 	/// Sub-type for Command Service Object Packet
-	typedef enum _commandServiceObjectPacketType{
+	typedef enum _serviceObjectCommandPacketType{
 		/// Start the Service
-		COMMAND_SERVICE_OBJECT_PACKET_TYPE_START,
+		SERVICE_OBJECT_COMMAND_PACKET_TYPE_START,
 		/// End the Service
-		COMMAND_SERVICE_OBJECT_PACKET_TYPE_END,
+		SERVICE_OBJECT_COMMAND_PACKET_TYPE_END,
 		/// Pause the Service
-		COMMAND_SERVICE_OBJECT_PACKET_TYPE_PAUSE,
+		SERVICE_OBJECT_COMMAND_PACKET_TYPE_PAUSE,
 		/// Continue the Service
-		COMMAND_SERVICE_OBJECT_PACKET_TYPE_CONTINUE,
+		SERVICE_OBJECT_COMMAND_PACKET_TYPE_CONTINUE,
 		/// Restart the Service
-		COMMAND_SERVICE_OBJECT_PACKET_TYPE_BOUNCE,
+		SERVICE_OBJECT_COMMAND_PACKET_TYPE_BOUNCE,
 		/// Start the Service's Custom Process
-		COMMAND_SERVICE_OBJECT_PACKET_TYPE_CUSTOM_PROCESS,
+		SERVICE_OBJECT_COMMAND_PACKET_TYPE_CUSTOM_PROCESS,
 		/// Run Command for Service
-		COMMAND_SERVICE_OBJECT_PACKET_TYPE_RUN_COMMAND
+		SERVICE_OBJECT_COMMAND_PACKET_TYPE_RUN_COMMAND
 
-	}CommandServiceObjectPacketType;
+	}ServiceObjectCommandPacketType;
 
-	typedef enum _commandMainServicePacketType{
+	typedef enum _mainServiceCommandPacketType{
 		/// Start the Main Service's Custom Process
-		COMMAND_MAIN_SERVICE_PACKET_TYPE_CUSTOM_PROCESS=0,
+		MAIN_SERVICE_COMMAND_PACKET_TYPE_CUSTOM_PROCESS=0,
 		/// Run Command for Main Service
-		COMMAND_MAIN_SERVICE_PACKET_TYPE_RUN_COMMAND
-	}CommandMainServicePackeType;
+		MAIN_SERVICE_COMMAND_PACKET_TYPE_RUN_COMMAND
+	}MainServiceCommandPackeType;
 
 	/// Sub-type for Get Service Info Packet
 	typedef enum _mainServiceInfoGetPacketType{
