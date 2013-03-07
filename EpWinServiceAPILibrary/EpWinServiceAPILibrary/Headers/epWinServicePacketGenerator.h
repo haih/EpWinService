@@ -98,7 +98,7 @@ namespace epws
 		@remark waitTime is for RunCommand/CustomProcess command type
 		@remark cmd is only for RunCommand command type
 		*/
-		void AddCommandMainService(MainServiceCommandPackeType type,int waitTime=WAITTIME_INIFINITE, EpTString cmd =_T(""));
+		void AddCommandMainService(MainServiceCommandPacketType type,int waitTime=WAITTIME_INIFINITE, EpTString cmd =_T(""));
 
 		/*!
 		Add Get Main Service Info frame to the packet

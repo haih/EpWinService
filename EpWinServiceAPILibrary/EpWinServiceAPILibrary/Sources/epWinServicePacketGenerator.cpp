@@ -135,7 +135,7 @@ void WinServicePacketGenerator::AddCommandServiceObj(ServiceObjectCommandPacketT
 	}
 }
 
-void WinServicePacketGenerator::AddCommandMainService(MainServiceCommandPackeType type,int waitTime, EpTString cmd)
+void WinServicePacketGenerator::AddCommandMainService(MainServiceCommandPacketType type,int waitTime, EpTString cmd)
 {
 	LockObj lock(m_packetGeneratorLock);
 	m_count++;

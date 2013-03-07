@@ -115,7 +115,7 @@ namespace epws
 		MAIN_SERVICE_COMMAND_PACKET_TYPE_CUSTOM_PROCESS,
 		/// Run Command for Main Service
 		MAIN_SERVICE_COMMAND_PACKET_TYPE_RUN_COMMAND
-	}MainServiceCommandPackeType;
+	}MainServiceCommandPacketType;
 
 	/// Sub-type for Get Service Info Packet
 	typedef enum _mainServiceInfoGetPacketType{
