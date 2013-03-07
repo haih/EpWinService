@@ -63,13 +63,15 @@ typedef enum _packetType{
 	PACKET_TYPE_SERVICE_OBJECT_INFO_SET,
 	/// Service Command type
 	PACKET_TYPE_SERVICE_COMMAND,
-	
+
 }PacketType;
 
 /// Sub-type for Command Process Object Packet
 typedef enum _processObjectCommandPacketType{
+	/// Null type
+	PROCESS_OBJECT_COMMAND_PACKET_TYPE_NULL=0,
 	/// Start the Process
-	PROCESS_OBJECT_COMMAND_PACKET_TYPE_START=0,
+	PROCESS_OBJECT_COMMAND_PACKET_TYPE_START,
 	/// End the Process
 	PROCESS_OBJECT_COMMAND_PACKET_TYPE_END,
 	/// Restart the Process
@@ -82,6 +84,8 @@ typedef enum _processObjectCommandPacketType{
 
 /// Sub-type for Command Service Object Packet
 typedef enum _serviceObjectCommandPacketType{
+	/// Null Type
+	SERVICE_OBJECT_COMMAND_PACKET_TYPE_NULL=0,
 	/// Start the Service
 	SERVICE_OBJECT_COMMAND_PACKET_TYPE_START,
 	/// End the Service
@@ -100,14 +104,18 @@ typedef enum _serviceObjectCommandPacketType{
 }ServiceObjectCommandPacketType;
 
 typedef enum _mainServiceCommandPacketType{
+	/// Null Type
+	MAIN_SERVICE_COMMAND_PACKET_TYPE_NULL=0,
 	/// Start the Main Service's Custom Process
-	MAIN_SERVICE_COMMAND_PACKET_TYPE_CUSTOM_PROCESS=0,
+	MAIN_SERVICE_COMMAND_PACKET_TYPE_CUSTOM_PROCESS,
 	/// Run Command for Main Service
 	MAIN_SERVICE_COMMAND_PACKET_TYPE_RUN_COMMAND
 }MainServiceCommandPackeType;
 
 /// Sub-type for Get Service Info Packet
 typedef enum _mainServiceInfoGetPacketType{
+	/// Null Type
+	MAIN_SERVICE_INFO_GET_PACKET_TYPE_NULL,
 	/// Get Service Name
 	MAIN_SERVICE_INFO_GET_PACKET_TYPE_SERVICE_NAME=0,
 	/// Get Domain Name
@@ -134,8 +142,10 @@ typedef enum _mainServiceInfoGetPacketType{
 
 /// Sub-type for Set Service Info Packet
 typedef enum _mainServiceInfoSetPacketType{
+	/// Null type
+	MAIN_SERVICE_INFO_SET_PACKET_TYPE_NULL=0,
 	/// Set Interval time for checking processes
-	MAIN_SERVICE_INFO_SET_PACKET_TYPE_CHECKPROCESSINTERVAL=0,
+	MAIN_SERVICE_INFO_SET_PACKET_TYPE_CHECKPROCESSINTERVAL,
 	/// Set Interval time for checking services
 	MAIN_SERVICE_INFO_SET_PACKET_TYPE_CHECKSERVICESINTERVAL,
 	/// Set Main Service's Custom Process CommandLine
@@ -145,8 +155,10 @@ typedef enum _mainServiceInfoSetPacketType{
 
 /// Sub-type for Get Process Info Packet
 typedef enum _processObjectInfoGetPacketType{
+	/// Null Type
+	PROCESS_OBJECT_INFO_GET_PACKET_TYPE_NULL=0,
 	/// Get Process's CommandLine
-	PROCESS_OBJECT_INFO_GET_PACKET_TYPE_COMMANDLINE=0,
+	PROCESS_OBJECT_INFO_GET_PACKET_TYPE_COMMANDLINE,
 	/// Get Process's Pre-process CommandLine
 	PROCESS_OBJECT_INFO_GET_PACKET_TYPE_PREPROCESS_COMMANDLINE,
 	/// Get Process's Post-process CommandLine
@@ -185,8 +197,10 @@ typedef enum _processObjectInfoGetPacketType{
 
 /// Sub-type for Set Process Info Packet
 typedef enum _processObjectInfoSetPacketType{
+	/// Null Type
+	PROCESS_OBJECT_INFO_SET_PACKET_TYPE_NULL=0,
 	/// Set Process's CommandLine
-	PROCESS_OBJECT_INFO_SET_PACKET_TYPE_COMMANDLINE=0,
+	PROCESS_OBJECT_INFO_SET_PACKET_TYPE_COMMANDLINE,
 	/// Set Process's Pre-process CommandLine
 	PROCESS_OBJECT_INFO_SET_PACKET_TYPE_PREPROCESS_COMMANDLINE,
 	/// Set Process's Post-process CommandLine
@@ -224,8 +238,10 @@ typedef enum _processObjectInfoSetPacketType{
 
 /// Sub-type for Get Service Info Packet
 typedef enum _serviceObjectInfoGetPacketType{
+	/// Null Type
+	SERVICE_OBJECT_INFO_GET_PACKET_TYPE_NULL=0,
 	/// Get Service's Service Name
-	SERVICE_OBJECT_INFO_GET_PACKET_TYPE_SERVICENAME=0,
+	SERVICE_OBJECT_INFO_GET_PACKET_TYPE_SERVICENAME,
 	/// Get Service's Pre-process CommandLine
 	SERVICE_OBJECT_INFO_GET_PACKET_TYPE_PREPROCESS_COMMANDLINE,
 	/// Get Service's Post-process CommandLine
@@ -265,8 +281,10 @@ typedef enum _serviceObjectInfoGetPacketType{
 
 /// Sub-type for Set Service Info Packet
 typedef enum _serviceObjectInfoSetPacketType{
+	/// Null Type
+	SERVICE_OBJECT_INFO_SET_PACKET_TYPE_NULL=0,
 	/// Set Service's Service Name
-	SERVICE_OBJECT_INFO_SET_PACKET_TYPE_SERVICENAME=0,
+	SERVICE_OBJECT_INFO_SET_PACKET_TYPE_SERVICENAME,
 	/// Set Service's Pre-process CommandLine
 	SERVICE_OBJECT_INFO_SET_PACKET_TYPE_PREPROCESS_COMMANDLINE,
 	/// Set Service's Post-process CommandLine
@@ -304,8 +322,10 @@ typedef enum _serviceObjectInfoSetPacketType{
 
 /// Sub-type for Service Command Packet
 typedef enum _serviceCommandPacketType{
+	/// Null Type
+	SERVICE_COMMAND_PACKET_TYPE_NULL=0,
 	/// Service Start Command
-	SERVICE_COMMAND_PACKET_TYPE_START=0,
+	SERVICE_COMMAND_PACKET_TYPE_START,
 	/// Service Continue Command
 	SERVICE_COMMAND_PACKET_TYPE_CONTINUE,
 	/// Service Stop Command
