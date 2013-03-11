@@ -120,9 +120,9 @@ namespace epws
 	/// Sub-type for Get Service Info Packet
 	typedef enum _mainServiceInfoGetPacketType{
 		/// Null Type
-		MAIN_SERVICE_INFO_GET_PACKET_TYPE_NULL,
+		MAIN_SERVICE_INFO_GET_PACKET_TYPE_NULL=0,
 		/// Get Service Name
-		MAIN_SERVICE_INFO_GET_PACKET_TYPE_SERVICE_NAME=0,
+		MAIN_SERVICE_INFO_GET_PACKET_TYPE_SERVICE_NAME,
 		/// Get Domain Name
 		MAIN_SERVICE_INFO_GET_PACKET_TYPE_DOMAIN_NAME,
 		/// Get User Name
