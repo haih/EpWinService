@@ -98,7 +98,7 @@ namespace epws
 		@remark waitTime is for RunCommand/CustomProcess command type
 		@remark cmd is only for RunCommand command type
 		*/
-		void AddCommandMainService(MainServiceCommandPacketType type,int waitTime=WAITTIME_INIFINITE, EpTString cmd =_T(""));
+		void AddCommandMainService(MainServiceCommandPacketType type,int waitTime=WAITTIME_INIFINITE, const EpTString &cmd =_T(""));
 
 		/*!
 		Add Get Main Service Info frame to the packet
@@ -111,7 +111,7 @@ namespace epws
 		@param[in] type type of the information setting
 		@param[in] info the information to set
 		*/
-		void AddSetMainServiceInfo(MainServiceInfoSetPacketType type,MainServiceInfo info);
+		void AddSetMainServiceInfo(MainServiceInfoSetPacketType type,const MainServiceInfo &info);
 
 		/*!
 		Add Command Service Object frame to the packet
@@ -122,7 +122,7 @@ namespace epws
 		@remark waitTime is for RunCommand/CustomProcess command type
 		@remark cmd is only for RunCommand command type
 		*/
-		void AddCommandServiceObj(ServiceObjectCommandPacketType type, int objIndex,int waitTime=WAITTIME_INIFINITE, EpTString cmd =_T(""));
+		void AddCommandServiceObj(ServiceObjectCommandPacketType type, int objIndex,int waitTime=WAITTIME_INIFINITE,const EpTString &cmd =_T(""));
 
 		/*!
 		Add Get Service Object Info frame to the packet
@@ -137,7 +137,7 @@ namespace epws
 		@param[in] serviceIndex the index of the service object to get info
 		@param[in] info the information to set
 		*/
-		void AddSetServiceInfo(ServiceObjectInfoSetPacketType type, unsigned int serviceIndex, ServiceObjInfo info);
+		void AddSetServiceInfo(ServiceObjectInfoSetPacketType type, unsigned int serviceIndex, const ServiceObjInfo &info);
 
 		/*!
 		Add Command Process Object frame to the packet
@@ -148,7 +148,7 @@ namespace epws
 		@remark waitTime is for RunCommand/CustomProcess command type
 		@remark cmd is only for RunCommand command type
 		*/
-		void AddCommandProcessObj(ProcessObjectCommandPacketType type, int objIndex,int waitTime=WAITTIME_INIFINITE, EpTString cmd =_T(""));
+		void AddCommandProcessObj(ProcessObjectCommandPacketType type, int objIndex,int waitTime=WAITTIME_INIFINITE,const EpTString &cmd =_T(""));
 
 		/*!
 		Add Get Process Object Info frame to the packet
@@ -163,7 +163,7 @@ namespace epws
 		@param[in] procIndex the index of the process object to get info
 		@param[in] info the information to set
 		*/
-		void AddSetProcessInfo(ProcessObjectInfoSetPacketType type, unsigned int procIndex,ProcessObjInfo info);
+		void AddSetProcessInfo(ProcessObjectInfoSetPacketType type, unsigned int procIndex,const ProcessObjInfo &info);
 
 		/*!
 		Add Command Service frame to the packet
@@ -171,7 +171,7 @@ namespace epws
 		@param[in] serviceName the name of the service to command
 		@param[in] info the information to set
 		*/
-		void AddCommandService(ServiceCommandPacketType type, const TCHAR *serviceName, ServiceInfo info);
+		void AddCommandService(ServiceCommandPacketType type, const TCHAR *serviceName,const ServiceInfo &info);
 
 
 

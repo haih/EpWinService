@@ -356,7 +356,7 @@ namespace epws
 		/// Failed
 		PACKET_PROCESS_STATUS_FAIL,
 		/// Process Index is out of range
-		PACKET_PROCESS_STATUS_FAIL_PROCESS_IDX_OUT_OF_RANCE,
+		PACKET_PROCESS_STATUS_FAIL_OBJECT_IDX_OUT_OF_RANCE,
 		/// Packet have argument error
 		PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR,
 		/// Processing Service Handle error

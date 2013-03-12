@@ -186,7 +186,7 @@ void AdminServerProcessor::commandProcessObject(unsigned int subPacketType,Strea
 		}
 		else
 		{
-			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_PROCESS_IDX_OUT_OF_RANCE);
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_OBJECT_IDX_OUT_OF_RANCE);
 			retOutStream.WriteInt(objIdx);
 			return;
 		}
@@ -306,7 +306,7 @@ void AdminServerProcessor::commandServiceObject(unsigned int subPacketType,Strea
 		}
 		else
 		{
-			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_PROCESS_IDX_OUT_OF_RANCE);
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_OBJECT_IDX_OUT_OF_RANCE);
 			retOutStream.WriteInt(objIdx);
 			return;
 		}
@@ -541,7 +541,7 @@ void AdminServerProcessor::getProcessInfo(unsigned int subPacketType,Stream &str
 	}
 	else
 	{
-		retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_PROCESS_IDX_OUT_OF_RANCE);
+		retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_OBJECT_IDX_OUT_OF_RANCE);
 		retOutStream.WriteInt(procIdx);
 		return;
 	}
@@ -936,7 +936,7 @@ void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &str
 	}
 	else
 	{
-		retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_PROCESS_IDX_OUT_OF_RANCE);
+		retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_OBJECT_IDX_OUT_OF_RANCE);
 		retOutStream.WriteInt(procIdx);
 		return;
 	}
@@ -1027,7 +1027,7 @@ void AdminServerProcessor::getServiceInfo(unsigned int subPacketType,Stream &str
 	}
 	else
 	{
-		retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_PROCESS_IDX_OUT_OF_RANCE);
+		retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_OBJECT_IDX_OUT_OF_RANCE);
 		retOutStream.WriteInt(serviceIdx);
 		return;
 	}
@@ -1415,7 +1415,7 @@ void AdminServerProcessor::setServiceInfo(unsigned int subPacketType,Stream &str
 	}
 	else
 	{
-		retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_PROCESS_IDX_OUT_OF_RANCE);
+		retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_OBJECT_IDX_OUT_OF_RANCE);
 		retOutStream.WriteInt(serviceIdx);
 		return;
 	}

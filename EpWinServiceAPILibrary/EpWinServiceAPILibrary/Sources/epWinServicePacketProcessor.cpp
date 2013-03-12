@@ -102,7 +102,7 @@ RetrieveStatus WinServicePacketProcessor::commandProcessObject(unsigned int subP
 			}
 			retInfo->m_objIdx=procIdx;
 			break;
-		case PACKET_PROCESS_STATUS_FAIL_PROCESS_IDX_OUT_OF_RANCE:
+		case PACKET_PROCESS_STATUS_FAIL_OBJECT_IDX_OUT_OF_RANCE:
 			if(!stream.ReadInt(procIdx))
 			{
 				return RETRIEVE_STATUS_FAIL_OBJECTIDX;
@@ -143,7 +143,7 @@ RetrieveStatus WinServicePacketProcessor::commandServiceObject(unsigned int subP
 			}
 			retInfo->m_objIdx=procIdx;
 			break;
-		case PACKET_PROCESS_STATUS_FAIL_PROCESS_IDX_OUT_OF_RANCE:
+		case PACKET_PROCESS_STATUS_FAIL_OBJECT_IDX_OUT_OF_RANCE:
 			if(!stream.ReadInt(procIdx))
 			{
 				return RETRIEVE_STATUS_FAIL_OBJECTIDX;
@@ -352,7 +352,7 @@ RetrieveStatus WinServicePacketProcessor::getProcessInfo(unsigned int subPacketT
 		{
 		case PACKET_PROCESS_STATUS_FAIL:
 			break;
-		case PACKET_PROCESS_STATUS_FAIL_PROCESS_IDX_OUT_OF_RANCE:
+		case PACKET_PROCESS_STATUS_FAIL_OBJECT_IDX_OUT_OF_RANCE:
 			if(!stream.ReadInt(procIdx))
 			{
 				return RETRIEVE_STATUS_FAIL_OBJECTIDX;
@@ -595,7 +595,7 @@ RetrieveStatus WinServicePacketProcessor::setProcessInfo(unsigned int subPacketT
 		{
 		case PACKET_PROCESS_STATUS_FAIL:
 			break;
-		case PACKET_PROCESS_STATUS_FAIL_PROCESS_IDX_OUT_OF_RANCE:
+		case PACKET_PROCESS_STATUS_FAIL_OBJECT_IDX_OUT_OF_RANCE:
 			if(!stream.ReadInt(procIdx))
 			{
 				return RETRIEVE_STATUS_FAIL_OBJECTIDX;
@@ -660,7 +660,7 @@ RetrieveStatus WinServicePacketProcessor::getServiceInfo(unsigned int subPacketT
 		{
 		case PACKET_PROCESS_STATUS_FAIL:
 			break;
-		case PACKET_PROCESS_STATUS_FAIL_PROCESS_IDX_OUT_OF_RANCE:
+		case PACKET_PROCESS_STATUS_FAIL_OBJECT_IDX_OUT_OF_RANCE:
 			if(!stream.ReadInt(serviceIdx))
 			{
 				return RETRIEVE_STATUS_FAIL_OBJECTIDX;
@@ -902,7 +902,7 @@ RetrieveStatus WinServicePacketProcessor::setServiceInfo(unsigned int subPacketT
 		{
 		case PACKET_PROCESS_STATUS_FAIL:
 			break;
-		case PACKET_PROCESS_STATUS_FAIL_PROCESS_IDX_OUT_OF_RANCE:
+		case PACKET_PROCESS_STATUS_FAIL_OBJECT_IDX_OUT_OF_RANCE:
 			if(!stream.ReadInt(serviceIdx))
 			{
 				return RETRIEVE_STATUS_FAIL_OBJECTIDX;

@@ -92,7 +92,7 @@ void WinServicePacketGenerator::Clear()
 	m_stream.SetSeek(epl::Stream::STREAM_SEEK_TYPE_SEEK_SET);
 	m_count=0;
 }
-void WinServicePacketGenerator::AddCommandProcessObj(ProcessObjectCommandPacketType type, int objIndex,int waitTime, EpTString cmd)
+void WinServicePacketGenerator::AddCommandProcessObj(ProcessObjectCommandPacketType type, int objIndex,int waitTime, const EpTString &cmd)
 {
 	LockObj lock(m_packetGeneratorLock);
 	m_count++;
@@ -113,7 +113,7 @@ void WinServicePacketGenerator::AddCommandProcessObj(ProcessObjectCommandPacketT
 
 	}
 }
-void WinServicePacketGenerator::AddCommandServiceObj(ServiceObjectCommandPacketType type, int objIndex,int waitTime, EpTString cmd)
+void WinServicePacketGenerator::AddCommandServiceObj(ServiceObjectCommandPacketType type, int objIndex,int waitTime,const EpTString &cmd)
 {
 	LockObj lock(m_packetGeneratorLock);
 	m_count++;
@@ -135,7 +135,7 @@ void WinServicePacketGenerator::AddCommandServiceObj(ServiceObjectCommandPacketT
 	}
 }
 
-void WinServicePacketGenerator::AddCommandMainService(MainServiceCommandPacketType type,int waitTime, EpTString cmd)
+void WinServicePacketGenerator::AddCommandMainService(MainServiceCommandPacketType type,int waitTime, const EpTString &cmd)
 {
 	LockObj lock(m_packetGeneratorLock);
 	m_count++;
@@ -162,7 +162,7 @@ void WinServicePacketGenerator::AddGetMainServiceInfo(MainServiceInfoGetPacketTy
 	m_stream.WriteUInt((unsigned int)type);
 }
 
-void WinServicePacketGenerator::AddSetMainServiceInfo(MainServiceInfoSetPacketType type,MainServiceInfo info)
+void WinServicePacketGenerator::AddSetMainServiceInfo(MainServiceInfoSetPacketType type,const MainServiceInfo &info)
 {
 	LockObj lock(m_packetGeneratorLock);
 	m_count++;
@@ -192,7 +192,7 @@ void WinServicePacketGenerator::AddGetServiceInfo(ServiceObjectInfoGetPacketType
 	m_stream.WriteUInt((unsigned int)type);
 	m_stream.WriteUInt(serviceIndex);
 }
-void WinServicePacketGenerator::AddSetServiceInfo(ServiceObjectInfoSetPacketType type, unsigned int serviceIndex, ServiceObjInfo info)
+void WinServicePacketGenerator::AddSetServiceInfo(ServiceObjectInfoSetPacketType type, unsigned int serviceIndex, const ServiceObjInfo &info)
 {
 	LockObj lock(m_packetGeneratorLock);
 	m_count++;
@@ -289,7 +289,7 @@ void WinServicePacketGenerator::AddGetProcessInfo(ProcessObjectInfoGetPacketType
 	m_stream.WriteUInt((unsigned int)type);
 	m_stream.WriteUInt(procIndex);
 }
-void WinServicePacketGenerator::AddSetProcessInfo(ProcessObjectInfoSetPacketType type, unsigned int procIndex,ProcessObjInfo info)
+void WinServicePacketGenerator::AddSetProcessInfo(ProcessObjectInfoSetPacketType type, unsigned int procIndex,const ProcessObjInfo &info)
 {
 	LockObj lock(m_packetGeneratorLock);
 	m_count++;
@@ -378,7 +378,7 @@ void WinServicePacketGenerator::AddSetProcessInfo(ProcessObjectInfoSetPacketType
 		break;
 	}
 }
-void WinServicePacketGenerator::AddCommandService(ServiceCommandPacketType type, const TCHAR *serviceName, ServiceInfo info)
+void WinServicePacketGenerator::AddCommandService(ServiceCommandPacketType type, const TCHAR *serviceName, const ServiceInfo &info)
 {
 	LockObj lock(m_packetGeneratorLock);
 	EpTString serviceNameString=serviceName;
