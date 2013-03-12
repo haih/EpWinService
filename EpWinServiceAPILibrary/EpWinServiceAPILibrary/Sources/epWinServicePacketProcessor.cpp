@@ -538,7 +538,7 @@ RetrieveStatus WinServicePacketProcessor::getProcessInfo(unsigned int subPacketT
 				}
 				(*retInfo)=delayPauseEndTime;
 				break;
-			case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_IS_PROCESS_RESTART:
+			case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_IS_RESTART:
 				if(!stream.ReadUInt(tempUInt))
 				{
 					return RETRIEVE_STATUS_FAIL_ARGUMENT;
@@ -845,7 +845,7 @@ RetrieveStatus WinServicePacketProcessor::getServiceInfo(unsigned int subPacketT
 				}
 				(*retInfo)=delayPauseEndTime;
 				break;
-			case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_IS_SERVICE_RESTART:
+			case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_IS_RESTART:
 				if(!stream.ReadUInt(tempUInt))
 				{
 					return RETRIEVE_STATUS_FAIL_ARGUMENT;

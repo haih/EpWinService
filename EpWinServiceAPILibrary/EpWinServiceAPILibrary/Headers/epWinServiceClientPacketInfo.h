@@ -186,7 +186,7 @@ namespace epws
 		/// Get Process's delay pause/end time
 		PROCESS_OBJECT_INFO_GET_PACKET_TYPE_DELAY_PAUSE_END_TIME,
 		/// Get Process's restart flag when fault.
-		PROCESS_OBJECT_INFO_GET_PACKET_TYPE_IS_PROCESS_RESTART,
+		PROCESS_OBJECT_INFO_GET_PACKET_TYPE_IS_RESTART,
 		/// Get Process's impersonation flag
 		PROCESS_OBJECT_INFO_GET_PACKET_TYPE_IS_IMPERSONATE,
 		/// Get Process's user-interface flag
@@ -228,7 +228,7 @@ namespace epws
 		/// Set Process's delay pause/end time
 		PROCESS_OBJECT_INFO_SET_PACKET_TYPE_DELAY_PAUSE_END_TIME,
 		/// Set Process's restart flag when fault
-		PROCESS_OBJECT_INFO_SET_PACKET_TYPE_IS_PROCESS_RESTART,
+		PROCESS_OBJECT_INFO_SET_PACKET_TYPE_IS_RESTART,
 		/// Set Process's impersonate flag
 		PROCESS_OBJECT_INFO_SET_PACKET_TYPE_IS_IMPERSONATE,
 		/// Set Process's user-interface flag
@@ -270,7 +270,7 @@ namespace epws
 		SERVICE_OBJECT_INFO_GET_PACKET_TYPE_DELAY_PAUSE_END_TIME,
 
 		/// Get Service's restart flag when fault.
-		SERVICE_OBJECT_INFO_GET_PACKET_TYPE_IS_SERVICE_RESTART,
+		SERVICE_OBJECT_INFO_GET_PACKET_TYPE_IS_RESTART,
 		/// Get Service's impersonation flag
 		SERVICE_OBJECT_INFO_GET_PACKET_TYPE_IS_IMPERSONATE,
 		/// Get Service's user-interface flag
@@ -313,7 +313,7 @@ namespace epws
 		SERVICE_OBJECT_INFO_SET_PACKET_TYPE_DELAY_PAUSE_END_TIME,
 
 		/// Set Service's restart flag when fault
-		SERVICE_OBJECT_INFO_SET_PACKET_TYPE_IS_SERVICE_RESTART,
+		SERVICE_OBJECT_INFO_SET_PACKET_TYPE_IS_RESTART,
 		/// Set Service's impersonate flag
 		SERVICE_OBJECT_INFO_SET_PACKET_TYPE_IS_IMPERSONATE,
 		/// Set Service's user-interface flag

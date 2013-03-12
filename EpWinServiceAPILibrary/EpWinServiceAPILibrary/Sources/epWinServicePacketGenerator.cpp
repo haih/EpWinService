@@ -236,7 +236,7 @@ void WinServicePacketGenerator::AddSetServiceInfo(ServiceObjectInfoSetPacketType
 	case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_DELAY_PAUSE_END_TIME:
 		m_stream.WriteUInt(info.m_delayPauseEndTime);
 		break;
-	case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_IS_SERVICE_RESTART:
+	case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_IS_RESTART:
 		if(info.m_isRestart)
 			m_stream.WriteUInt(1);
 		else
@@ -333,7 +333,7 @@ void WinServicePacketGenerator::AddSetProcessInfo(ProcessObjectInfoSetPacketType
 	case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_DELAY_PAUSE_END_TIME:
 		m_stream.WriteUInt(info.m_delayPauseEndTime);
 		break;
-	case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_IS_PROCESS_RESTART:
+	case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_IS_RESTART:
 		if(info.m_isRestart)
 			m_stream.WriteUInt(1);
 		else

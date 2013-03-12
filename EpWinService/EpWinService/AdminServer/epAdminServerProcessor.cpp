@@ -528,7 +528,7 @@ void AdminServerProcessor::getProcessInfo(unsigned int subPacketType,Stream &str
 		case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_DELAY_PAUSE_END_TIME:
 			retOutStream.WriteUInt(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetDelayPauseEndTime());
 			break;
-		case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_IS_PROCESS_RESTART:
+		case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_IS_RESTART:
 			retOutStream.WriteUInt(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetIsRestart());
 			break;
 		case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_IS_IMPERSONATE:
@@ -726,7 +726,7 @@ void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &str
 				return;
 			}
 			break;
-		case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_IS_PROCESS_RESTART:
+		case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_IS_RESTART:
 			if(stream.ReadUInt(val))
 			{
 				if(val)
@@ -1014,7 +1014,7 @@ void AdminServerProcessor::getServiceInfo(unsigned int subPacketType,Stream &str
 		case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_DELAY_PAUSE_END_TIME:
 			retOutStream.WriteUInt(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetDelayPauseEndTime());
 			break;
-		case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_IS_SERVICE_RESTART:
+		case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_IS_RESTART:
 			retOutStream.WriteUInt(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetIsRestart());
 			break;
 		case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_IS_IMPERSONATE:
@@ -1205,7 +1205,7 @@ void AdminServerProcessor::setServiceInfo(unsigned int subPacketType,Stream &str
 				return;
 			}
 			break;
-		case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_IS_SERVICE_RESTART:
+		case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_IS_RESTART:
 			if(stream.ReadUInt(val))
 			{
 				if(val)
