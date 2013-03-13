@@ -369,14 +369,6 @@
 			Name="Core"
 			>
 			<File
-				RelativePath=".\Core\epLogWriter.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Core\epLogWriter.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Core\epServiceManager.cpp"
 				>
 			</File>
@@ -570,6 +562,10 @@
 			</File>
 			<File
 				RelativePath=".\EpLibraryHeaders\epLocale.h"
+				>
+			</File>
+			<File
+				RelativePath=".\EpLibraryHeaders\epLogWriter.h"
 				>
 			</File>
 			<File
