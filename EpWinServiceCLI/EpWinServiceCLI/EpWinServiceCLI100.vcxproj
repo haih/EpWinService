@@ -1,0 +1,307 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug Unicode|Win32">
+      <Configuration>Debug Unicode</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release Unicode|Win32">
+      <Configuration>Release Unicode</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{77D25F85-E54A-4A6F-AEA0-0728E1181973}</ProjectGuid>
+    <RootNamespace>EpWinServiceCLI100</RootNamespace>
+    <ProjectName>EpWinServiceCLI</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Unicode|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Unicode|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug Unicode|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release Unicode|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)Bin\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Unicode|Win32'">
+    <OutDir>$(SolutionDir)Bin\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IntDir>Intermediate\VS100\$(Configuration)\</IntDir>
+    <EnableManagedIncrementalBuild>false</EnableManagedIncrementalBuild>
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)_D100</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Unicode|Win32'">
+    <IntDir>Intermediate\VS100\$(Configuration)\</IntDir>
+    <EnableManagedIncrementalBuild>false</EnableManagedIncrementalBuild>
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)U_D100</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)Bin\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Unicode|Win32'">
+    <OutDir>$(SolutionDir)Bin\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IntDir>Intermediate\VS100\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)100</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Unicode|Win32'">
+    <IntDir>Intermediate\VS100\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)U100</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.;.\EpLibraryHeaders;.\EpServerEngineHeaders;.\EpWinServiceAPIHeaders;.\Core</AdditionalIncludeDirectories>
+      <CompileAsManaged>false</CompileAsManaged>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>false</StringPooling>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <FloatingPointExceptions>false</FloatingPointExceptions>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <OpenMPSupport>false</OpenMPSupport>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalLibraryDirectories>.\Libs</AdditionalLibraryDirectories>
+      <AdditionalDependencies>EpWinServiceAPILibrary_D100.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <SubSystem>Console</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug Unicode|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.;.\EpLibraryHeaders;.\EpServerEngineHeaders;.\EpWinServiceAPIHeaders;.\Core</AdditionalIncludeDirectories>
+      <CompileAsManaged>false</CompileAsManaged>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>false</StringPooling>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <FloatingPointExceptions>false</FloatingPointExceptions>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <OpenMPSupport>false</OpenMPSupport>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalLibraryDirectories>.\Libs</AdditionalLibraryDirectories>
+      <AdditionalDependencies>EpWinServiceAPILibraryU_D100.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <SubSystem>Console</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>.;.\EpLibraryHeaders;.\EpServerEngineHeaders;.\EpWinServiceAPIHeaders;.\Core</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>false</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FloatingPointExceptions>false</FloatingPointExceptions>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <OpenMPSupport>false</OpenMPSupport>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalLibraryDirectories>.\Libs</AdditionalLibraryDirectories>
+      <AdditionalDependencies>EpWinServiceAPILibrary100.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <SubSystem>Console</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Unicode|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>.;.\EpLibraryHeaders;.\EpServerEngineHeaders;.\EpWinServiceAPIHeaders;.\Core</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>false</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FloatingPointExceptions>false</FloatingPointExceptions>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <OpenMPSupport>false</OpenMPSupport>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalLibraryDirectories>.\Libs</AdditionalLibraryDirectories>
+      <AdditionalDependencies>EpWinServiceAPILibraryU100.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <SubSystem>Console</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="Core\epWinServiceReturnXMLBuilder.h" />
+    <ClInclude Include="Core\epWinServiceTypeInterpreter.h" />
+    <ClInclude Include="Core\epWinServiceXMLParser.h" />
+    <ClInclude Include="EpLibraryHeaders\epAlgorithm.h" />
+    <ClInclude Include="EpLibraryHeaders\epAssert.h" />
+    <ClInclude Include="EpLibraryHeaders\epBaseJob.h" />
+    <ClInclude Include="EpLibraryHeaders\epBaseJobProcessor.h" />
+    <ClInclude Include="EpLibraryHeaders\epBaseLock.h" />
+    <ClInclude Include="EpLibraryHeaders\epBaseOutputter.h" />
+    <ClInclude Include="EpLibraryHeaders\epBaseTextFile.h" />
+    <ClInclude Include="EpLibraryHeaders\epBaseWorkerThread.h" />
+    <ClInclude Include="EpLibraryHeaders\epBinarySearch.h" />
+    <ClInclude Include="EpLibraryHeaders\epCmdLineOptions.h" />
+    <ClInclude Include="EpLibraryHeaders\epConsoleHelper.h" />
+    <ClInclude Include="EpLibraryHeaders\epCriticalSectionEx.h" />
+    <ClInclude Include="EpLibraryHeaders\epCStringEx.h" />
+    <ClInclude Include="EpLibraryHeaders\epDateTimeHelper.h" />
+    <ClInclude Include="EpLibraryHeaders\epDelegate.h" />
+    <ClInclude Include="EpLibraryHeaders\epDynamicArray.h" />
+    <ClInclude Include="EpLibraryHeaders\epEndian.h" />
+    <ClInclude Include="EpLibraryHeaders\epEventEx.h" />
+    <ClInclude Include="EpLibraryHeaders\epException.h" />
+    <ClInclude Include="EpLibraryHeaders\epFastLog.h" />
+    <ClInclude Include="EpLibraryHeaders\epFastSqrt.h" />
+    <ClInclude Include="EpLibraryHeaders\epFileStream.h" />
+    <ClInclude Include="EpLibraryHeaders\epFolderHelper.h" />
+    <ClInclude Include="EpLibraryHeaders\epInsertionSort.h" />
+    <ClInclude Include="EpLibraryHeaders\epInterlockedEx.h" />
+    <ClInclude Include="EpLibraryHeaders\epJobScheduleQueue.h" />
+    <ClInclude Include="EpLibraryHeaders\epKAryHeap.h" />
+    <ClInclude Include="EpLibraryHeaders\epl.h" />
+    <ClInclude Include="EpLibraryHeaders\epLib.h" />
+    <ClInclude Include="EpLibraryHeaders\epLocale.h" />
+    <ClInclude Include="EpLibraryHeaders\epLogWriter.h" />
+    <ClInclude Include="EpLibraryHeaders\epMemory.h" />
+    <ClInclude Include="EpLibraryHeaders\epMergeSort.h" />
+    <ClInclude Include="EpLibraryHeaders\epMutex.h" />
+    <ClInclude Include="EpLibraryHeaders\epNetworkStream.h" />
+    <ClInclude Include="EpLibraryHeaders\epNoLock.h" />
+    <ClInclude Include="EpLibraryHeaders\epPatriciaTrie.h" />
+    <ClInclude Include="EpLibraryHeaders\epPlatform.h" />
+    <ClInclude Include="EpLibraryHeaders\epPrimeNum.h" />
+    <ClInclude Include="EpLibraryHeaders\epProfiler.h" />
+    <ClInclude Include="EpLibraryHeaders\epPropertiesFile.h" />
+    <ClInclude Include="EpLibraryHeaders\epQuickSort.h" />
+    <ClInclude Include="EpLibraryHeaders\epRandom.h" />
+    <ClInclude Include="EpLibraryHeaders\epRegistryHelper.h" />
+    <ClInclude Include="EpLibraryHeaders\epSemaphore.h" />
+    <ClInclude Include="EpLibraryHeaders\epSimpleLogger.h" />
+    <ClInclude Include="EpLibraryHeaders\epSingletonHolder.h" />
+    <ClInclude Include="EpLibraryHeaders\epSmartObject.h" />
+    <ClInclude Include="EpLibraryHeaders\epStream.h" />
+    <ClInclude Include="EpLibraryHeaders\epSystem.h" />
+    <ClInclude Include="EpLibraryHeaders\epTaskbarNotifier.h" />
+    <ClInclude Include="EpLibraryHeaders\epTextFile.h" />
+    <ClInclude Include="EpLibraryHeaders\epThread.h" />
+    <ClInclude Include="EpLibraryHeaders\epThreadSafeClass.h" />
+    <ClInclude Include="EpLibraryHeaders\epThreadSafePQueue.h" />
+    <ClInclude Include="EpLibraryHeaders\epThreadSafeQueue.h" />
+    <ClInclude Include="EpLibraryHeaders\epTinyObject.h" />
+    <ClInclude Include="EpLibraryHeaders\epWinProcessHelper.h" />
+    <ClInclude Include="EpLibraryHeaders\epWorkerThreadDelegate.h" />
+    <ClInclude Include="EpLibraryHeaders\epWorkerThreadFactory.h" />
+    <ClInclude Include="EpLibraryHeaders\epWorkerThreadInfinite.h" />
+    <ClInclude Include="EpLibraryHeaders\epWorkerThreadSingle.h" />
+    <ClInclude Include="EpLibraryHeaders\epXMLFile.h" />
+    <ClInclude Include="EpLibraryHeaders\epXMLite.h" />
+    <ClInclude Include="EpServerEngineHeaders\epBaseClient.h" />
+    <ClInclude Include="EpServerEngineHeaders\epBaseClientManual.h" />
+    <ClInclude Include="EpServerEngineHeaders\epBaseClientUDP.h" />
+    <ClInclude Include="EpServerEngineHeaders\epBaseClientUDPManual.h" />
+    <ClInclude Include="EpServerEngineHeaders\epBasePacketParser.h" />
+    <ClInclude Include="EpServerEngineHeaders\epBaseServer.h" />
+    <ClInclude Include="EpServerEngineHeaders\epBaseServerObject.h" />
+    <ClInclude Include="EpServerEngineHeaders\epBaseServerSendObject.h" />
+    <ClInclude Include="EpServerEngineHeaders\epBaseServerUDP.h" />
+    <ClInclude Include="EpServerEngineHeaders\epBaseServerWorker.h" />
+    <ClInclude Include="EpServerEngineHeaders\epBaseServerWorkerUDP.h" />
+    <ClInclude Include="EpServerEngineHeaders\epPacket.h" />
+    <ClInclude Include="EpServerEngineHeaders\epPacketContainer.h" />
+    <ClInclude Include="EpServerEngineHeaders\epParserList.h" />
+    <ClInclude Include="EpServerEngineHeaders\epse.h" />
+    <ClInclude Include="EpServerEngineHeaders\epServerConf.h" />
+    <ClInclude Include="EpServerEngineHeaders\epServerEngine.h" />
+    <ClInclude Include="EpServerEngineHeaders\epServerObjectList.h" />
+    <ClInclude Include="EpServerEngineHeaders\epServerObjectRemover.h" />
+    <ClInclude Include="EpWinServiceAPIHeaders\epWinServiceAPILibrary.h" />
+    <ClInclude Include="EpWinServiceAPIHeaders\epWinServiceClient.h" />
+    <ClInclude Include="EpWinServiceAPIHeaders\epWinServiceClientPacketInfo.h" />
+    <ClInclude Include="EpWinServiceAPIHeaders\epWinServiceCommunicator.h" />
+    <ClInclude Include="EpWinServiceAPIHeaders\epWinServiceDefines.h" />
+    <ClInclude Include="EpWinServiceAPIHeaders\epWinServiceInfoStruct.h" />
+    <ClInclude Include="EpWinServiceAPIHeaders\epWinServicePacketGenerator.h" />
+    <ClInclude Include="EpWinServiceAPIHeaders\epWinServicePacketProcessor.h" />
+    <ClInclude Include="EpWinServiceAPIHeaders\epWinServiceResult.h" />
+    <ClInclude Include="EpWinServiceAPIHeaders\epWinServiceResultInfo.h" />
+    <ClInclude Include="EpWinServiceAPIHeaders\epws.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Core\epWinServiceReturnXMLBuilder.cpp" />
+    <ClCompile Include="Core\epWinServiceTypeInterpreter.cpp" />
+    <ClCompile Include="Core\epWinServiceXMLParser.cpp" />
+    <ClCompile Include="EpWinServiceCLI.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\LICENSE" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
