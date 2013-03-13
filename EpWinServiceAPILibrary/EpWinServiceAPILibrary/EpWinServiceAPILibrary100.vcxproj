@@ -527,6 +527,7 @@
     <ClInclude Include="EpLibraryHeaders\epl.h" />
     <ClInclude Include="EpLibraryHeaders\epLib.h" />
     <ClInclude Include="EpLibraryHeaders\epLocale.h" />
+    <ClInclude Include="EpLibraryHeaders\epLogWriter.h" />
     <ClInclude Include="EpLibraryHeaders\epMemory.h" />
     <ClInclude Include="EpLibraryHeaders\epMergeSort.h" />
     <ClInclude Include="EpLibraryHeaders\epMutex.h" />

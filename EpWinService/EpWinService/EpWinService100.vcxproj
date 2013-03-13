@@ -169,7 +169,6 @@
     <ClCompile Include="AdminServer\epAdminServerProcessor.cpp" />
     <ClCompile Include="AdminServer\epAdminServerWorker.cpp" />
     <ClCompile Include="Core\epBaseManagementObject.cpp" />
-    <ClCompile Include="Core\epLogWriter.cpp" />
     <ClCompile Include="Core\epProcessHandler.cpp" />
     <ClCompile Include="Core\epProcessObject.cpp" />
     <ClCompile Include="Core\epServiceHandler.cpp" />
@@ -186,7 +185,6 @@
     <ClInclude Include="AdminServer\epAdminServerProcessor.h" />
     <ClInclude Include="AdminServer\epAdminServerWorker.h" />
     <ClInclude Include="Core\epBaseManagementObject.h" />
-    <ClInclude Include="Core\epLogWriter.h" />
     <ClInclude Include="Core\epProcessHandler.h" />
     <ClInclude Include="Core\epProcessObject.h" />
     <ClInclude Include="Core\epServiceDefines.h" />
@@ -224,6 +222,7 @@
     <ClInclude Include="EpLibraryHeaders\epl.h" />
     <ClInclude Include="EpLibraryHeaders\epLib.h" />
     <ClInclude Include="EpLibraryHeaders\epLocale.h" />
+    <ClInclude Include="EpLibraryHeaders\epLogWriter.h" />
     <ClInclude Include="EpLibraryHeaders\epMemory.h" />
     <ClInclude Include="EpLibraryHeaders\epMergeSort.h" />
     <ClInclude Include="EpLibraryHeaders\epMutex.h" />

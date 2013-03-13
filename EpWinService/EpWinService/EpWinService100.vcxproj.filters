@@ -42,9 +42,6 @@
     <ClCompile Include="EpWinService.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Core\epLogWriter.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="Core\epServiceManager.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -85,9 +82,6 @@
     </ClInclude>
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\epLogWriter.h">
-      <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="Core\epServiceManager.h">
       <Filter>Core</Filter>
@@ -373,6 +367,9 @@
     </ClInclude>
     <ClInclude Include="EpServerEngineHeaders\epServerObjectRemover.h">
       <Filter>EpServerEngineHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="EpLibraryHeaders\epLogWriter.h">
+      <Filter>EpLibraryHeaders</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
