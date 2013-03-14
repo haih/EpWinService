@@ -1,3 +1,21 @@
+/*! 
+EpWinServiceCLI for the EpWinServiceCLI
+Copyright (C) 2013  Woong Gyu La <juhgiyo@gmail.com>
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 // EpWinServiceCLI90.cpp : Defines the entry point for the console application.
 //
 
@@ -8,6 +26,24 @@
 
 int _tmain(int argc, _TCHAR* argv[])
 {
+	_tprintf(_T("\n"));
+	_tprintf(_T("*********************************************************************\n"));
+	_tprintf(_T("EpWinServiceCLI is a command line interface that for\n   EpWinService solution under a GPL3.0 license.\n\n"));
+	_tprintf(_T("Copyright (C) 2013  Woong Gyu La <juhgiyo@gmail.com>\n"));
+	_tprintf(_T("            <http://github.com/juhgiyo/epWinService>\n\n"));
+	_tprintf(_T("This program is free software: you can redistribute it and/or modify\n"));
+	_tprintf(_T("it under the terms of the GNU General Public License as published by\n"));
+	_tprintf(_T("the Free Software Foundation, either version 3 of the License, or\n"));
+	_tprintf(_T("(at your option) any later version.\n\n"));
+	_tprintf(_T("This program is distributed in the hope that it will be useful,\n"));
+	_tprintf(_T("but WITHOUT ANY WARRANTY; without even the implied warranty of\n"));
+	_tprintf(_T("MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"));
+	_tprintf(_T("GNU General Public License for more details.\n\n"));
+	_tprintf(_T("You should have received a copy of the GNU General Public License\n"));
+	_tprintf(_T("along with this program.  If not, see <http://www.gnu.org/licenses/>.\n"));
+	_tprintf(_T("*********************************************************************\n"));
+	_tprintf(_T("\n\n"));
+
 	CmdLineOptions options;
 	if(options.Parse(argc,argv))
 	{

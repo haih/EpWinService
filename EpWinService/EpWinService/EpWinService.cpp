@@ -1,6 +1,7 @@
 /*! 
 EpWinService for the EpWinService
 Copyright (C) 2013  Woong Gyu La <juhgiyo@gmail.com>
+		<http://github.com/juhgiyo/epWinService>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -36,8 +37,9 @@ int _tmain(int argc, _TCHAR* argv[])
 {
 	_tprintf(_T("\n"));
 	_tprintf(_T("*********************************************************************\n"));
-	_tprintf(_T("EpWinService is a Visual C++ framework that supports making multiple\n   custom applications as Windows Services under a GPL3.0 license.\n"));
-	_tprintf(_T("Copyright (C) 2013  Woong Gyu La <juhgiyo@gmail.com>\n\n"));
+	_tprintf(_T("EpWinService is a Visual C++ framework that supports making multiple\n   custom applications as Windows Services under a GPL3.0 license.\n\n"));
+	_tprintf(_T("Copyright (C) 2013  Woong Gyu La <juhgiyo@gmail.com>\n"));
+	_tprintf(_T("            <http://github.com/juhgiyo/epWinService>\n\n"));
 	_tprintf(_T("This program is free software: you can redistribute it and/or modify\n"));
 	_tprintf(_T("it under the terms of the GNU General Public License as published by\n"));
 	_tprintf(_T("the Free Software Foundation, either version 3 of the License, or\n"));
