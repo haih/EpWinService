@@ -28,7 +28,7 @@ int _tmain(int argc, _TCHAR* argv[])
 {
 	_tprintf(_T("\n"));
 	_tprintf(_T("*********************************************************************\n"));
-	_tprintf(_T("EpWinServiceCLI is a command line interface that for\n   EpWinService solution under a GPL3.0 license.\n\n"));
+	_tprintf(_T("EpWinServiceCLI is a command line interface for EpWinService solution\n   under a GPL3.0 license.\n\n"));
 	_tprintf(_T("Copyright (C) 2013  Woong Gyu La <juhgiyo@gmail.com>\n"));
 	_tprintf(_T("            <http://github.com/juhgiyo/epWinService>\n\n"));
 	_tprintf(_T("This program is free software: you can redistribute it and/or modify\n"));
