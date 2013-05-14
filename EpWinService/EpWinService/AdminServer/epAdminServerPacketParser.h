@@ -48,7 +48,7 @@ public:
 	Initializes the Parser
 	@param[in] waitTimeMilliSec the wait time in millisecond for terminating
 	*/
-	AdminServerPacketParser(unsigned int waitTimeMilliSec=DEFAULT_WAITTIME);
+	AdminServerPacketParser(unsigned int waitTimeMilliSec=WAITTIME_INIFINITE);
 
 	/*!
 	Default Copy Constructor
