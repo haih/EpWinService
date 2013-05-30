@@ -54,16 +54,7 @@ public:
 	Destroy the Service Object
 	*/
 	virtual ~ServiceObject();
-	/*!
-	Start the Service.
-	@return true if started, otherwise false
-	*/
-	virtual bool Start();
-
-	/*!
-	Stop the Service.
-	*/
-	virtual void Stop();
+	
 
 	/*!
 	Pause the Service.
@@ -136,6 +127,17 @@ public:
 
 
 private:
+	/*!
+	Start the Service.
+	@return true if started, otherwise false
+	*/
+	virtual bool start();
+
+	/*!
+	Stop the Service.
+	*/
+	virtual void stop();
+
 	/*!
 	Replace the given command's arguments
 	@param[in] cmd the single command to replace

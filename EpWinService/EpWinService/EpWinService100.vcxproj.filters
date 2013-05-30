@@ -34,6 +34,9 @@
     <Filter Include="Core\Management\ServiceManagement">
       <UniqueIdentifier>{571ee094-5925-4912-9ca2-c556b3066094}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Management\DeployManagement">
+      <UniqueIdentifier>{bcb87574-fbdf-435b-a28b-779659e72220}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -74,6 +77,12 @@
     </ClCompile>
     <ClCompile Include="Core\epServiceObject.cpp">
       <Filter>Core\Management\ServiceManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\epBaseDeployObject.cpp">
+      <Filter>Core\Management\DeployManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\epSvnDeployObject.cpp">
+      <Filter>Core\Management\DeployManagement</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -391,6 +400,12 @@
     </ClInclude>
     <ClInclude Include="EpLibraryHeaders\epIpcServerInterfaces.h">
       <Filter>EpLibraryHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\epBaseDeployObject.h">
+      <Filter>Core\Management\DeployManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\epSvnDeployObject.h">
+      <Filter>Core\Management\DeployManagement</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

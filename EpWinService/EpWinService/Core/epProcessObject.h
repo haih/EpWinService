@@ -56,16 +56,6 @@ public:
 	*/
 	virtual ~ProcessObject();
 
-	/*!
-	Start the Process.
-	@return true if started, otherwise false
-	*/
-	virtual bool Start();
-
-	/*!
-	Stop the Process.
-	*/
-	virtual void Stop();
 
 	/*!
 	Return whether this process is started or not
@@ -117,6 +107,19 @@ public:
 	
 
 private:
+
+	
+	/*!
+	Start the Process.
+	@return true if started, otherwise false
+	*/
+	virtual bool start();
+
+	/*!
+	Stop the Process.
+	*/
+	virtual void stop();
+
 	/*!
 	Replace the given command's arguments
 	@param[in] cmd the single command to replace

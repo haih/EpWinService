@@ -30,7 +30,7 @@ ProcessObject::ProcessObject(unsigned int procIndex):BaseManagementObject(MANAGE
 	memset(textBuffer,0,sizeof(TCHAR)*MAX_STRING_LENGTH);
 	GetPrivateProfileString(m_objectString.GetString(),_T("CommandLine"),_T(""),textBuffer,MAX_STRING_LENGTH,m_iniFileName.GetString());
 	m_commandLine=textBuffer;
-	m_commandLine.Trim();
+	m_commandLine=m_commandLine.Trim();
 
 
 	EP_DELETE[] textBuffer;
@@ -43,9 +43,9 @@ ProcessObject::~ProcessObject()
 
 
 
-bool ProcessObject::Start()
+bool ProcessObject::start()
 {
-	LockObj lock(&m_baseObjLock);
+	
 	if(m_pProcInfo.hProcess)
 		return true;
 
@@ -104,9 +104,8 @@ bool ProcessObject::Start()
 
 }
 
-void ProcessObject::Stop()
+void ProcessObject::stop()
 {
-	LockObj lock(&m_baseObjLock);
 	if(m_pProcInfo.hProcess)
 	{
 		// post a WM_QUIT message first

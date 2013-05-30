@@ -815,6 +815,26 @@
 						>
 					</File>
 				</Filter>
+				<Filter
+					Name="DeployManagement"
+					>
+					<File
+						RelativePath=".\Core\epBaseDeployObject.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Core\epBaseDeployObject.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Core\epSvnDeployObject.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Core\epSvnDeployObject.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 		<Filter

@@ -101,6 +101,7 @@ void AdminServerProcessor::commandProcessObject(unsigned int subPacketType,Strea
 
 
 	int waitTime=WAITTIME_INIFINITE;
+	int rev=REVISION_UNKNOWN;
 	EpTString cmd=_T("");
 	switch(subPacketType)
 	{
@@ -126,12 +127,24 @@ void AdminServerProcessor::commandProcessObject(unsigned int subPacketType,Strea
 			return;
 		}
 		break;
+	case PROCESS_OBJECT_COMMAND_PACKET_TYPE_DEPLOY:
+		if(!stream.ReadInt(rev))
+		{
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+			retOutStream.WriteInt(objIdx);
+			return;
+		}
+		break;
+
 	default:
 		break;
 	}
 
 
 	int processCount=(int)PROCESS_HANDLER_INSTANCE.GetNumberOfProcesses();
+	
+	DeployErrCode errCode=DEPLOY_ERR_CODE_SUCCESS;
+	unsigned int curRev=0;
 	if(objIdx==OBJECT_IDX_ALL)
 	{
 
@@ -154,6 +167,14 @@ void AdminServerProcessor::commandProcessObject(unsigned int subPacketType,Strea
 				break;
 			case PROCESS_OBJECT_COMMAND_PACKET_TYPE_RUN_COMMAND:
 				PROCESS_HANDLER_INSTANCE.At(procTrav)->RunCommand(cmd.c_str(),waitTime);
+				break;
+			case PROCESS_OBJECT_COMMAND_PACKET_TYPE_DEPLOY:
+				errCode=PROCESS_HANDLER_INSTANCE.At(procTrav)->Deploy(curRev,rev);
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+				retOutStream.WriteInt(objIdx);
+				retOutStream.WriteUInt(errCode);
+				retOutStream.WriteInt(curRev);
+				return;
 				break;
 			}
 
@@ -181,7 +202,9 @@ void AdminServerProcessor::commandProcessObject(unsigned int subPacketType,Strea
 			case PROCESS_OBJECT_COMMAND_PACKET_TYPE_RUN_COMMAND:
 				PROCESS_HANDLER_INSTANCE.At(objIdx)->RunCommand(cmd.c_str(),waitTime);
 				break;
-
+			case PROCESS_OBJECT_COMMAND_PACKET_TYPE_DEPLOY:
+				errCode=PROCESS_HANDLER_INSTANCE.At(objIdx)->Deploy(curRev,rev);
+				break;
 			}
 		}
 		else
@@ -210,6 +233,7 @@ void AdminServerProcessor::commandServiceObject(unsigned int subPacketType,Strea
 
 
 	int waitTime=WAITTIME_INIFINITE;
+	int rev=REVISION_UNKNOWN;
 	EpTString cmd=_T("");
 	switch(subPacketType)
 	{
@@ -235,11 +259,22 @@ void AdminServerProcessor::commandServiceObject(unsigned int subPacketType,Strea
 			return;
 		}
 		break;
+	case SERVICE_OBJECT_COMMAND_PACKET_TYPE_DEPLOY:
+		if(!stream.ReadInt(rev))
+		{
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+			retOutStream.WriteInt(objIdx);
+			return;
+		}
 	default:
 		break;
 	}
 
 	int serviceCount=(int)SERVICE_HANDLER_INSTANCE.GetNumberOfServices();
+
+	DeployErrCode errCode=DEPLOY_ERR_CODE_SUCCESS;
+	unsigned int curRev=0;
+
 	if(objIdx==OBJECT_IDX_ALL)
 	{
 		for(int serviceTrav=0;serviceTrav<serviceCount;serviceTrav++)
@@ -268,6 +303,14 @@ void AdminServerProcessor::commandServiceObject(unsigned int subPacketType,Strea
 				break;
 			case SERVICE_OBJECT_COMMAND_PACKET_TYPE_RUN_COMMAND:
 				SERVICE_HANDLER_INSTANCE.At(serviceTrav)->RunCommand(cmd.c_str(),waitTime);
+				break;
+			case SERVICE_OBJECT_COMMAND_PACKET_TYPE_DEPLOY:
+				errCode=SERVICE_HANDLER_INSTANCE.At(serviceTrav)->Deploy(curRev,rev);
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+				retOutStream.WriteInt(objIdx);
+				retOutStream.WriteUInt(errCode);
+				retOutStream.WriteInt(curRev);
+				return;
 				break;
 			}
 
@@ -301,6 +344,9 @@ void AdminServerProcessor::commandServiceObject(unsigned int subPacketType,Strea
 				break;
 			case SERVICE_OBJECT_COMMAND_PACKET_TYPE_RUN_COMMAND:
 				SERVICE_HANDLER_INSTANCE.At(objIdx)->RunCommand(cmd.c_str(),waitTime);
+				break;
+			case SERVICE_OBJECT_COMMAND_PACKET_TYPE_DEPLOY:
+				errCode=SERVICE_HANDLER_INSTANCE.At(objIdx)->Deploy(curRev,rev);
 				break;
 			}
 		}
@@ -465,11 +511,28 @@ void AdminServerProcessor::getProcessInfo(unsigned int subPacketType,Stream &str
 
 	if(procIdx>=0 && procIdx<PROCESS_HANDLER_INSTANCE.GetNumberOfProcesses())
 	{
+		int rev=REVISION_UNKNOWN;
+		unsigned int retRev=0;
+		DeployErrCode deployErrCode=DEPLOY_ERR_CODE_SUCCESS;
 		retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
 		retOutStream.WriteInt(procIdx);
 		switch(subPacketType)
 		{
 		case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_ALL:
+			retOutStream.WriteTString(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetDeployRepositoryURL());
+			retOutStream.WriteTString(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetDeployLocalPath());
+			retOutStream.WriteTString(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetDeployUserName());
+			retOutStream.WriteTString(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetDeployUserPassword());
+			if((deployErrCode=PROCESS_HANDLER_INSTANCE.At(procIdx)->GetCurrentRevision(retRev))==DEPLOY_ERR_CODE_SUCCESS)
+				rev=(int)retRev;
+			retOutStream.WriteUInt((unsigned int)deployErrCode);
+			retOutStream.WriteInt(rev);
+			if((deployErrCode=PROCESS_HANDLER_INSTANCE.At(procIdx)->GetLatestRevision(retRev))==DEPLOY_ERR_CODE_SUCCESS)
+				rev=(int)retRev;
+			retOutStream.WriteUInt((unsigned int)deployErrCode);
+			retOutStream.WriteInt(rev);
+
+
 			if(PROCESS_HANDLER_INSTANCE.At(procIdx)->IsStarted())
 				retOutStream.WriteUInt(PROCESS_STATUS_TYPE_RUNNING);
 			else
@@ -489,6 +552,31 @@ void AdminServerProcessor::getProcessInfo(unsigned int subPacketType,Stream &str
 			retOutStream.WriteTString(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetUserName().GetString());
 			retOutStream.WriteTString(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetUserPassword().GetString());
 			break;
+		case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_REPOS_URL:
+			retOutStream.WriteTString(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetDeployRepositoryURL());
+			break;
+		case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_LOCAL_PATH:
+			retOutStream.WriteTString(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetDeployLocalPath());
+			break;
+		case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_USERNAME:
+			retOutStream.WriteTString(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetDeployUserName());
+			break;
+		case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_USERPASSWORD:
+			retOutStream.WriteTString(PROCESS_HANDLER_INSTANCE.At(procIdx)->GetDeployUserPassword());
+			break;
+		case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_CURRENT_REVISION:
+			if((deployErrCode=PROCESS_HANDLER_INSTANCE.At(procIdx)->GetCurrentRevision(retRev))==DEPLOY_ERR_CODE_SUCCESS)
+				rev=(int)retRev;
+			retOutStream.WriteUInt((unsigned int)deployErrCode);
+			retOutStream.WriteInt(rev);
+			break;
+		case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_LATEST_REVISION:
+			if((deployErrCode=PROCESS_HANDLER_INSTANCE.At(procIdx)->GetLatestRevision(retRev))==DEPLOY_ERR_CODE_SUCCESS)
+				rev=(int)retRev;
+			retOutStream.WriteUInt((unsigned int)deployErrCode);
+			retOutStream.WriteInt(rev);
+			break;
+
 		case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_STATUS:
 			if(PROCESS_HANDLER_INSTANCE.At(procIdx)->IsStarted())
 				retOutStream.WriteUInt(PROCESS_STATUS_TYPE_RUNNING);
@@ -777,6 +865,63 @@ void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &str
 				return;
 			}
 			break;
+		case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_DEPLOY_REPOS_URL:
+			if(stream.ReadTString(retString))
+			{
+				PROCESS_HANDLER_INSTANCE.At(procIdx)->SetDeployRepositoryURL(retString.c_str());
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+				retOutStream.WriteInt(procIdx);
+			}
+			else
+			{
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+				retOutStream.WriteInt(procIdx);
+				return;
+			}	
+			break;
+		case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_DEPLOY_LOCAL_PATH:
+			if(stream.ReadTString(retString))
+			{
+				PROCESS_HANDLER_INSTANCE.At(procIdx)->SetDeployLocalPath(retString.c_str());
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+				retOutStream.WriteInt(procIdx);
+			}
+			else
+			{
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+				retOutStream.WriteInt(procIdx);
+				return;
+			}	
+			break;
+		case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_DEPLOY_USERNAME:
+			if(stream.ReadTString(retString))
+			{
+				PROCESS_HANDLER_INSTANCE.At(procIdx)->SetDeployUserName(retString.c_str());
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+				retOutStream.WriteInt(procIdx);
+			}
+			else
+			{
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+				retOutStream.WriteInt(procIdx);
+				return;
+			}	
+			break;
+		case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_DEPLOY_USERPASSWORD:
+			if(stream.ReadTString(retString))
+			{
+				PROCESS_HANDLER_INSTANCE.At(procIdx)->SetDeployUserPassword(retString.c_str());
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+				retOutStream.WriteInt(procIdx);
+			}
+			else
+			{
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+				retOutStream.WriteInt(procIdx);
+				return;
+			}
+			break;
+
 		case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_ALL:
 			if(stream.ReadTString(retString))
 			{
@@ -929,6 +1074,52 @@ void AdminServerProcessor::setProcessInfo(unsigned int subPacketType,Stream &str
 				return;
 			}
 
+			if(stream.ReadTString(retString))
+			{
+				PROCESS_HANDLER_INSTANCE.At(procIdx)->SetDeployRepositoryURL(retString.c_str());
+			}
+			else
+			{
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+				retOutStream.WriteInt(procIdx);
+				return;
+			}	
+		
+			if(stream.ReadTString(retString))
+			{
+				PROCESS_HANDLER_INSTANCE.At(procIdx)->SetDeployLocalPath(retString.c_str());
+			}
+			else
+			{
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+				retOutStream.WriteInt(procIdx);
+				return;
+			}	
+
+			
+			if(stream.ReadTString(retString))
+			{
+				PROCESS_HANDLER_INSTANCE.At(procIdx)->SetDeployUserName(retString.c_str());
+			}
+			else
+			{
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+				retOutStream.WriteInt(procIdx);
+				return;
+			}	
+	
+			
+			if(stream.ReadTString(retString))
+			{
+				PROCESS_HANDLER_INSTANCE.At(procIdx)->SetDeployUserPassword(retString.c_str());
+			}
+			else
+			{
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+				retOutStream.WriteInt(procIdx);
+				return;
+			}
+
 			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
 			retOutStream.WriteInt(procIdx);
 			break;
@@ -953,13 +1144,29 @@ void AdminServerProcessor::getServiceInfo(unsigned int subPacketType,Stream &str
 
 	if(serviceIdx>=0 && serviceIdx<SERVICE_HANDLER_INSTANCE.GetNumberOfServices())
 	{
+		int rev=REVISION_UNKNOWN;
+		unsigned int retRev=0;
+		DeployErrCode deployErrCode=DEPLOY_ERR_CODE_SUCCESS;
+
 		retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
 		retOutStream.WriteInt(serviceIdx);
 		switch(subPacketType)
 		{
 		case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_ALL:
 
-			
+			retOutStream.WriteTString(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetDeployRepositoryURL());
+			retOutStream.WriteTString(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetDeployLocalPath());
+			retOutStream.WriteTString(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetDeployUserName());
+			retOutStream.WriteTString(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetDeployUserPassword());
+			if((deployErrCode=SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetCurrentRevision(retRev))==DEPLOY_ERR_CODE_SUCCESS)
+				rev=(int)retRev;
+			retOutStream.WriteUInt((unsigned int)deployErrCode);
+			retOutStream.WriteInt(rev);
+			if((deployErrCode=SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetLatestRevision(retRev))==DEPLOY_ERR_CODE_SUCCESS)
+				rev=(int)retRev;
+			retOutStream.WriteUInt((unsigned int)deployErrCode);
+			retOutStream.WriteInt(rev);
+
 			retOutStream.WriteUInt(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetStatus());
 			retOutStream.WriteUInt(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetDelayStartTime());
 			retOutStream.WriteUInt(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetDelayPauseEndTime());
@@ -976,6 +1183,32 @@ void AdminServerProcessor::getServiceInfo(unsigned int subPacketType,Stream &str
 			retOutStream.WriteTString(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetUserName().GetString());
 			retOutStream.WriteTString(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetUserPassword().GetString());
 			break;
+
+		case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_REPOS_URL:
+			retOutStream.WriteTString(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetDeployRepositoryURL());
+			break;
+		case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_LOCAL_PATH:
+			retOutStream.WriteTString(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetDeployLocalPath());
+			break;
+		case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_USERNAME:
+			retOutStream.WriteTString(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetDeployUserName());
+			break;
+		case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_USERPASSWORD:
+			retOutStream.WriteTString(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetDeployUserPassword());
+			break;
+		case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_CURRENT_REVISION:
+			if((deployErrCode=SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetCurrentRevision(retRev))==DEPLOY_ERR_CODE_SUCCESS)
+				rev=(int)retRev;
+			retOutStream.WriteUInt((unsigned int)deployErrCode);
+			retOutStream.WriteInt(rev);
+			break;
+		case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_LATEST_REVISION:
+			if((deployErrCode=SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetLatestRevision(retRev))==DEPLOY_ERR_CODE_SUCCESS)
+				rev=(int)retRev;
+			retOutStream.WriteUInt((unsigned int)deployErrCode);
+			retOutStream.WriteInt(rev);
+			break;
+
 		case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_STATUS:
 			retOutStream.WriteUInt(SERVICE_HANDLER_INSTANCE.At(serviceIdx)->GetStatus());
 			break;
@@ -1256,6 +1489,64 @@ void AdminServerProcessor::setServiceInfo(unsigned int subPacketType,Stream &str
 				return;
 			}
 			break;
+
+		case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_DEPLOY_REPOS_URL:
+			if(stream.ReadTString(retString))
+			{
+				PROCESS_HANDLER_INSTANCE.At(serviceIdx)->SetDeployRepositoryURL(retString.c_str());
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+				retOutStream.WriteInt(serviceIdx);
+			}
+			else
+			{
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+				retOutStream.WriteInt(serviceIdx);
+				return;
+			}	
+			break;
+		case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_DEPLOY_LOCAL_PATH:
+			if(stream.ReadTString(retString))
+			{
+				PROCESS_HANDLER_INSTANCE.At(serviceIdx)->SetDeployLocalPath(retString.c_str());
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+				retOutStream.WriteInt(serviceIdx);
+			}
+			else
+			{
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+				retOutStream.WriteInt(serviceIdx);
+				return;
+			}	
+			break;
+		case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_DEPLOY_USERNAME:
+			if(stream.ReadTString(retString))
+			{
+				PROCESS_HANDLER_INSTANCE.At(serviceIdx)->SetDeployUserName(retString.c_str());
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+				retOutStream.WriteInt(serviceIdx);
+			}
+			else
+			{
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+				retOutStream.WriteInt(serviceIdx);
+				return;
+			}	
+			break;
+		case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_DEPLOY_USERPASSWORD:
+			if(stream.ReadTString(retString))
+			{
+				PROCESS_HANDLER_INSTANCE.At(serviceIdx)->SetDeployUserPassword(retString.c_str());
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+				retOutStream.WriteInt(serviceIdx);
+			}
+			else
+			{
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+				retOutStream.WriteInt(serviceIdx);
+				return;
+			}
+			break;
+
 		case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_ALL:
 			if(stream.ReadTString(retString))
 			{
@@ -1408,6 +1699,52 @@ void AdminServerProcessor::setServiceInfo(unsigned int subPacketType,Stream &str
 				retOutStream.WriteInt(serviceIdx);
 				return;
 			}
+
+			if(stream.ReadTString(retString))
+			{
+				PROCESS_HANDLER_INSTANCE.At(serviceIdx)->SetDeployRepositoryURL(retString.c_str());
+			}
+			else
+			{
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+				retOutStream.WriteInt(serviceIdx);
+				return;
+			}	
+
+			if(stream.ReadTString(retString))
+			{
+				PROCESS_HANDLER_INSTANCE.At(serviceIdx)->SetDeployLocalPath(retString.c_str());
+			}
+			else
+			{
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+				retOutStream.WriteInt(serviceIdx);
+				return;
+			}	
+
+
+			if(stream.ReadTString(retString))
+			{
+				PROCESS_HANDLER_INSTANCE.At(serviceIdx)->SetDeployUserName(retString.c_str());
+			}
+			else
+			{
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+				retOutStream.WriteInt(serviceIdx);
+				return;
+			}	
+
+			if(stream.ReadTString(retString))
+			{
+				PROCESS_HANDLER_INSTANCE.At(serviceIdx)->SetDeployUserPassword(retString.c_str());
+			}
+			else
+			{
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR);
+				retOutStream.WriteInt(serviceIdx);
+				return;
+			}
+
 			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
 			retOutStream.WriteInt(serviceIdx);
 			break;

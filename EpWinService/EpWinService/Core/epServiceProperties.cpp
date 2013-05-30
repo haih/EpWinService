@@ -28,27 +28,27 @@ ServiceProperties::ServiceProperties()
 	memset(textBuffer,0,sizeof(TCHAR)*MAX_STRING_LENGTH);
 	GetPrivateProfileString(_T("Settings"),_T("ServiceName"),_T("EpWinService"),textBuffer,MAX_STRING_LENGTH,m_iniFileName.GetString());
 	m_serviceName=textBuffer;
-	m_serviceName.Trim();
+	m_serviceName=m_serviceName.Trim();
 
 	memset(textBuffer,0,sizeof(TCHAR)*MAX_STRING_LENGTH);
 	GetPrivateProfileString(_T("Settings"),_T("DomainName"),_T(""),textBuffer,MAX_STRING_LENGTH,m_iniFileName.GetString());
 	m_domainName=textBuffer;
-	m_domainName.Trim();
+	m_domainName=m_domainName.Trim();
 
 	memset(textBuffer,0,sizeof(TCHAR)*MAX_STRING_LENGTH);
 	GetPrivateProfileString(_T("Settings"),_T("UserName"),_T(""),textBuffer,MAX_STRING_LENGTH,m_iniFileName.GetString());
 	m_userName=textBuffer;
-	m_userName.Trim();
+	m_userName=m_userName.Trim();
 
 	memset(textBuffer,0,sizeof(TCHAR)*MAX_STRING_LENGTH);
 	GetPrivateProfileString(_T("Settings"),_T("UserPassword"),_T(""),textBuffer,MAX_STRING_LENGTH,m_iniFileName.GetString());
 	m_userPassword=textBuffer;
-	m_userPassword.Trim();
+	m_userPassword=m_userPassword.Trim();
 
 	memset(textBuffer,0,sizeof(TCHAR)*MAX_STRING_LENGTH);
 	GetPrivateProfileString(_T("Settings"),_T("Dependencies"),_T(""),textBuffer,MAX_STRING_LENGTH,m_iniFileName.GetString());
 	m_origDependency=textBuffer;
-	m_origDependency.Trim();
+	m_origDependency=m_origDependency.Trim();
 
 	m_dependency=m_origDependency;
 	m_dependency.Replace(_T(' '), _T('\0'));
@@ -64,12 +64,12 @@ ServiceProperties::ServiceProperties()
 	memset(textBuffer,0,sizeof(TCHAR)*MAX_STRING_LENGTH);
 	GetPrivateProfileString(_T("Settings"),_T("CustomProcessCommandLine"),_T(""),textBuffer,MAX_STRING_LENGTH,m_iniFileName.GetString());
 	m_customProcessCommandLine=textBuffer;
-	m_customProcessCommandLine.Trim();
+	m_customProcessCommandLine=m_customProcessCommandLine.Trim();
 	
 	memset(textBuffer,0,sizeof(TCHAR)*MAX_STRING_LENGTH);
 	GetPrivateProfileString(_T("Settings"),_T("AdminServerPort"),_T("8988"),textBuffer,MAX_STRING_LENGTH,m_iniFileName.GetString());
 	m_adminServerPort=textBuffer;
-	m_adminServerPort.Trim();
+	m_adminServerPort=m_adminServerPort.Trim();
 
 	m_checkProcessInterval=GetPrivateProfileInt(_T("Settings"),_T("CheckProcessInterval"),10,m_iniFileName.GetString());
 	m_checkServiceInterval=GetPrivateProfileInt(_T("Settings"),_T("CheckServiceInterval"),10,m_iniFileName.GetString());
@@ -186,8 +186,7 @@ CString ServiceProperties::GetCustomProcessCommandLine()
 void ServiceProperties::SetCustomProcessCommandLine(CString cmd)
 {
 	LockObj lock(&m_propertiesLock);
-	cmd.Trim();
-	m_customProcessCommandLine=cmd;
+	m_customProcessCommandLine=cmd.Trim();
 	WritePrivateProfileString(_T("Settings"),_T("CustomProcessCommandLine"),m_customProcessCommandLine.GetString(),m_iniFileName.GetString());
 }
 

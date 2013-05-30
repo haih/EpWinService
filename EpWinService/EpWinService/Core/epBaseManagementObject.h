@@ -31,7 +31,7 @@ An Interface for Base Management Object.
 #ifndef __EP_BASE_MANAGEMENT_OBJECT_H__
 #define __EP_BASE_MANAGEMENT_OBJECT_H__
 
-
+#include "epBaseDeployObject.h"
 /// Management Object Type
 typedef enum _managementObjectType{
 	/// Process Type
@@ -86,12 +86,12 @@ public:
 	Start the object.
 	@return true if started, otherwise false
 	*/
-	virtual bool Start()=0;
+	bool Start();
 
 	/*!
 	End the object.
 	*/
-	virtual void Stop()=0;
+	void Stop();
 
 	/*!
 	Start the post-Process.
@@ -277,8 +277,102 @@ public:
 	*/
 	void SetDelayPauseEndTime(unsigned int timeInMilli);
 
+	/*!
+	Get Ini Filename
+	@return Ini Filename
+	*/
+	CString GetIniFileName();
+
+	/*!
+	Get Object String
+	@return Object String
+	*/
+	CString GetObjectString();
+
+	
+	/*!
+	Deploy the Local path as given revision
+	@param[in] properties the properties
+	@param[out] retRevNum the revision after the update
+	@param[in] rev the revision to be updated to
+	@return the Deploy Error Code
+	@remark if rev is REVISION_UNKNOWN then Local path is updated to latest revision
+	*/
+	DeployErrCode Deploy(unsigned int & retRevNum,int rev=REVISION_UNKNOWN);
+
+	/*!
+	Return the current revision of the local path
+	@param[out] retRevNum the current revision of the local path
+	@return the Deploy Error Code
+	*/
+	DeployErrCode GetCurrentRevision(unsigned int & retRevNum);
+
+	/*!
+	Return the latest revision of the repository
+	@param[out] retRevNum the latest revision of the repository
+	@return the Deploy Error Code
+	*/
+	DeployErrCode GetLatestRevision(unsigned int & retRevNum);
+
+	/*!
+	Get the Deploy repository URL
+	@return the Deploy repository URL
+	*/
+	const TCHAR *GetDeployRepositoryURL();
+
+	/*!
+	Get the Deploy local path
+	@return the Deploy local path
+	*/
+	const TCHAR *GetDeployLocalPath();
+
+	/*!
+	Get the Deploy Username
+	@return the Username
+	*/
+	const TCHAR *GetDeployUserName();
+
+	/*!
+	Get the User Password
+	@return the User Password
+	*/
+	const TCHAR *GetDeployUserPassword();
+
+	/*!
+	Set Repository URL
+	@param[in] reposURL Repository URL
+	*/
+	void SetDeployRepositoryURL(CString reposURL);
+
+	/*!
+	Set Local Path
+	@param[in] localPath Local Path
+	*/
+	void SetDeployLocalPath(CString localPath);
+
+	/*!
+	Set User Name
+	@param[in] userName User Name
+	*/
+	void SetDeployUserName(CString userName);
+
+	/*!
+	Set User Password
+	@param[in] userPass User Password
+	*/
+	void SetDeployUserPassword(CString userPass);
 protected:
 
+	/*!
+	Start the object.
+	@return true if started, otherwise false
+	*/
+	virtual bool start()=0;
+
+	/*!
+	End the object.
+	*/
+	virtual void stop()=0;
 	/*!
 	Run a single command given.
 	@param[in] command a single command to run
@@ -355,6 +449,9 @@ protected:
 
 	/// Management Object Type
 	ManagementObjectType m_objType;
+
+	/// Deploy Object
+	BaseDeployObject *m_deployObj;
 
 };
 #endif //__EP_BASE_MANAGEMENT_OBJECT_H__

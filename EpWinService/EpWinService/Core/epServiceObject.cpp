@@ -30,7 +30,7 @@ ServiceObject::ServiceObject(unsigned int serviceIndex):BaseManagementObject(MAN
 	memset(textBuffer,0,sizeof(TCHAR)*MAX_STRING_LENGTH);
 	GetPrivateProfileString(m_objectString.GetString(),_T("ServiceName"),_T(""),textBuffer,MAX_STRING_LENGTH,m_iniFileName.GetString());
 	m_serviceName=textBuffer;
-	m_serviceName.Trim();
+	m_serviceName=m_serviceName.Trim();
 	
 	m_isUserStopped=false;
 
@@ -44,9 +44,8 @@ ServiceObject::~ServiceObject()
 
 
 
-bool ServiceObject::Start()
+bool ServiceObject::start()
 {
-	LockObj lock(&m_baseObjLock);
 	m_isUserStopped=false;
 	SERVICE_STATUS status;
 	DWORD retCode;
@@ -67,9 +66,8 @@ bool ServiceObject::Start()
 	return false;
 }
 
-void ServiceObject::Stop()
+void ServiceObject::stop()
 {
-	LockObj lock(&m_baseObjLock);
 	DWORD retCode;
 	SERVICE_HANDLER_INSTANCE.StopService(m_serviceName.GetString(),retCode);
 	::Sleep(m_delayPauseEndTime>0?m_delayPauseEndTime:50);

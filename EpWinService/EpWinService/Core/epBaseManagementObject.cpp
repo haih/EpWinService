@@ -19,11 +19,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "epBaseManagementObject.h"
 #include "epLogWriter.h"
 #include "epServiceProperties.h"
+#include "epSvnDeployObject.h"
 
 void BaseManagementObject::ParseCommand(CString cmd,  vector<CString>& retCmdList)
 {
 	retCmdList.clear();
-	cmd.Trim();
+	cmd=cmd.Trim();
 
 	CString parsedCommand=_T("");
 	while(cmd.GetLength())
@@ -61,13 +62,23 @@ void BaseManagementObject::ParseCommand(CString cmd,  vector<CString>& retCmdLis
 			}
 		}
 		cmd.Delete(0,stringTrav);
-		parsedCommand.Trim();
+		parsedCommand=parsedCommand.Trim();
 		if(parsedCommand.GetLength())
 			retCmdList.push_back(parsedCommand);
-		cmd.Trim();
+		cmd=cmd.Trim();
 	}
 	
 
+}
+bool BaseManagementObject::Start()
+{
+	LockObj lock(&m_baseObjLock);
+	return start();
+}
+void BaseManagementObject::Stop()
+{
+	LockObj lock(&m_baseObjLock);
+	stop();
 }
 
 BaseManagementObject::BaseManagementObject(ManagementObjectType objType,unsigned int objIndex)
@@ -97,20 +108,20 @@ BaseManagementObject::BaseManagementObject(ManagementObjectType objType,unsigned
 	memset(textBuffer,0,sizeof(TCHAR)*MAX_STRING_LENGTH);
 	GetPrivateProfileString(m_objectString.GetString(),_T("PreProcessCommandLine"),_T(""),textBuffer,MAX_STRING_LENGTH,m_iniFileName.GetString());
 	m_preProcessCommandLine=textBuffer;
-	m_preProcessCommandLine.Trim();
+	m_preProcessCommandLine=m_preProcessCommandLine.Trim();
 	BaseManagementObject::ParseCommand(m_preProcessCommandLine,m_preProcessCommandLineList);
 
 	memset(textBuffer,0,sizeof(TCHAR)*MAX_STRING_LENGTH);
 	GetPrivateProfileString(m_objectString.GetString(),_T("PostProcessCommandLine"),_T(""),textBuffer,MAX_STRING_LENGTH,m_iniFileName.GetString());
 	m_postProcessCommandLine=textBuffer;
-	m_postProcessCommandLine.Trim();
+	m_postProcessCommandLine=m_postProcessCommandLine.Trim();
 	BaseManagementObject::ParseCommand(m_postProcessCommandLine,m_postProcessCommandLineList);
 
 
 	memset(textBuffer,0,sizeof(TCHAR)*MAX_STRING_LENGTH);
 	GetPrivateProfileString(m_objectString.GetString(),_T("CustomProcessCommandLine"),_T(""),textBuffer,MAX_STRING_LENGTH,m_iniFileName.GetString());
 	m_customProcessCommandLine=textBuffer;
-	m_customProcessCommandLine.Trim();
+	m_customProcessCommandLine=m_customProcessCommandLine.Trim();
 	BaseManagementObject::ParseCommand(m_customProcessCommandLine,m_customProcessCommandLineList);
 
 	m_preProcessWaitTime=GetPrivateProfileInt(m_objectString.GetString(),_T("PreProcessWaitTime"),WAITTIME_INIFINITE,m_iniFileName.GetString());
@@ -133,27 +144,43 @@ BaseManagementObject::BaseManagementObject(ManagementObjectType objType,unsigned
 	memset(textBuffer,0,sizeof(TCHAR)*MAX_STRING_LENGTH);
 	GetPrivateProfileString(m_objectString.GetString(),_T("DomainName"),_T(""),textBuffer,MAX_STRING_LENGTH,m_iniFileName.GetString());
 	m_domainName=textBuffer;
-	m_domainName.Trim();
+	m_domainName=m_domainName.Trim();
 
 	memset(textBuffer,0,sizeof(TCHAR)*MAX_STRING_LENGTH);
 	GetPrivateProfileString(m_objectString.GetString(),_T("UserName"),_T(""),textBuffer,MAX_STRING_LENGTH,m_iniFileName.GetString());
 	m_userName=textBuffer;
-	m_userName.Trim();
+	m_userName=m_userName.Trim();
 
 	memset(textBuffer,0,sizeof(TCHAR)*MAX_STRING_LENGTH);
 	GetPrivateProfileString(m_objectString.GetString(),_T("Password"),_T(""),textBuffer,MAX_STRING_LENGTH,m_iniFileName.GetString());
 	m_userPassword=textBuffer;
-	m_userPassword.Trim();
+	m_userPassword=m_userPassword.Trim();
 
 	m_delayStartTime=GetPrivateProfileInt(m_objectString.GetString(),_T("DelayStartTime"),0,m_iniFileName.GetString());
 	m_delayPauseEndTime=GetPrivateProfileInt(m_objectString.GetString(),_T("DelayPauseEndTime"),0,m_iniFileName.GetString());
+
+
+	memset(textBuffer,0,sizeof(TCHAR)*MAX_STRING_LENGTH);
+	GetPrivateProfileString(m_objectString.GetString(),_T("DeployType"),_T("SVN"),textBuffer,MAX_STRING_LENGTH,m_iniFileName.GetString());
+	CString deployType=textBuffer;
+	deployType=deployType.Trim();
+
+	if(deployType.Compare(_T("SVN"))==0)
+	{
+		m_deployObj=EP_NEW SvnDeployObject(m_objectString,m_iniFileName);
+	}
+	else
+	{
+		m_deployObj=EP_NEW SvnDeployObject(m_objectString,m_iniFileName);
+	}
 
 	EP_DELETE[] textBuffer;
 }
 
 BaseManagementObject::~BaseManagementObject()
 {
-
+	if(m_deployObj)
+		EP_DELETE m_deployObj;
 }
 
 void BaseManagementObject::preProcess()
@@ -347,8 +374,7 @@ CString BaseManagementObject::GetPreProcessCommandLine()
 void BaseManagementObject::SetPreProcessCommandLine(CString cmd)
 {
 	LockObj lock(&m_baseObjLock);
-	cmd.Trim();
-	m_preProcessCommandLine=cmd;
+	m_preProcessCommandLine=cmd.Trim();
 	WritePrivateProfileString(m_objectString.GetString(),_T("PreProcessCommandLine"),m_preProcessCommandLine.GetString(),m_iniFileName.GetString());
 	BaseManagementObject::ParseCommand(m_preProcessCommandLine,m_preProcessCommandLineList);
 }
@@ -362,8 +388,7 @@ CString BaseManagementObject::GetPostProcessCommandLine()
 void BaseManagementObject::SetPostProcessCommandLine(CString cmd)
 {
 	LockObj lock(&m_baseObjLock);
-	cmd.Trim();
-	m_postProcessCommandLine=cmd;
+	m_postProcessCommandLine=cmd.Trim();
 	WritePrivateProfileString(m_objectString.GetString(),_T("PostProcessCommandLine"),m_postProcessCommandLine.GetString(),m_iniFileName.GetString());
 	BaseManagementObject::ParseCommand(m_postProcessCommandLine,m_postProcessCommandLineList);
 }
@@ -377,8 +402,7 @@ CString BaseManagementObject::GetCustomProcessCommandLine()
 void BaseManagementObject::SetCustomProcessCommandLine(CString cmd)
 {
 	LockObj lock(&m_baseObjLock);
-	cmd.Trim();
-	m_customProcessCommandLine=cmd;
+	m_customProcessCommandLine=cmd.Trim();
 	WritePrivateProfileString(m_objectString.GetString(),_T("CustomProcessCommandLine"),m_customProcessCommandLine.GetString(),m_iniFileName.GetString());
 	BaseManagementObject::ParseCommand(m_customProcessCommandLine,m_customProcessCommandLineList);
 }
@@ -515,3 +539,77 @@ void BaseManagementObject::SetDelayPauseEndTime(unsigned int timeInMilli)
 	WritePrivateProfileString(m_objectString.GetString(),_T("DelayPauseEndTime"),valueString.GetString(),m_iniFileName.GetString());
 }
 
+CString BaseManagementObject::GetIniFileName()
+{
+	LockObj lock(&m_baseObjLock);
+	return m_iniFileName;
+}
+CString BaseManagementObject::GetObjectString()
+{
+	LockObj lock(&m_baseObjLock);
+	return m_objectString;
+}
+
+DeployErrCode BaseManagementObject::Deploy(unsigned int & retRevNum,int rev)
+{
+	bool previouslyStarted=IsStarted();
+	
+	LockObj lock(&m_baseObjLock);
+	if(previouslyStarted==true)
+	{
+		stop();
+	}
+
+	DeployErrCode retCode=m_deployObj->Update(retRevNum,rev);
+
+	if(previouslyStarted)
+	{
+		start();
+	}
+	return retCode;
+
+}
+
+DeployErrCode BaseManagementObject::GetCurrentRevision(unsigned int & retRevNum)
+{
+	return m_deployObj->GetCurrentRevision(retRevNum);
+}
+
+DeployErrCode BaseManagementObject::GetLatestRevision(unsigned int & retRevNum)
+{
+	return m_deployObj->GetLatestRevision(retRevNum);
+}
+
+
+const TCHAR *BaseManagementObject::GetDeployRepositoryURL()
+{
+	return m_deployObj->GetRepositoryURL();
+}
+const TCHAR *BaseManagementObject::GetDeployLocalPath()
+{
+	return m_deployObj->GetLocalPath();
+}
+const TCHAR *BaseManagementObject::GetDeployUserName()
+{
+	return m_deployObj->GetUserName();
+}
+const TCHAR *BaseManagementObject::GetDeployUserPassword()
+{
+	return m_deployObj->GetUserPassword();
+}
+void BaseManagementObject::SetDeployRepositoryURL(CString reposURL)
+{
+	m_deployObj->SetRepositoryURL(reposURL);
+}
+void BaseManagementObject::SetDeployLocalPath(CString localPath)
+{
+	m_deployObj->SetLocalPath(localPath);
+}
+void BaseManagementObject::SetDeployUserName(CString userName)
+{
+	m_deployObj->SetUserName(userName);
+}
+void BaseManagementObject::SetDeployUserPassword(CString userPass)
+{
+	m_deployObj->SetUserPassword(userPass);
+}

@@ -168,6 +168,7 @@
     <ClCompile Include="AdminServer\epAdminServerPacketParser.cpp" />
     <ClCompile Include="AdminServer\epAdminServerProcessor.cpp" />
     <ClCompile Include="AdminServer\epAdminServerWorker.cpp" />
+    <ClCompile Include="Core\epBaseDeployObject.cpp" />
     <ClCompile Include="Core\epBaseManagementObject.cpp" />
     <ClCompile Include="Core\epProcessHandler.cpp" />
     <ClCompile Include="Core\epProcessObject.cpp" />
@@ -175,6 +176,7 @@
     <ClCompile Include="Core\epServiceManager.cpp" />
     <ClCompile Include="Core\epServiceObject.cpp" />
     <ClCompile Include="Core\epServiceProperties.cpp" />
+    <ClCompile Include="Core\epSvnDeployObject.cpp" />
     <ClCompile Include="EpWinService.cpp" />
     <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
@@ -184,6 +186,7 @@
     <ClInclude Include="AdminServer\epAdminServerPacketParser.h" />
     <ClInclude Include="AdminServer\epAdminServerProcessor.h" />
     <ClInclude Include="AdminServer\epAdminServerWorker.h" />
+    <ClInclude Include="Core\epBaseDeployObject.h" />
     <ClInclude Include="Core\epBaseManagementObject.h" />
     <ClInclude Include="Core\epProcessHandler.h" />
     <ClInclude Include="Core\epProcessObject.h" />
@@ -192,6 +195,7 @@
     <ClInclude Include="Core\epServiceManager.h" />
     <ClInclude Include="Core\epServiceObject.h" />
     <ClInclude Include="Core\epServiceProperties.h" />
+    <ClInclude Include="Core\epSvnDeployObject.h" />
     <ClInclude Include="EpLibraryHeaders\epAlgorithm.h" />
     <ClInclude Include="EpLibraryHeaders\epAssert.h" />
     <ClInclude Include="EpLibraryHeaders\epBaseJob.h" />
