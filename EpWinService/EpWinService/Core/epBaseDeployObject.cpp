@@ -27,22 +27,22 @@ BaseDeployObject::BaseDeployObject(CString objectString, CString iniFileName)
 	TCHAR *textBuffer=EP_NEW TCHAR[MAX_STRING_LENGTH];
 
 	memset(textBuffer,0,sizeof(TCHAR)*MAX_STRING_LENGTH);
-	GetPrivateProfileString(m_objectString.GetString(),_T("SVNRepositoryURL"),_T(""),textBuffer,MAX_STRING_LENGTH,m_iniFileName.GetString());
+	GetPrivateProfileString(m_objectString.GetString(),_T("DeployRepositoryURL"),_T(""),textBuffer,MAX_STRING_LENGTH,m_iniFileName.GetString());
 	m_repoURL=textBuffer;
 	m_repoURL=m_repoURL.Trim();
 
 	memset(textBuffer,0,sizeof(TCHAR)*MAX_STRING_LENGTH);
-	GetPrivateProfileString(m_objectString.GetString(),_T("SVNLocalPath"),_T(""),textBuffer,MAX_STRING_LENGTH,m_iniFileName.GetString());
+	GetPrivateProfileString(m_objectString.GetString(),_T("DeployLocalPath"),_T(""),textBuffer,MAX_STRING_LENGTH,m_iniFileName.GetString());
 	m_localPath=textBuffer;
 	m_localPath=m_localPath.Trim();
 
 	memset(textBuffer,0,sizeof(TCHAR)*MAX_STRING_LENGTH);
-	GetPrivateProfileString(m_objectString.GetString(),_T("SVNUserName"),_T(""),textBuffer,MAX_STRING_LENGTH,m_iniFileName.GetString());
+	GetPrivateProfileString(m_objectString.GetString(),_T("DeployUserName"),_T(""),textBuffer,MAX_STRING_LENGTH,m_iniFileName.GetString());
 	m_userName=textBuffer;
 	m_userName=m_userName.Trim();
 
 	memset(textBuffer,0,sizeof(TCHAR)*MAX_STRING_LENGTH);
-	GetPrivateProfileString(m_objectString.GetString(),_T("SVNUserPassword"),_T(""),textBuffer,MAX_STRING_LENGTH,m_iniFileName.GetString());
+	GetPrivateProfileString(m_objectString.GetString(),_T("DeployUserPassword"),_T(""),textBuffer,MAX_STRING_LENGTH,m_iniFileName.GetString());
 	m_userPassword=textBuffer;
 	m_userPassword=m_userPassword.Trim();
 
