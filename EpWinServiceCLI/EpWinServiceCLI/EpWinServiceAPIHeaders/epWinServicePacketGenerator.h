@@ -125,6 +125,13 @@ namespace epws
 		void AddCommandServiceObj(ServiceObjectCommandPacketType type, int objIndex,int waitTime=WAITTIME_INIFINITE,const EpTString &cmd =_T(""));
 
 		/*!
+		Add Deploy Command Service Object frame to the packet
+		@param[in] objIndex the object index to command (OBJECT_IDX_ALL for all Service Objects)
+		@param[in] revisionNum the revision number, updated to (Optional)
+		@remark if revisionNum == REVISION_UNKNOWN then it updates to latest revision.
+		*/
+		void AddDeployCommandServiceObj(int objIndex,int revisionNum=REVISION_UNKNOWN);
+		/*!
 		Add Get Service Object Info frame to the packet
 		@param[in] type type of the information getting
 		@param[in] serviceIndex the index of the service object to get info
@@ -149,6 +156,14 @@ namespace epws
 		@remark cmd is only for RunCommand command type
 		*/
 		void AddCommandProcessObj(ProcessObjectCommandPacketType type, int objIndex,int waitTime=WAITTIME_INIFINITE,const EpTString &cmd =_T(""));
+
+		/*!
+		Add Deploy Command Process Object frame to the packet
+		@param[in] objIndex the object index to command (OBJECT_IDX_ALL for all Process Objects)
+		@param[in] revisionNum the revision number, updated to (Optional)
+		@remark if revisionNum == REVISION_UNKNOWN then it updates to latest revision.
+		*/
+		void AddDeployCommandProcessObj(int objIndex,int revisionNum=REVISION_UNKNOWN);
 
 		/*!
 		Add Get Process Object Info frame to the packet

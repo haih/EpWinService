@@ -42,6 +42,10 @@ ProcessObjectCommandPacketType WinServiceTypeInterpreter::GetProcessObjectComman
 	{
 		subCommandType= PROCESS_OBJECT_COMMAND_PACKET_TYPE_RUN_COMMAND;
 	}
+	else if(subCommand.Compare(_T("Deploy"))==0)
+	{
+		subCommandType= PROCESS_OBJECT_COMMAND_PACKET_TYPE_DEPLOY;
+	}
 	return subCommandType;
 }
 ProcessObjectInfoGetPacketType WinServiceTypeInterpreter::GetProcessObjectInfoGetPacketType(CString subCommand)
@@ -107,6 +111,32 @@ ProcessObjectInfoGetPacketType WinServiceTypeInterpreter::GetProcessObjectInfoGe
 	{
 		subCommandType= PROCESS_OBJECT_INFO_GET_PACKET_TYPE_STATUS;
 	}
+
+	else if(subCommand.Compare(_T("DeployRepositoryURL"))==0)
+	{
+		subCommandType= PROCESS_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_REPOS_URL;
+	}
+	else if(subCommand.Compare(_T("DeployLocalPath"))==0)
+	{
+		subCommandType= PROCESS_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_LOCAL_PATH;
+	}
+	else if(subCommand.Compare(_T("DeployUserName"))==0)
+	{
+		subCommandType= PROCESS_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_USERNAME;
+	}
+	else if(subCommand.Compare(_T("DeployUserPassword"))==0)
+	{
+		subCommandType= PROCESS_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_USERPASSWORD;
+	}
+	else if(subCommand.Compare(_T("DeployCurrentRevision"))==0)
+	{
+		subCommandType= PROCESS_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_CURRENT_REVISION;
+	}
+	else if(subCommand.Compare(_T("DeployLatestRevision"))==0)
+	{
+		subCommandType= PROCESS_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_LATEST_REVISION;
+	}
+
 	else if(subCommand.Compare(_T("All"))==0)
 	{
 		subCommandType= PROCESS_OBJECT_INFO_GET_PACKET_TYPE_ALL;
@@ -172,6 +202,23 @@ ProcessObjectInfoSetPacketType WinServiceTypeInterpreter::GetProcessObjectInfoSe
 	{
 		subCommandType= PROCESS_OBJECT_INFO_SET_PACKET_TYPE_IS_USER_INTERFACE;
 	}
+	else if(subCommand.Compare(_T("DeployRepositoryURL"))==0)
+	{
+		subCommandType= PROCESS_OBJECT_INFO_SET_PACKET_TYPE_DEPLOY_REPOS_URL;
+	}
+	else if(subCommand.Compare(_T("DeployLocalPath"))==0)
+	{
+		subCommandType= PROCESS_OBJECT_INFO_SET_PACKET_TYPE_DEPLOY_LOCAL_PATH;
+	}
+	else if(subCommand.Compare(_T("DeployUserName"))==0)
+	{
+		subCommandType= PROCESS_OBJECT_INFO_SET_PACKET_TYPE_DEPLOY_USERNAME;
+	}
+	else if(subCommand.Compare(_T("DeployUserPassword"))==0)
+	{
+		subCommandType= PROCESS_OBJECT_INFO_SET_PACKET_TYPE_DEPLOY_USERPASSWORD;
+	}
+
 	else if(subCommand.Compare(_T("All"))==0)
 	{
 		subCommandType= PROCESS_OBJECT_INFO_SET_PACKET_TYPE_ALL;
@@ -208,6 +255,10 @@ ServiceObjectCommandPacketType WinServiceTypeInterpreter::GetServiceObjectComman
 	else if(subCommand.Compare(_T("RunCommand"))==0)
 	{
 		subCommandType= SERVICE_OBJECT_COMMAND_PACKET_TYPE_RUN_COMMAND;
+	}
+	else if(subCommand.Compare(_T("Deploy"))==0)
+	{
+		subCommandType= SERVICE_OBJECT_COMMAND_PACKET_TYPE_DEPLOY;
 	}
 	return subCommandType;
 }
@@ -274,6 +325,32 @@ ServiceObjectInfoGetPacketType WinServiceTypeInterpreter::GetServiceObjectInfoGe
 	{
 		subCommandType= SERVICE_OBJECT_INFO_GET_PACKET_TYPE_STATUS;
 	}
+
+	else if(subCommand.Compare(_T("DeployRepositoryURL"))==0)
+	{
+		subCommandType= SERVICE_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_REPOS_URL;
+	}
+	else if(subCommand.Compare(_T("DeployLocalPath"))==0)
+	{
+		subCommandType= SERVICE_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_LOCAL_PATH;
+	}
+	else if(subCommand.Compare(_T("DeployUserName"))==0)
+	{
+		subCommandType= SERVICE_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_USERNAME;
+	}
+	else if(subCommand.Compare(_T("DeployUserPassword"))==0)
+	{
+		subCommandType= SERVICE_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_USERPASSWORD;
+	}
+	else if(subCommand.Compare(_T("DeployCurrentRevision"))==0)
+	{
+		subCommandType= SERVICE_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_CURRENT_REVISION;
+	}
+	else if(subCommand.Compare(_T("DeployLatestRevision"))==0)
+	{
+		subCommandType= SERVICE_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_LATEST_REVISION;
+	}
+
 	else if(subCommand.Compare(_T("All"))==0)
 	{
 		subCommandType= SERVICE_OBJECT_INFO_GET_PACKET_TYPE_ALL;
@@ -340,6 +417,24 @@ ServiceObjectInfoSetPacketType WinServiceTypeInterpreter::GetServiceObjectInfoSe
 	{
 		subCommandType= SERVICE_OBJECT_INFO_SET_PACKET_TYPE_IS_USER_INTERFACE;
 	}
+
+	else if(subCommand.Compare(_T("DeployRepositoryURL"))==0)
+	{
+		subCommandType= SERVICE_OBJECT_INFO_SET_PACKET_TYPE_DEPLOY_REPOS_URL;
+	}
+	else if(subCommand.Compare(_T("DeployLocalPath"))==0)
+	{
+		subCommandType= SERVICE_OBJECT_INFO_SET_PACKET_TYPE_DEPLOY_LOCAL_PATH;
+	}
+	else if(subCommand.Compare(_T("DeployUserName"))==0)
+	{
+		subCommandType= SERVICE_OBJECT_INFO_SET_PACKET_TYPE_DEPLOY_USERNAME;
+	}
+	else if(subCommand.Compare(_T("DeployUserPassword"))==0)
+	{
+		subCommandType= SERVICE_OBJECT_INFO_SET_PACKET_TYPE_DEPLOY_USERPASSWORD;
+	}
+
 	else if(subCommand.Compare(_T("All"))==0)
 	{
 		subCommandType= SERVICE_OBJECT_INFO_SET_PACKET_TYPE_ALL;
@@ -570,6 +665,9 @@ CString WinServiceTypeInterpreter::GetReturnTypeString(ReturnType type)
 	case RETURN_TYPE_SERVICE_HANDLE_ERROR_INFO:
 		retString= _T("ServiceHandleErrorInfo");
 		break;
+	case RETURN_TYPE_DEPLOY_INFO:
+		retString= _T("DeployInfo");
+		break;
 	}
 	return retString;
 }
@@ -684,6 +782,9 @@ CString WinServiceTypeInterpreter::getProcessObjectCommandTypeString(unsigned in
 	case PROCESS_OBJECT_COMMAND_PACKET_TYPE_RUN_COMMAND:
 		retString =_T("RunCommand");
 		break;
+	case PROCESS_OBJECT_COMMAND_PACKET_TYPE_DEPLOY:
+		retString =_T("Deploy");
+		break;
 	}
 	return retString;
 
@@ -741,6 +842,24 @@ CString WinServiceTypeInterpreter::getProcessObjectInfoGetTypeString(unsigned in
 		break;
 	case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_STATUS:
 		retString =_T("Status");
+		break;
+	case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_REPOS_URL:
+		retString =_T("DeployRepositoryURL");
+		break;
+	case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_LOCAL_PATH:
+		retString =_T("DeployLocalPath");
+		break;
+	case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_USERNAME:
+		retString =_T("DeployUserName");
+		break;
+	case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_USERPASSWORD:
+		retString =_T("DeployUserPassword");
+		break;
+	case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_CURRENT_REVISION:
+		retString =_T("DeployCurrentRevision");
+		break;
+	case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_LATEST_REVISION:
+		retString =_T("DeployLatestRevision");
 		break;
 	case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_ALL:
 		retString =_T("All");
@@ -802,6 +921,18 @@ CString WinServiceTypeInterpreter::getProcessObjectInfoSetTypeString(unsigned in
 	case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_IS_USER_INTERFACE:
 		retString =_T("IsUserInterface");
 		break;
+	case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_DEPLOY_REPOS_URL:
+		retString =_T("DeployRepositoryURL");
+		break;
+	case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_DEPLOY_LOCAL_PATH:
+		retString =_T("DeployLocalPath");
+		break;
+	case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_DEPLOY_USERNAME:
+		retString =_T("DeployUserName");
+		break;
+	case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_DEPLOY_USERPASSWORD:
+		retString =_T("DeployUserPassword");
+		break;
 	case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_ALL:
 		retString =_T("All");
 		break;
@@ -841,6 +972,10 @@ CString WinServiceTypeInterpreter::getServiceObjectCommandTypeString(unsigned in
 	case SERVICE_OBJECT_COMMAND_PACKET_TYPE_RUN_COMMAND:
 		retString =_T("RunCommand");
 		break;
+	case SERVICE_OBJECT_COMMAND_PACKET_TYPE_DEPLOY:
+		retString =_T("Deploy");
+		break;
+
 	}
 	return retString;
 
@@ -898,6 +1033,26 @@ CString WinServiceTypeInterpreter::getServiceObjectInfoGetTypeString(unsigned in
 	case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_STATUS:
 		retString =_T("Status");
 		break;
+
+	case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_REPOS_URL:
+		retString =_T("DeployRepositoryURL");
+		break;
+	case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_LOCAL_PATH:
+		retString =_T("DeployLocalPath");
+		break;
+	case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_USERNAME:
+		retString =_T("DeployUserName");
+		break;
+	case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_USERPASSWORD:
+		retString =_T("DeployUserPassword");
+		break;
+	case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_CURRENT_REVISION:
+		retString =_T("DeployCurrentRevision");
+		break;
+	case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_LATEST_REVISION:
+		retString =_T("DeployLatestRevision");
+		break;
+
 	case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_ALL:
 		retString =_T("All");
 		break;
@@ -958,6 +1113,20 @@ CString WinServiceTypeInterpreter::getServiceObjectInfoSetTypeString(unsigned in
 	case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_IS_USER_INTERFACE:
 		retString =_T("IsUserInterface");
 		break;
+
+	case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_DEPLOY_REPOS_URL:
+		retString =_T("DeployRepositoryURL");
+		break;
+	case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_DEPLOY_LOCAL_PATH:
+		retString =_T("DeployLocalPath");
+		break;
+	case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_DEPLOY_USERNAME:
+		retString =_T("DeployUserName");
+		break;
+	case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_DEPLOY_USERPASSWORD:
+		retString =_T("DeployUserPassword");
+		break;
+
 	case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_ALL:
 		retString =_T("All");
 		break;

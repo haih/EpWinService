@@ -54,7 +54,8 @@ int _tmain(int argc, _TCHAR* argv[])
 			EpTString fileName=options.GetArgument(_T("-xmlfile"),0);
 			if(m_xmlFile.LoadFromFile(fileName.c_str()))
 			{
-				WinServiceXMLParser::ProcessParse(&m_xmlFile,result);
+				if(!WinServiceXMLParser::ProcessParse(&m_xmlFile,result))
+					return 0;
 			}
 			
 			
@@ -64,7 +65,8 @@ int _tmain(int argc, _TCHAR* argv[])
 			EpTString xmlString=options.GetArgument(_T("-xmlfile"),0);
 			m_xmlFile.Load(xmlString.c_str());
 
-			WinServiceXMLParser::ProcessParse(&m_xmlFile,result);
+			if(!WinServiceXMLParser::ProcessParse(&m_xmlFile,result))
+				return 0;
 			
 		}
 		XMLFile m_outXmlFile=XMLFile();

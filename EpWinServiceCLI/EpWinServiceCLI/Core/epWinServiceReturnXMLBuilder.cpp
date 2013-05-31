@@ -209,6 +209,72 @@ void WinServiceReturnXMLBuilder::addServiceObjInfo(const WinServiceResultInfo & 
 		root->AppendChild(_T("isUserInterface"),_T("true"));
 	else
 		root->AppendChild(_T("isUserInterface"),_T("false"));
+
+	root->AppendChild(_T("deployRepositoryURL"),info.m_deployRepositoryURL.c_str());
+	root->AppendChild(_T("deployLocalPath"),info.m_deployLocalPath.c_str());
+	root->AppendChild(_T("deployUserName"),info.m_deployUserName.c_str());
+	root->AppendChild(_T("deployUserPassword"),info.m_deployUserPassword.c_str());
+
+	XNode *deployInfoNode=root->AppendChild(_T("deployCurrentInfo"));
+	switch(info.m_deployCurrentInfo.m_errCode)
+	{
+
+	case DEPLOY_ERR_CODE_SUCCESS:
+		deployInfoNode->AppendChild(_T("deployErrCode"),_T("Success"));
+		break;
+	case DEPLOY_ERR_CODE_FAIED_SVNCOMMAND:
+		deployInfoNode->AppendChild(_T("deployErrCode"),_T("Failed: SVN Command"));
+		break;
+	case DEPLOY_ERR_CODE_FAIED_NULL_USERNAME:
+		deployInfoNode->AppendChild(_T("deployErrCode"),_T("Failed: User Name NOT Set"));
+		break;
+	case DEPLOY_ERR_CODE_FAIED_NULL_PASSWORD:
+		deployInfoNode->AppendChild(_T("deployErrCode"),_T("Failed: User Password NOT Set"));
+		break;
+	case DEPLOY_ERR_CODE_FAIED_NULL_REPOURL:
+		deployInfoNode->AppendChild(_T("deployErrCode"),_T("Failed: RepositoryURL NOT Set"));
+		break;
+	case DEPLOY_ERR_CODE_FAIED_NULL_LOCALPATH:
+		deployInfoNode->AppendChild(_T("deployErrCode"),_T("Failed: Local Path NOT Set"));
+		break;
+	case DEPLOY_ERR_CODE_FAIED_CLEANUP:
+		deployInfoNode->AppendChild(_T("deployErrCode"),_T("Failed: Clean up"));
+		break;
+	}
+	_itot(info.m_deployCurrentInfo.m_revisionNum,itotBuffer,10);
+	deployInfoNode->AppendChild(_T("revisionNum"),itotBuffer);
+	System::Memset(itotBuffer,0,sizeof(TCHAR)*65);
+
+	deployInfoNode=root->AppendChild(_T("deployLatestInfo"));
+	switch(info.m_deployCurrentInfo.m_errCode)
+	{
+
+	case DEPLOY_ERR_CODE_SUCCESS:
+		deployInfoNode->AppendChild(_T("deployErrCode"),_T("Success"));
+		break;
+	case DEPLOY_ERR_CODE_FAIED_SVNCOMMAND:
+		deployInfoNode->AppendChild(_T("deployErrCode"),_T("Failed: SVN Command"));
+		break;
+	case DEPLOY_ERR_CODE_FAIED_NULL_USERNAME:
+		deployInfoNode->AppendChild(_T("deployErrCode"),_T("Failed: User Name NOT Set"));
+		break;
+	case DEPLOY_ERR_CODE_FAIED_NULL_PASSWORD:
+		deployInfoNode->AppendChild(_T("deployErrCode"),_T("Failed: User Password NOT Set"));
+		break;
+	case DEPLOY_ERR_CODE_FAIED_NULL_REPOURL:
+		deployInfoNode->AppendChild(_T("deployErrCode"),_T("Failed: RepositoryURL NOT Set"));
+		break;
+	case DEPLOY_ERR_CODE_FAIED_NULL_LOCALPATH:
+		deployInfoNode->AppendChild(_T("deployErrCode"),_T("Failed: Local Path NOT Set"));
+		break;
+	case DEPLOY_ERR_CODE_FAIED_CLEANUP:
+		deployInfoNode->AppendChild(_T("deployErrCode"),_T("Failed: Clean up"));
+		break;
+	}
+	_itot(info.m_deployLatestInfo.m_revisionNum,itotBuffer,10);
+	deployInfoNode->AppendChild(_T("revisionNum"),itotBuffer);
+	System::Memset(itotBuffer,0,sizeof(TCHAR)*65);
+
 }
 
 void WinServiceReturnXMLBuilder::addProcessObjInfo(const WinServiceResultInfo & resultInfo,XNode *root)
@@ -266,6 +332,71 @@ void WinServiceReturnXMLBuilder::addProcessObjInfo(const WinServiceResultInfo & 
 		root->AppendChild(_T("isUserInterface"),_T("true"));
 	else
 		root->AppendChild(_T("isUserInterface"),_T("false"));
+
+	root->AppendChild(_T("deployRepositoryURL"),info.m_deployRepositoryURL.c_str());
+	root->AppendChild(_T("deployLocalPath"),info.m_deployLocalPath.c_str());
+	root->AppendChild(_T("deployUserName"),info.m_deployUserName.c_str());
+	root->AppendChild(_T("deployUserPassword"),info.m_deployUserPassword.c_str());
+
+	XNode *deployInfoNode=root->AppendChild(_T("deployCurrentInfo"));
+	switch(info.m_deployCurrentInfo.m_errCode)
+	{
+
+	case DEPLOY_ERR_CODE_SUCCESS:
+		deployInfoNode->AppendChild(_T("deployErrCode"),_T("Success"));
+		break;
+	case DEPLOY_ERR_CODE_FAIED_SVNCOMMAND:
+		deployInfoNode->AppendChild(_T("deployErrCode"),_T("Failed: SVN Command"));
+		break;
+	case DEPLOY_ERR_CODE_FAIED_NULL_USERNAME:
+		deployInfoNode->AppendChild(_T("deployErrCode"),_T("Failed: User Name NOT Set"));
+		break;
+	case DEPLOY_ERR_CODE_FAIED_NULL_PASSWORD:
+		deployInfoNode->AppendChild(_T("deployErrCode"),_T("Failed: User Password NOT Set"));
+		break;
+	case DEPLOY_ERR_CODE_FAIED_NULL_REPOURL:
+		deployInfoNode->AppendChild(_T("deployErrCode"),_T("Failed: RepositoryURL NOT Set"));
+		break;
+	case DEPLOY_ERR_CODE_FAIED_NULL_LOCALPATH:
+		deployInfoNode->AppendChild(_T("deployErrCode"),_T("Failed: Local Path NOT Set"));
+		break;
+	case DEPLOY_ERR_CODE_FAIED_CLEANUP:
+		deployInfoNode->AppendChild(_T("deployErrCode"),_T("Failed: Clean up"));
+		break;
+	}
+	_itot(info.m_deployCurrentInfo.m_revisionNum,itotBuffer,10);
+	deployInfoNode->AppendChild(_T("revisionNum"),itotBuffer);
+	System::Memset(itotBuffer,0,sizeof(TCHAR)*65);
+
+	deployInfoNode=root->AppendChild(_T("deployLatestInfo"));
+	switch(info.m_deployCurrentInfo.m_errCode)
+	{
+
+	case DEPLOY_ERR_CODE_SUCCESS:
+		deployInfoNode->AppendChild(_T("deployErrCode"),_T("Success"));
+		break;
+	case DEPLOY_ERR_CODE_FAIED_SVNCOMMAND:
+		deployInfoNode->AppendChild(_T("deployErrCode"),_T("Failed: SVN Command"));
+		break;
+	case DEPLOY_ERR_CODE_FAIED_NULL_USERNAME:
+		deployInfoNode->AppendChild(_T("deployErrCode"),_T("Failed: User Name NOT Set"));
+		break;
+	case DEPLOY_ERR_CODE_FAIED_NULL_PASSWORD:
+		deployInfoNode->AppendChild(_T("deployErrCode"),_T("Failed: User Password NOT Set"));
+		break;
+	case DEPLOY_ERR_CODE_FAIED_NULL_REPOURL:
+		deployInfoNode->AppendChild(_T("deployErrCode"),_T("Failed: RepositoryURL NOT Set"));
+		break;
+	case DEPLOY_ERR_CODE_FAIED_NULL_LOCALPATH:
+		deployInfoNode->AppendChild(_T("deployErrCode"),_T("Failed: Local Path NOT Set"));
+		break;
+	case DEPLOY_ERR_CODE_FAIED_CLEANUP:
+		deployInfoNode->AppendChild(_T("deployErrCode"),_T("Failed: Clean up"));
+		break;
+	}
+	_itot(info.m_deployLatestInfo.m_revisionNum,itotBuffer,10);
+	deployInfoNode->AppendChild(_T("revisionNum"),itotBuffer);
+	System::Memset(itotBuffer,0,sizeof(TCHAR)*65);
 }
 void WinServiceReturnXMLBuilder::addReturnValue(const WinServiceResultInfo & resultInfo,XNode *root)
 {
@@ -336,6 +467,36 @@ void WinServiceReturnXMLBuilder::addReturnValue(const WinServiceResultInfo & res
 			root->AppendChild(_T("value"),_T("Unknown"));
 			break;
 		}
+		break;
+	case RETURN_TYPE_DEPLOY_INFO:
+		switch(resultInfo.ToDeployInfo().m_errCode)
+		{
+
+		case DEPLOY_ERR_CODE_SUCCESS:
+			root->AppendChild(_T("deployErrCode"),_T("Success"));
+			break;
+		case DEPLOY_ERR_CODE_FAIED_SVNCOMMAND:
+			root->AppendChild(_T("deployErrCode"),_T("Failed: SVN Command"));
+			break;
+		case DEPLOY_ERR_CODE_FAIED_NULL_USERNAME:
+			root->AppendChild(_T("deployErrCode"),_T("Failed: User Name NOT Set"));
+			break;
+		case DEPLOY_ERR_CODE_FAIED_NULL_PASSWORD:
+			root->AppendChild(_T("deployErrCode"),_T("Failed: User Password NOT Set"));
+			break;
+		case DEPLOY_ERR_CODE_FAIED_NULL_REPOURL:
+			root->AppendChild(_T("deployErrCode"),_T("Failed: RepositoryURL NOT Set"));
+			break;
+		case DEPLOY_ERR_CODE_FAIED_NULL_LOCALPATH:
+			root->AppendChild(_T("deployErrCode"),_T("Failed: Local Path NOT Set"));
+			break;
+		case DEPLOY_ERR_CODE_FAIED_CLEANUP:
+			root->AppendChild(_T("deployErrCode"),_T("Failed: Clean up"));
+			break;
+		}
+		_itot(resultInfo.ToDeployInfo().m_revisionNum,itotBuffer,10);
+		root->AppendChild(_T("revisionNum"),itotBuffer);
+		System::Memset(itotBuffer,0,sizeof(TCHAR)*65);
 		break;
 	case RETURN_TYPE_PROCESSOBJ_INFO:
 		addProcessObjInfo(resultInfo,root);

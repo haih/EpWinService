@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "epWinServiceXMLParser.h"
 #include "epWinServiceTypeInterpreter.h"
 
+
 WinServiceXMLParserError WinServiceXMLParser::processMainServiceCommand(MainServiceCommandPacketType subCommandType, XNode *root,WinServicePacketGenerator &retPacketGen)
 {
 	WinServiceXMLParserError retErr=WINSERVICE_XML_PARSER_ERROR_SUCCESS;
@@ -146,6 +147,8 @@ WinServiceXMLParserError WinServiceXMLParser::processProcessObjectCommand(Proces
 	CString waitTimeString=_T("INFINITE");
 	unsigned int waitTime=WAITTIME_INIFINITE;
 	CString cmd=_T("");
+	CString revisionNumString=_T("UNKNOWN");
+	int revisionNum=REVISION_UNKNOWN;
 	int objIdx=-1;
 	XNode * argNode=NULL;
 
@@ -192,6 +195,17 @@ WinServiceXMLParserError WinServiceXMLParser::processProcessObjectCommand(Proces
 		else
 			return WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT;
 		break;
+	case PROCESS_OBJECT_COMMAND_PACKET_TYPE_DEPLOY:
+		argNode=root->GetChild(_T("revisionNum"));
+		if(argNode)
+		{
+			revisionNumString=argNode->GetText();
+			if(revisionNumString.Compare(_T("UNKNOWN"))!=0)
+				revisionNum=(int)_ttoi(revisionNumString.GetString());
+		}		
+		retPacketGen.AddDeployCommandProcessObj(objIdx,revisionNum);
+		return retErr;
+		break;
 	default:
 		return WINSERVICE_XML_PARSER_ERROR_INVALID_SUBCOMMAND;
 		break;
@@ -231,6 +245,14 @@ WinServiceXMLParserError WinServiceXMLParser::processProcessObjectInfoGet(Proces
 	case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_IS_IMPERSONATE:
 	case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_IS_USER_INTERFACE:
 	case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_STATUS:
+
+	case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_REPOS_URL:
+	case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_LOCAL_PATH:
+	case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_USERNAME:
+	case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_USERPASSWORD:
+	case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_CURRENT_REVISION:
+	case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_LATEST_REVISION:
+
 	case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_ALL:
 		break;
 	default:
@@ -265,25 +287,28 @@ WinServiceXMLParserError WinServiceXMLParser::processProcessObjectInfoSet(Proces
 			procObjInfo.m_commandLine=argNode->GetText();
 		else
 			return WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT;
-
+		break;
 	case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_PREPROCESS_COMMANDLINE:
 		argNode=root->GetChild(_T("preProcessCommandLine"));
 		if(argNode)
 			procObjInfo.m_preProcessCommandLine=argNode->GetText().GetString();
 		else
 			return WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT;
+		break;
 	case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_POSTPROCESS_COMMANDLINE:
 		argNode=root->GetChild(_T("postProcessCommandLine"));
 		if(argNode)
 			procObjInfo.m_postProcessCommandLine=argNode->GetText().GetString();
 		else
 			return WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT;
+		break;
 	case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_CUSTOMPROCESS_COMMANDLINE:
 		argNode=root->GetChild(_T("customProcessCommandLine"));
 		if(argNode)
 			procObjInfo.m_customProcessCommandLine=argNode->GetText().GetString();
 		else
 			return WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT;
+		break;
 	case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_PREPROCESS_WAIT_TIME:
 		argNode=root->GetChild(_T("preProcessWaitTime"));
 		if(argNode)
@@ -293,6 +318,7 @@ WinServiceXMLParserError WinServiceXMLParser::processProcessObjectInfoSet(Proces
 		}
 		else
 			return WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT;
+		break;
 	case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_POSTPROCESS_WAIT_TIME:
 		argNode=root->GetChild(_T("postProcessWaitTime"));
 		if(argNode)
@@ -302,36 +328,42 @@ WinServiceXMLParserError WinServiceXMLParser::processProcessObjectInfoSet(Proces
 		}
 		else
 			return WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT;
+		break;
 	case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_DOMAINNAME:
 		argNode=root->GetChild(_T("domainName"));
 		if(argNode)
 			procObjInfo.m_domainName=argNode->GetText().GetString();
 		else
 			return WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT;
+		break;
 	case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_USERNAME:
 		argNode=root->GetChild(_T("userName"));
 		if(argNode)
 			procObjInfo.m_userName=argNode->GetText().GetString();
 		else
 			return WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT;
+		break;
 	case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_USERPASSWORD:
 		argNode=root->GetChild(_T("userPassword"));
 		if(argNode)
 			procObjInfo.m_userPassword=argNode->GetText().GetString();
 		else
 			return WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT;
+		break;
 	case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_DELAY_START_TIME:
 		argNode=root->GetChild(_T("delayStartTime"));
 		if(argNode)
 			procObjInfo.m_delayStartTime=(unsigned int)_ttoi(argNode->GetText().GetString());
 		else
 			return WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT;
+		break;
 	case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_DELAY_PAUSE_END_TIME:
 		argNode=root->GetChild(_T("delayPauseEndTime"));
 		if(argNode)
 			procObjInfo.m_delayPauseEndTime=(unsigned int)_ttoi(argNode->GetText().GetString());
 		else
 			return WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT;
+		break;
 	case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_IS_RESTART:
 		argNode=root->GetChild(_T("IsRestart"));
 		if(argNode)
@@ -345,6 +377,7 @@ WinServiceXMLParserError WinServiceXMLParser::processProcessObjectInfoSet(Proces
 		}
 		else
 			return WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT;
+		break;
 	case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_IS_IMPERSONATE:
 		argNode=root->GetChild(_T("IsImpersonate"));
 		if(argNode)
@@ -358,6 +391,7 @@ WinServiceXMLParserError WinServiceXMLParser::processProcessObjectInfoSet(Proces
 		}
 		else
 			return WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT;
+		break;
 	case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_IS_USER_INTERFACE:
 		argNode=root->GetChild(_T("IsUserInterface"));
 		if(argNode)
@@ -371,6 +405,37 @@ WinServiceXMLParserError WinServiceXMLParser::processProcessObjectInfoSet(Proces
 		}
 		else
 			return WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT;
+		break;
+
+	case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_DEPLOY_REPOS_URL:
+		argNode=root->GetChild(_T("deployRepositoryURL"));
+		if(argNode)
+			procObjInfo.m_deployRepositoryURL=argNode->GetText().GetString();
+		else
+			return WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT;
+		break;
+	case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_DEPLOY_LOCAL_PATH:
+		argNode=root->GetChild(_T("deployLocalPath"));
+		if(argNode)
+			procObjInfo.m_deployLocalPath=argNode->GetText().GetString();
+		else
+			return WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT;
+		break;
+	case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_DEPLOY_USERNAME:
+		argNode=root->GetChild(_T("deployUserName"));
+		if(argNode)
+			procObjInfo.m_deployUserName=argNode->GetText().GetString();
+		else
+			return WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT;
+		break;
+	case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_DEPLOY_USERPASSWORD:
+		argNode=root->GetChild(_T("deployUserPassword"));
+		if(argNode)
+			procObjInfo.m_deployUserName=argNode->GetText().GetString();
+		else
+			return WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT;
+		break;
+
 	case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_ALL:
 		argNode=root->GetChild(_T("All"));
 		if(argNode)
@@ -472,9 +537,31 @@ WinServiceXMLParserError WinServiceXMLParser::processProcessObjectInfoSet(Proces
 			}
 			else
 				return WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT;
+			argNode=root->GetChild(_T("deployRepositoryURL"));
+			if(argNode)
+				procObjInfo.m_deployRepositoryURL=argNode->GetText().GetString();
+			else
+				return WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT;
+			argNode=root->GetChild(_T("deployLocalPath"));
+			if(argNode)
+				procObjInfo.m_deployLocalPath=argNode->GetText().GetString();
+			else
+				return WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT;
+			argNode=root->GetChild(_T("deployUserName"));
+			if(argNode)
+				procObjInfo.m_deployUserName=argNode->GetText().GetString();
+			else
+				return WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT;
+			argNode=root->GetChild(_T("deployUserPassword"));
+			if(argNode)
+				procObjInfo.m_deployUserName=argNode->GetText().GetString();
+			else
+				return WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT;
+
 		}
 		else
 			return WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT;
+		break;
 	default:
 		return WINSERVICE_XML_PARSER_ERROR_INVALID_SUBCOMMAND;
 		break;
@@ -490,6 +577,8 @@ WinServiceXMLParserError WinServiceXMLParser::processServiceObjectCommand(Servic
 	CString waitTimeString=_T("INFINITE");
 	unsigned int waitTime=WAITTIME_INIFINITE;
 	CString cmd=_T("");
+	CString revisionNumString=_T("UNKNOWN");
+	int revisionNum=REVISION_UNKNOWN;
 	int objIdx=-1;
 	XNode * argNode=NULL;
 	argNode=root->GetChild(_T("objIndex"));
@@ -539,6 +628,17 @@ WinServiceXMLParserError WinServiceXMLParser::processServiceObjectCommand(Servic
 		else
 			return WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT;
 		break;
+	case SERVICE_OBJECT_COMMAND_PACKET_TYPE_DEPLOY:
+		argNode=root->GetChild(_T("revisionNum"));
+		if(argNode)
+		{
+			revisionNumString=argNode->GetText();
+			if(revisionNumString.Compare(_T("UNKNOWN"))!=0)
+				revisionNum=(int)_ttoi(revisionNumString.GetString());
+		}		
+		retPacketGen.AddDeployCommandServiceObj(objIdx,revisionNum);
+		return retErr;
+		break;
 	default:
 		return WINSERVICE_XML_PARSER_ERROR_INVALID_SUBCOMMAND;
 		break;
@@ -578,6 +678,14 @@ WinServiceXMLParserError WinServiceXMLParser::processServiceObjectInfoGet(Servic
 	case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_IS_IMPERSONATE:
 	case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_IS_USER_INTERFACE:
 	case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_STATUS:
+
+	case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_REPOS_URL:
+	case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_LOCAL_PATH:
+	case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_USERNAME:
+	case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_USERPASSWORD:
+	case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_CURRENT_REVISION:
+	case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_LATEST_REVISION:
+
 	case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_ALL:
 		break;
 	default:
@@ -612,25 +720,28 @@ WinServiceXMLParserError WinServiceXMLParser::processServiceObjectInfoSet(Servic
 			serviceObjInfo.m_serviceName=argNode->GetText().GetString();
 		else
 			return WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT;
-
+		break;
 	case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_PREPROCESS_COMMANDLINE:
 		argNode=root->GetChild(_T("preProcessCommandLine"));
 		if(argNode)
 			serviceObjInfo.m_preProcessCommandLine=argNode->GetText().GetString();
 		else
 			return WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT;
+		break;
 	case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_POSTPROCESS_COMMANDLINE:
 		argNode=root->GetChild(_T("postProcessCommandLine"));
 		if(argNode)
 			serviceObjInfo.m_postProcessCommandLine=argNode->GetText().GetString();
 		else
 			return WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT;
+		break;
 	case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_CUSTOMPROCESS_COMMANDLINE:
 		argNode=root->GetChild(_T("customProcessCommandLine"));
 		if(argNode)
 			serviceObjInfo.m_customProcessCommandLine=argNode->GetText().GetString();
 		else
 			return WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT;
+		break;
 	case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_PREPROCESS_WAIT_TIME:
 		argNode=root->GetChild(_T("preProcessWaitTime"));
 		if(argNode)
@@ -640,6 +751,7 @@ WinServiceXMLParserError WinServiceXMLParser::processServiceObjectInfoSet(Servic
 		}
 		else
 			return WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT;
+		break;
 	case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_POSTPROCESS_WAIT_TIME:
 		argNode=root->GetChild(_T("postProcessWaitTime"));
 		if(argNode)
@@ -649,36 +761,42 @@ WinServiceXMLParserError WinServiceXMLParser::processServiceObjectInfoSet(Servic
 		}
 		else
 			return WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT;
+		break;
 	case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_DOMAINNAME:
 		argNode=root->GetChild(_T("domainName"));
 		if(argNode)
 			serviceObjInfo.m_domainName=argNode->GetText().GetString();
 		else
 			return WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT;
+		break;
 	case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_USERNAME:
 		argNode=root->GetChild(_T("userName"));
 		if(argNode)
 			serviceObjInfo.m_userName=argNode->GetText().GetString();
 		else
 			return WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT;
+		break;
 	case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_USERPASSWORD:
 		argNode=root->GetChild(_T("userPassword"));
 		if(argNode)
 			serviceObjInfo.m_userPassword=argNode->GetText().GetString();
 		else
 			return WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT;
+		break;
 	case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_DELAY_START_TIME:
 		argNode=root->GetChild(_T("delayStartTime"));
 		if(argNode)
 			serviceObjInfo.m_delayStartTime=(unsigned int)_ttoi(argNode->GetText().GetString());
 		else
 			return WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT;
+		break;
 	case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_DELAY_PAUSE_END_TIME:
 		argNode=root->GetChild(_T("delayPauseEndTime"));
 		if(argNode)
 			serviceObjInfo.m_delayPauseEndTime=(unsigned int)_ttoi(argNode->GetText().GetString());
 		else
 			return WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT;
+		break;
 	case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_IS_RESTART:
 		argNode=root->GetChild(_T("IsRestart"));
 		if(argNode)
@@ -692,6 +810,7 @@ WinServiceXMLParserError WinServiceXMLParser::processServiceObjectInfoSet(Servic
 		}
 		else
 			return WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT;
+		break;
 	case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_IS_IMPERSONATE:
 		argNode=root->GetChild(_T("IsImpersonate"));
 		if(argNode)
@@ -705,6 +824,7 @@ WinServiceXMLParserError WinServiceXMLParser::processServiceObjectInfoSet(Servic
 		}
 		else
 			return WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT;
+		break;
 	case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_IS_USER_INTERFACE:
 		argNode=root->GetChild(_T("IsUserInterface"));
 		if(argNode)
@@ -718,6 +838,37 @@ WinServiceXMLParserError WinServiceXMLParser::processServiceObjectInfoSet(Servic
 		}
 		else
 			return WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT;
+		break;
+
+	case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_DEPLOY_REPOS_URL:
+		argNode=root->GetChild(_T("deployRepositoryURL"));
+		if(argNode)
+			serviceObjInfo.m_deployRepositoryURL=argNode->GetText().GetString();
+		else
+			return WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT;
+		break;
+	case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_DEPLOY_LOCAL_PATH:
+		argNode=root->GetChild(_T("deployLocalPath"));
+		if(argNode)
+			serviceObjInfo.m_deployLocalPath=argNode->GetText().GetString();
+		else
+			return WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT;
+		break;
+	case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_DEPLOY_USERNAME:
+		argNode=root->GetChild(_T("deployUserName"));
+		if(argNode)
+			serviceObjInfo.m_deployUserName=argNode->GetText().GetString();
+		else
+			return WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT;
+		break;
+	case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_DEPLOY_USERPASSWORD:
+		argNode=root->GetChild(_T("deployUserPassword"));
+		if(argNode)
+			serviceObjInfo.m_deployUserName=argNode->GetText().GetString();
+		else
+			return WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT;
+		break;
+
 	case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_ALL:
 		argNode=root->GetChild(_T("All"));
 		if(argNode)
@@ -819,9 +970,34 @@ WinServiceXMLParserError WinServiceXMLParser::processServiceObjectInfoSet(Servic
 			}
 			else
 				return WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT;
+
+			argNode=root->GetChild(_T("deployRepositoryURL"));
+			if(argNode)
+				serviceObjInfo.m_deployRepositoryURL=argNode->GetText().GetString();
+			else
+				return WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT;
+			argNode=root->GetChild(_T("deployLocalPath"));
+			if(argNode)
+				serviceObjInfo.m_deployLocalPath=argNode->GetText().GetString();
+			else
+				return WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT;
+			break;
+			argNode=root->GetChild(_T("deployUserName"));
+			if(argNode)
+				serviceObjInfo.m_deployUserName=argNode->GetText().GetString();
+			else
+				return WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT;
+			argNode=root->GetChild(_T("deployUserPassword"));
+			if(argNode)
+				serviceObjInfo.m_deployUserName=argNode->GetText().GetString();
+			else
+				return WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT;
+
+
 		}
 		else
 			return WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT;
+		break;
 	default:
 		return WINSERVICE_XML_PARSER_ERROR_INVALID_SUBCOMMAND;
 		break;
