@@ -195,11 +195,17 @@ typedef enum _processObjectInfoGetPacketType{
 	/// Get current Process's status
 	PROCESS_OBJECT_INFO_GET_PACKET_TYPE_STATUS,
 
+	/// Get Process's Deploy Repository URL
 	PROCESS_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_REPOS_URL,
+	/// Get Process's Deploy Local Path
 	PROCESS_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_LOCAL_PATH,
+	/// Get Process's Deploy User Name
 	PROCESS_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_USERNAME,
+	/// Get Process's Deploy User Password
 	PROCESS_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_USERPASSWORD,
+	/// Get Process's Deployed Current Revision
 	PROCESS_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_CURRENT_REVISION,
+	/// Get Process's Deployed Latest Revision
 	PROCESS_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_LATEST_REVISION,
 
 	/// Get all information above
@@ -241,9 +247,13 @@ typedef enum _processObjectInfoSetPacketType{
 	/// Set Process's user-interface flag
 	PROCESS_OBJECT_INFO_SET_PACKET_TYPE_IS_USER_INTERFACE,
 
+	/// Set Process's Deploy Repository URL
 	PROCESS_OBJECT_INFO_SET_PACKET_TYPE_DEPLOY_REPOS_URL,
+	/// Set Process's Deploy Local Path
 	PROCESS_OBJECT_INFO_SET_PACKET_TYPE_DEPLOY_LOCAL_PATH,
+	/// Set Process's Deploy User Name
 	PROCESS_OBJECT_INFO_SET_PACKET_TYPE_DEPLOY_USERNAME,
+	/// Set Process's Deploy User Password
 	PROCESS_OBJECT_INFO_SET_PACKET_TYPE_DEPLOY_USERPASSWORD,
 
 	/// Set all information above
@@ -291,12 +301,17 @@ typedef enum _serviceObjectInfoGetPacketType{
 	/// Get current Service's status
 	SERVICE_OBJECT_INFO_GET_PACKET_TYPE_STATUS,
 
-
+	/// Get Service's Deploy Repository URL
 	SERVICE_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_REPOS_URL,
+	/// Get Service's Deploy Local Path
 	SERVICE_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_LOCAL_PATH,
+	/// Get Service's Deploy User Name
 	SERVICE_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_USERNAME,
+	/// Get Service's Deploy User Password
 	SERVICE_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_USERPASSWORD,
+	/// Get Service's Deployed Current Revision
 	SERVICE_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_CURRENT_REVISION,
+	/// Get Service's Deployed Latest Revision
 	SERVICE_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_LATEST_REVISION,
 
 	/// Get all information above
@@ -338,10 +353,13 @@ typedef enum _serviceObjectInfoSetPacketType{
 	SERVICE_OBJECT_INFO_SET_PACKET_TYPE_IS_IMPERSONATE,
 	/// Set Service's user-interface flag
 	SERVICE_OBJECT_INFO_SET_PACKET_TYPE_IS_USER_INTERFACE,
-
+	/// Set Service's Deploy Repository URL
 	SERVICE_OBJECT_INFO_SET_PACKET_TYPE_DEPLOY_REPOS_URL,
+	/// Set Service's Deploy Local Path
 	SERVICE_OBJECT_INFO_SET_PACKET_TYPE_DEPLOY_LOCAL_PATH,
+	/// Set Service's Deploy User Name
 	SERVICE_OBJECT_INFO_SET_PACKET_TYPE_DEPLOY_USERNAME,
+	/// Set Service's Deploy User Password
 	SERVICE_OBJECT_INFO_SET_PACKET_TYPE_DEPLOY_USERPASSWORD,
 
 	/// Set all information above

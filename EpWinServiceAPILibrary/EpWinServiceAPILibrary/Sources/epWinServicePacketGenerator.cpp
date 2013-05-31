@@ -113,6 +113,17 @@ void WinServicePacketGenerator::AddCommandProcessObj(ProcessObjectCommandPacketT
 
 	}
 }
+
+void WinServicePacketGenerator::AddDeployCommandProcessObj(int objIndex,int revisionNum)
+{
+	LockObj lock(m_packetGeneratorLock);
+	m_count++;
+	m_stream.WriteUInt((unsigned int)PACKET_TYPE_PROCESS_OBJECT_COMMAND);
+	m_stream.WriteUInt((unsigned int)PROCESS_OBJECT_COMMAND_PACKET_TYPE_DEPLOY);
+	m_stream.WriteInt(objIndex);
+	m_stream.WriteInt(revisionNum);
+}
+
 void WinServicePacketGenerator::AddCommandServiceObj(ServiceObjectCommandPacketType type, int objIndex,int waitTime,const EpTString &cmd)
 {
 	LockObj lock(m_packetGeneratorLock);
@@ -133,6 +144,17 @@ void WinServicePacketGenerator::AddCommandServiceObj(ServiceObjectCommandPacketT
 		break;
 
 	}
+}
+
+void WinServicePacketGenerator::AddDeployCommandServiceObj(int objIndex,int revisionNum)
+{
+	LockObj lock(m_packetGeneratorLock);
+	m_count++;
+	m_stream.WriteUInt((unsigned int)PACKET_TYPE_SERVICE_OBJECT_COMMAND);
+	m_stream.WriteUInt((unsigned int)SERVICE_OBJECT_COMMAND_PACKET_TYPE_DEPLOY);
+	m_stream.WriteInt(objIndex);
+	m_stream.WriteInt(revisionNum);
+
 }
 
 void WinServicePacketGenerator::AddCommandMainService(MainServiceCommandPacketType type,int waitTime, const EpTString &cmd)
@@ -254,6 +276,18 @@ void WinServicePacketGenerator::AddSetServiceInfo(ServiceObjectInfoSetPacketType
 		else
 			m_stream.WriteUInt(0);
 		break;
+	case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_DEPLOY_REPOS_URL:
+		m_stream.WriteTString(info.m_deployRepositoryURL);
+		break;
+	case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_DEPLOY_LOCAL_PATH:
+		m_stream.WriteTString(info.m_deployLocalPath);
+		break;
+	case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_DEPLOY_USERNAME:
+		m_stream.WriteTString(info.m_deployUserName);
+		break;
+	case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_DEPLOY_USERPASSWORD:
+		m_stream.WriteTString(info.m_deployUserPassword);
+		break;
 	case SERVICE_OBJECT_INFO_SET_PACKET_TYPE_ALL:
 		m_stream.WriteTString(info.m_serviceName);
 		m_stream.WriteTString(info.m_preProcessCommandLine);
@@ -278,6 +312,12 @@ void WinServicePacketGenerator::AddSetServiceInfo(ServiceObjectInfoSetPacketType
 			m_stream.WriteUInt(1);
 		else
 			m_stream.WriteUInt(0);
+		m_stream.WriteTString(info.m_deployRepositoryURL);
+		m_stream.WriteTString(info.m_deployLocalPath);
+		m_stream.WriteTString(info.m_deployUserName);
+		m_stream.WriteTString(info.m_deployUserPassword);
+
+
 		break;
 	}
 }
@@ -351,6 +391,19 @@ void WinServicePacketGenerator::AddSetProcessInfo(ProcessObjectInfoSetPacketType
 		else
 			m_stream.WriteUInt(0);
 		break;
+
+	case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_DEPLOY_REPOS_URL:
+		m_stream.WriteTString(info.m_deployRepositoryURL);
+		break;
+	case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_DEPLOY_LOCAL_PATH:
+		m_stream.WriteTString(info.m_deployLocalPath);
+		break;
+	case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_DEPLOY_USERNAME:
+		m_stream.WriteTString(info.m_deployUserName);
+		break;
+	case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_DEPLOY_USERPASSWORD:
+		m_stream.WriteTString(info.m_deployUserPassword);
+		break;
 	case PROCESS_OBJECT_INFO_SET_PACKET_TYPE_ALL:
 		m_stream.WriteTString(info.m_commandLine);
 		m_stream.WriteTString(info.m_preProcessCommandLine);
@@ -375,6 +428,10 @@ void WinServicePacketGenerator::AddSetProcessInfo(ProcessObjectInfoSetPacketType
 			m_stream.WriteUInt(1);
 		else
 			m_stream.WriteUInt(0);
+		m_stream.WriteTString(info.m_deployRepositoryURL);
+		m_stream.WriteTString(info.m_deployLocalPath);
+		m_stream.WriteTString(info.m_deployUserName);
+		m_stream.WriteTString(info.m_deployUserPassword);
 		break;
 	}
 }

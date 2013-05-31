@@ -76,6 +76,12 @@ const ServiceHandleErrorInfo &WinServiceResultInfo::ToServiceHandleErrorInfo() c
 	EP_ASSERT(m_retVal);
 	return *(ServiceHandleErrorInfo*)m_retVal;
 }
+
+const DeployInfo &WinServiceResultInfo::ToDeployInfo() const
+{
+	EP_ASSERT(m_retVal);
+	return *(DeployInfo*)m_retVal;
+}
 PacketType WinServiceResultInfo::GetPacketType() const
 {
 	return m_packetType;
@@ -167,6 +173,10 @@ WinServiceResultInfo::WinServiceResultInfo(const WinServiceResultInfo& b)
 			m_retVal=EP_NEW ServiceHandleErrorInfo();
 			*(ServiceHandleErrorInfo*)m_retVal=*(ServiceHandleErrorInfo*)b.m_retVal;
 			break;
+		case RETURN_TYPE_DEPLOY_INFO:
+			m_retVal=EP_NEW DeployInfo();
+			*(DeployInfo*)m_retVal=*(DeployInfo*)b.m_retVal;
+			break;
 		}
 	}
 }
@@ -227,6 +237,10 @@ WinServiceResultInfo & WinServiceResultInfo::operator=(const WinServiceResultInf
 			case RETURN_TYPE_SERVICE_HANDLE_ERROR_INFO:
 				m_retVal=EP_NEW ServiceHandleErrorInfo();
 				*(ServiceHandleErrorInfo*)m_retVal=*(ServiceHandleErrorInfo*)b.m_retVal;
+				break;
+			case RETURN_TYPE_DEPLOY_INFO:
+				m_retVal=EP_NEW DeployInfo();
+				*(DeployInfo*)m_retVal=*(DeployInfo*)b.m_retVal;
 				break;
 			}
 		}
@@ -334,5 +348,15 @@ WinServiceResultInfo &  WinServiceResultInfo::operator=(const ServiceHandleError
 	m_retVal=(void*)EP_NEW ServiceHandleErrorInfo();
 	*(ServiceHandleErrorInfo*)m_retVal=val;
 	m_retType=RETURN_TYPE_SERVICE_HANDLE_ERROR_INFO;
+	return *this;
+}
+
+WinServiceResultInfo &  WinServiceResultInfo::operator=(const DeployInfo &val)
+{
+	if(m_retVal)
+		EP_DELETE m_retVal;
+	m_retVal=(void*)EP_NEW DeployInfo();
+	*(DeployInfo*)m_retVal=val;
+	m_retType=RETURN_TYPE_DEPLOY_INFO;
 	return *this;
 }

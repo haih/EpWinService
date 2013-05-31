@@ -371,6 +371,32 @@ namespace epws
 		SERVICE_CONTROL_CODE_NETBINDDISABLE=SERVICE_CONTROL_NETBINDDISABLE,
 	}ServiceControlCode;
 
+	/// Deploy Error Code
+	typedef enum _DeployErrCode{
+		/// Success
+		DEPLOY_ERR_CODE_SUCCESS=0,
+		/// Deploy Command Error
+		DEPLOY_ERR_CODE_FAIED_SVNCOMMAND,
+		/// Deploy Username is NULL
+		DEPLOY_ERR_CODE_FAIED_NULL_USERNAME,
+		/// Deploy Password is NULL
+		DEPLOY_ERR_CODE_FAIED_NULL_PASSWORD,
+		/// No Deploy Repository Set
+		DEPLOY_ERR_CODE_FAIED_NULL_REPOURL,
+		/// No Deploy Local Path Set
+		DEPLOY_ERR_CODE_FAIED_NULL_LOCALPATH,
+		/// Deploy Cleanup failed
+		DEPLOY_ERR_CODE_FAIED_CLEANUP,
+	}DeployErrCode;
+
+	/*!
+	@def REVISION_UNKNOWN
+	@brief Revision Unknown Declaration
+
+	Macro for the Revision Unknown Param.
+	*/
+#define REVISION_UNKNOWN -1
+
 	/*!
 	@def SERVICE_DEFAULT_PARAM
 	@brief Service Default Param Declaration

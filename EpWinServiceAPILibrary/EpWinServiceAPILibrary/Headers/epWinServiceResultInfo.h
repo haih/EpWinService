@@ -65,6 +65,8 @@ namespace epws
 		RETURN_TYPE_SERVICE_STATUS_TYPE,
 		/// ServiceHandleErrorInfo Type
 		RETURN_TYPE_SERVICE_HANDLE_ERROR_INFO,
+		/// DeployInfo Type
+		RETURN_TYPE_DEPLOY_INFO,
 	}ReturnType;
 
 	/// Retrieve Status Enumeration
@@ -185,7 +187,11 @@ namespace epws
 		*/
 		const ServiceHandleErrorInfo &ToServiceHandleErrorInfo() const;
 
-
+		/*!
+		Return the value in DeployInfo
+		@return the value in DeployInfo
+		*/
+		const DeployInfo &ToDeployInfo() const;
 
 	private:
 		friend class WinServicePacketProcessor;
@@ -295,6 +301,13 @@ namespace epws
 		@return the reference to this object
 		*/
 		WinServiceResultInfo &  operator=(const ServiceHandleErrorInfo &val);
+
+		/*!
+		Set the Result Value as given val
+		@param[in] val the Result Value in DeployInfo
+		@return the reference to this object
+		*/
+		WinServiceResultInfo &  operator=(const DeployInfo &val);
 
 	private:
 		/// Packet Type

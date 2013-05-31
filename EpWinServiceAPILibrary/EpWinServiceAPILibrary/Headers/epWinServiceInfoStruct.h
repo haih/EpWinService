@@ -38,6 +38,27 @@ An Interface for WinService Information Structure.
 namespace epws
 {
 	/*! 
+	@struct DeployInfo epWinServiceInfoStruct.h
+	@brief A class for Deploy Information.
+	*/
+	struct EP_WINSERVICE_API DeployInfo{
+		/*!
+		Default Constructor
+
+		Initializes the DeployInfo
+		*/
+		DeployInfo()
+		{
+			m_errCode=DEPLOY_ERR_CODE_SUCCESS;
+			m_revisionNum=0;
+		}
+		/// Deploy Error Code
+		DeployErrCode m_errCode;
+		/// Revision Number
+		int m_revisionNum;
+	};
+
+	/*! 
 	@struct MainServiceInfo epWinServiceInfoStruct.h
 	@brief A class for Main Service Information.
 	*/
@@ -87,6 +108,15 @@ namespace epws
 			m_isRestart=true;
 			m_isImpersonate=false;
 			m_isUserInterface=false;
+
+			m_deployRepositoryURL=_T("");
+			m_deployLocalPath=_T("");
+			m_deployUserName=_T("");
+			m_deployUserPassword=_T("");
+			m_deployCurrentInfo.m_errCode=DEPLOY_ERR_CODE_SUCCESS;
+			m_deployCurrentInfo.m_revisionNum=REVISION_UNKNOWN;
+			m_deployLatestInfo.m_errCode=DEPLOY_ERR_CODE_SUCCESS;
+			m_deployLatestInfo.m_revisionNum=REVISION_UNKNOWN;
 		}
 		/// Service Status Type
 		ServiceStatusType m_serviceStatusType;
@@ -119,8 +149,24 @@ namespace epws
 		bool m_isImpersonate;
 		/// Flag for User-Interface
 		bool m_isUserInterface;
+
+
+		/// Repository URL
+		EpTString m_deployRepositoryURL;
+		/// Local Path
+		EpTString m_deployLocalPath;
+		/// Deploy User Name
+		EpTString m_deployUserName;
+		/// Deploy User Password
+		EpTString m_deployUserPassword;
+		/// Current Deploy Info
+		DeployInfo m_deployCurrentInfo;
+		/// Latest Deploy Info
+		DeployInfo m_deployLatestInfo;
 	};
 	
+
+
 	/*! 
 	@struct ProcessObjInfo epWinServiceInfoStruct.h
 	@brief A class for Process Object Information.
@@ -148,6 +194,16 @@ namespace epws
 			m_isRestart=true;
 			m_isImpersonate=false;
 			m_isUserInterface=false;
+
+			m_deployRepositoryURL=_T("");
+			m_deployLocalPath=_T("");
+			m_deployUserName=_T("");
+			m_deployUserPassword=_T("");
+			m_deployCurrentInfo.m_errCode=DEPLOY_ERR_CODE_SUCCESS;
+			m_deployCurrentInfo.m_revisionNum=REVISION_UNKNOWN;
+			m_deployLatestInfo.m_errCode=DEPLOY_ERR_CODE_SUCCESS;
+			m_deployLatestInfo.m_revisionNum=REVISION_UNKNOWN;
+
 
 		}
 		/// Process Status Type
@@ -182,7 +238,23 @@ namespace epws
 		/// Flag for User-Interface
 		bool m_isUserInterface;
 
+		/// Repository URL
+		EpTString m_deployRepositoryURL;
+		/// Local Path
+		EpTString m_deployLocalPath;
+		/// Deploy User Name
+		EpTString m_deployUserName;
+		/// Deploy User Password
+		EpTString m_deployUserPassword;
+		/// Current Deploy Info
+		DeployInfo m_deployCurrentInfo;
+		/// Latest Deploy Info
+		DeployInfo m_deployLatestInfo;
+
 	};
+
+	
+
 
 	/*! 
 	@struct ServiceInfo epWinServiceInfoStruct.h

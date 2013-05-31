@@ -88,6 +88,10 @@ RetrieveStatus WinServicePacketProcessor::commandProcessObject(unsigned int subP
 {
 	unsigned int result;
 	int procIdx;
+	unsigned int errCode;
+	int curRevision;
+	DeployInfo deployInfo;	
+
 	if(stream.ReadUInt(result))
 	{
 		retInfo->m_packetProcessResult=(PacketProcessStatus)result;
@@ -101,6 +105,23 @@ RetrieveStatus WinServicePacketProcessor::commandProcessObject(unsigned int subP
 				return RETRIEVE_STATUS_FAIL_OBJECTIDX;
 			}
 			retInfo->m_objIdx=procIdx;
+			
+			if((ProcessObjectCommandPacketType)subPacketType==PROCESS_OBJECT_COMMAND_PACKET_TYPE_DEPLOY)
+			{
+				if(!stream.ReadUInt(errCode))
+				{
+					return RETRIEVE_STATUS_FAIL_OBJECTIDX;
+				}
+				if(!stream.ReadInt(curRevision))
+				{
+					return RETRIEVE_STATUS_FAIL_OBJECTIDX;
+				}
+				deployInfo.m_errCode=(DeployErrCode)errCode;
+				deployInfo.m_revisionNum=curRevision;
+				*retInfo=deployInfo;
+
+			}
+	
 			break;
 		case PACKET_PROCESS_STATUS_FAIL_OBJECT_IDX_OUT_OF_RANCE:
 			if(!stream.ReadInt(procIdx))
@@ -129,6 +150,9 @@ RetrieveStatus WinServicePacketProcessor::commandServiceObject(unsigned int subP
 {
 	unsigned int result;
 	int procIdx;
+	unsigned int errCode;
+	int curRevision;
+	DeployInfo deployInfo;
 	if(stream.ReadUInt(result))
 	{
 		retInfo->m_packetProcessResult=(PacketProcessStatus)result;
@@ -142,6 +166,22 @@ RetrieveStatus WinServicePacketProcessor::commandServiceObject(unsigned int subP
 				return RETRIEVE_STATUS_FAIL_OBJECTIDX;
 			}
 			retInfo->m_objIdx=procIdx;
+			if((ServiceObjectCommandPacketType)subPacketType==SERVICE_OBJECT_COMMAND_PACKET_TYPE_DEPLOY)
+			{
+				if(!stream.ReadUInt(errCode))
+				{
+					return RETRIEVE_STATUS_FAIL_OBJECTIDX;
+				}
+				if(!stream.ReadInt(curRevision))
+				{
+					return RETRIEVE_STATUS_FAIL_OBJECTIDX;
+				}
+
+				deployInfo.m_errCode=(DeployErrCode)errCode;
+				deployInfo.m_revisionNum=curRevision;
+				*retInfo=deployInfo;
+
+			}
 			break;
 		case PACKET_PROCESS_STATUS_FAIL_OBJECT_IDX_OUT_OF_RANCE:
 			if(!stream.ReadInt(procIdx))
@@ -326,6 +366,7 @@ RetrieveStatus WinServicePacketProcessor::getProcessInfo(unsigned int subPacketT
 	int procIdx;
 
 	unsigned int tempUInt;
+	int tempInt;
 
 	ProcessStatusType procStatus;
 	unsigned int delayStartTime;
@@ -342,6 +383,13 @@ RetrieveStatus WinServicePacketProcessor::getProcessInfo(unsigned int subPacketT
 	EpTString domainName;
 	EpTString userName;
 	EpTString userPassword;
+
+	EpTString deployRepositoryURL;
+	EpTString deployLocalPath;
+	EpTString deployUserName;
+	EpTString deployUserPassword;
+	DeployInfo deployInfo;
+	
 
 	ProcessObjInfo procObjInfo;
 	
@@ -370,6 +418,47 @@ RetrieveStatus WinServicePacketProcessor::getProcessInfo(unsigned int subPacketT
 			switch(subPacketType)
 			{
 			case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_ALL:
+				if(!stream.ReadTString(procObjInfo.m_deployRepositoryURL))
+				{
+					return RETRIEVE_STATUS_FAIL_ARGUMENT;
+				}
+				if(!stream.ReadTString(procObjInfo.m_deployLocalPath))
+				{
+					return RETRIEVE_STATUS_FAIL_ARGUMENT;
+				}
+				if(!stream.ReadTString(procObjInfo.m_deployUserName))
+				{
+					return RETRIEVE_STATUS_FAIL_ARGUMENT;
+				}
+				if(!stream.ReadTString(procObjInfo.m_deployUserPassword))
+				{
+					return RETRIEVE_STATUS_FAIL_ARGUMENT;
+				}
+			
+				if(!stream.ReadUInt(tempUInt))
+				{
+					return RETRIEVE_STATUS_FAIL_ARGUMENT;
+				}
+				procObjInfo.m_deployCurrentInfo.m_errCode=(DeployErrCode)tempUInt;
+				if(!stream.ReadInt(tempInt))
+				{
+					return RETRIEVE_STATUS_FAIL_ARGUMENT;
+				}
+				procObjInfo.m_deployCurrentInfo.m_revisionNum=tempInt;
+
+				if(!stream.ReadUInt(tempUInt))
+				{
+					return RETRIEVE_STATUS_FAIL_ARGUMENT;
+				}
+				procObjInfo.m_deployLatestInfo.m_errCode=(DeployErrCode)tempUInt;
+
+				if(!stream.ReadInt(tempInt))
+				{
+					return RETRIEVE_STATUS_FAIL_ARGUMENT;
+				}
+				procObjInfo.m_deployLatestInfo.m_revisionNum=tempInt;
+
+				
 				if(!stream.ReadUInt(tempUInt))
 				{
 					return RETRIEVE_STATUS_FAIL_ARGUMENT;
@@ -452,6 +541,62 @@ RetrieveStatus WinServicePacketProcessor::getProcessInfo(unsigned int subPacketT
 				}
 				(*retInfo)=procObjInfo;
 				break;
+
+			case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_REPOS_URL:
+				if(!stream.ReadTString(deployRepositoryURL))
+				{
+					return RETRIEVE_STATUS_FAIL_ARGUMENT;
+				}
+				(*retInfo)=deployRepositoryURL;
+				break;
+			case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_LOCAL_PATH:
+				if(!stream.ReadTString(deployLocalPath))
+				{
+					return RETRIEVE_STATUS_FAIL_ARGUMENT;
+				}
+				(*retInfo)=deployLocalPath;
+				break;
+			case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_USERNAME:
+				if(!stream.ReadTString(deployUserName))
+				{
+					return RETRIEVE_STATUS_FAIL_ARGUMENT;
+				}
+				(*retInfo)=deployUserName;
+				break;
+			case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_USERPASSWORD:
+				if(!stream.ReadTString(deployUserPassword))
+				{
+					return RETRIEVE_STATUS_FAIL_ARGUMENT;
+				}
+				(*retInfo)=deployUserPassword;
+				break;
+			case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_CURRENT_REVISION:
+				if(!stream.ReadUInt(tempUInt))
+				{
+					return RETRIEVE_STATUS_FAIL_ARGUMENT;
+				}
+				deployInfo.m_errCode=(DeployErrCode)tempUInt;
+				if(!stream.ReadInt(tempInt))
+				{
+					return RETRIEVE_STATUS_FAIL_ARGUMENT;
+				}
+				deployInfo.m_revisionNum=tempInt;
+				(*retInfo)=deployInfo;
+				break;
+			case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_LATEST_REVISION:
+				if(!stream.ReadUInt(tempUInt))
+				{
+					return RETRIEVE_STATUS_FAIL_ARGUMENT;
+				}
+				deployInfo.m_errCode=(DeployErrCode)tempUInt;
+				if(!stream.ReadInt(tempInt))
+				{
+					return RETRIEVE_STATUS_FAIL_ARGUMENT;
+				}
+				deployInfo.m_revisionNum=tempInt;
+				(*retInfo)=deployInfo;
+				break;
+
 			case PROCESS_OBJECT_INFO_GET_PACKET_TYPE_STATUS:
 				if(!stream.ReadUInt(tempUInt))
 				{
@@ -634,6 +779,7 @@ RetrieveStatus WinServicePacketProcessor::getServiceInfo(unsigned int subPacketT
 	int serviceIdx;
 
 	unsigned int tempUInt;
+	int tempInt;
 
 	ServiceStatusType serviceStatus;
 	unsigned int delayStartTime;
@@ -650,6 +796,13 @@ RetrieveStatus WinServicePacketProcessor::getServiceInfo(unsigned int subPacketT
 	EpTString domainName;
 	EpTString userName;
 	EpTString userPassword;
+
+	EpTString deployRepositoryURL;
+	EpTString deployLocalPath;
+	EpTString deployUserName;
+	EpTString deployUserPassword;
+	DeployInfo deployInfo;
+
 
 	ServiceObjInfo serviceObjInfo;
 
@@ -677,6 +830,46 @@ RetrieveStatus WinServicePacketProcessor::getServiceInfo(unsigned int subPacketT
 			switch(subPacketType)
 			{
 			case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_ALL:
+				if(!stream.ReadTString(serviceObjInfo.m_deployRepositoryURL))
+				{
+					return RETRIEVE_STATUS_FAIL_ARGUMENT;
+				}
+				if(!stream.ReadTString(serviceObjInfo.m_deployLocalPath))
+				{
+					return RETRIEVE_STATUS_FAIL_ARGUMENT;
+				}
+				if(!stream.ReadTString(serviceObjInfo.m_deployUserName))
+				{
+					return RETRIEVE_STATUS_FAIL_ARGUMENT;
+				}
+				if(!stream.ReadTString(serviceObjInfo.m_deployUserPassword))
+				{
+					return RETRIEVE_STATUS_FAIL_ARGUMENT;
+				}
+
+				if(!stream.ReadUInt(tempUInt))
+				{
+					return RETRIEVE_STATUS_FAIL_ARGUMENT;
+				}
+				serviceObjInfo.m_deployCurrentInfo.m_errCode=(DeployErrCode)tempUInt;
+				if(!stream.ReadInt(tempInt))
+				{
+					return RETRIEVE_STATUS_FAIL_ARGUMENT;
+				}
+				serviceObjInfo.m_deployCurrentInfo.m_revisionNum=tempInt;
+
+				if(!stream.ReadUInt(tempUInt))
+				{
+					return RETRIEVE_STATUS_FAIL_ARGUMENT;
+				}
+				serviceObjInfo.m_deployLatestInfo.m_errCode=(DeployErrCode)tempUInt;
+
+				if(!stream.ReadInt(tempInt))
+				{
+					return RETRIEVE_STATUS_FAIL_ARGUMENT;
+				}
+				serviceObjInfo.m_deployLatestInfo.m_revisionNum=tempInt;
+
 				if(!stream.ReadUInt(tempUInt))
 				{
 					return RETRIEVE_STATUS_FAIL_ARGUMENT;
@@ -760,6 +953,61 @@ RetrieveStatus WinServicePacketProcessor::getServiceInfo(unsigned int subPacketT
 				(*retInfo)=serviceObjInfo;
 
 				break;
+			case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_REPOS_URL:
+				if(!stream.ReadTString(deployRepositoryURL))
+				{
+					return RETRIEVE_STATUS_FAIL_ARGUMENT;
+				}
+				(*retInfo)=deployRepositoryURL;
+				break;
+			case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_LOCAL_PATH:
+				if(!stream.ReadTString(deployLocalPath))
+				{
+					return RETRIEVE_STATUS_FAIL_ARGUMENT;
+				}
+				(*retInfo)=deployLocalPath;
+				break;
+			case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_USERNAME:
+				if(!stream.ReadTString(deployUserName))
+				{
+					return RETRIEVE_STATUS_FAIL_ARGUMENT;
+				}
+				(*retInfo)=deployUserName;
+				break;
+			case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_USERPASSWORD:
+				if(!stream.ReadTString(deployUserPassword))
+				{
+					return RETRIEVE_STATUS_FAIL_ARGUMENT;
+				}
+				(*retInfo)=deployUserPassword;
+				break;
+			case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_CURRENT_REVISION:
+				if(!stream.ReadUInt(tempUInt))
+				{
+					return RETRIEVE_STATUS_FAIL_ARGUMENT;
+				}
+				deployInfo.m_errCode=(DeployErrCode)tempUInt;
+				if(!stream.ReadInt(tempInt))
+				{
+					return RETRIEVE_STATUS_FAIL_ARGUMENT;
+				}
+				deployInfo.m_revisionNum=tempInt;
+				(*retInfo)=deployInfo;
+				break;
+			case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_DEPLOY_LATEST_REVISION:
+				if(!stream.ReadUInt(tempUInt))
+				{
+					return RETRIEVE_STATUS_FAIL_ARGUMENT;
+				}
+				deployInfo.m_errCode=(DeployErrCode)tempUInt;
+				if(!stream.ReadInt(tempInt))
+				{
+					return RETRIEVE_STATUS_FAIL_ARGUMENT;
+				}
+				deployInfo.m_revisionNum=tempInt;
+				(*retInfo)=deployInfo;
+				break;
+
 			case SERVICE_OBJECT_INFO_GET_PACKET_TYPE_STATUS:
 				if(!stream.ReadUInt(tempUInt))
 				{
