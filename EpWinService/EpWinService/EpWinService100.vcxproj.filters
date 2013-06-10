@@ -407,6 +407,9 @@
     <ClInclude Include="Core\epSvnDeployObject.h">
       <Filter>Core\Management\DeployManagement</Filter>
     </ClInclude>
+    <ClInclude Include="EpLibraryHeaders\epWinResizer.h">
+      <Filter>EpLibraryHeaders</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\LICENSE">
