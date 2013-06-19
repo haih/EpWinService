@@ -43,6 +43,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	_tprintf(_T("along with this program.  If not, see <http://www.gnu.org/licenses/>.\n"));
 	_tprintf(_T("*********************************************************************\n"));
 	_tprintf(_T("\n\n"));
+	_tprintf(_T("EpWinServiceCLI: Started\n"));
 
 	CmdLineOptions options;
 	if(options.Parse(argc,argv))
@@ -55,18 +56,22 @@ int _tmain(int argc, _TCHAR* argv[])
 			if(m_xmlFile.LoadFromFile(fileName.c_str()))
 			{
 				if(!WinServiceXMLParser::ProcessParse(&m_xmlFile,result))
+				{
 					return 0;
+				}
 			}
 			
 			
 		}
 		else if(options.HasOption(_T("-xml")))
 		{
-			EpTString xmlString=options.GetArgument(_T("-xmlfile"),0);
+			EpTString xmlString=options.GetArgument(_T("-xml"),0);
 			m_xmlFile.Load(xmlString.c_str());
 
 			if(!WinServiceXMLParser::ProcessParse(&m_xmlFile,result))
+			{
 				return 0;
+			}
 			
 		}
 		XMLFile m_outXmlFile=XMLFile();
