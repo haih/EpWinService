@@ -1240,8 +1240,16 @@ bool WinServiceXMLParser::parse(XNode *root,WinServicePacketGenerator &retPacket
 {
 	vector<Pair<unsigned int,WinServiceXMLParserError> > errorList;
 	if(!root)
+	{
+			System::TPrintf(_T("Parsing Command: Failed due to Invalid XML\n"));
 		return false;
+	}
 
+	if(root->GetChildCount()==0)
+	{
+		System::TPrintf(_T("Parsing Command: Failed due to No command to parse\n"));
+		return false;
+	}
 	for(int childIdx=0;childIdx<root->GetChildCount();childIdx++)
 	{
 		XNode * childNode=root->GetChild(childIdx);
@@ -1254,16 +1262,16 @@ bool WinServiceXMLParser::parse(XNode *root,WinServicePacketGenerator &retPacket
 			System::TPrintf(_T("Parsing Command(%d): Sucess\n"),childIdx);
 			break;
 		case WINSERVICE_XML_PARSER_ERROR_PARSE_FAIL:
-			System::TPrintf(_T("Parsing Command(%d): Parse Fail\n"),childIdx);
+			System::TPrintf(_T("Parsing Command(%d): Failed due to Parse Fail\n"),childIdx);
 			break;
 		case WINSERVICE_XML_PARSER_ERROR_INVALID_COMMAND:
-			System::TPrintf(_T("Parsing Command(%d): Invalid Command\n"),childIdx);
+			System::TPrintf(_T("Parsing Command(%d): Failed due to Invalid Command\n"),childIdx);
 			break;
 		case WINSERVICE_XML_PARSER_ERROR_INVALID_SUBCOMMAND:
-			System::TPrintf(_T("Parsing Command(%d): Invalid Subcommand\n"),childIdx);
+			System::TPrintf(_T("Parsing Command(%d): Failed due to Invalid Subcommand\n"),childIdx);
 			break;
 		case WINSERVICE_XML_PARSER_ERROR_INVALID_ARGUMENT:
-			System::TPrintf(_T("Parsing Command(%d): Invalid Argument\n"),childIdx);
+			System::TPrintf(_T("Parsing Command(%d): Failed due to Invalid Argument\n"),childIdx);
 			break;
 		}
 		if(err!= WINSERVICE_XML_PARSER_ERROR_SUCCESS)
