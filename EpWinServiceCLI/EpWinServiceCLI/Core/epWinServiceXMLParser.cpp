@@ -1241,13 +1241,13 @@ bool WinServiceXMLParser::parse(XNode *root,WinServicePacketGenerator &retPacket
 	vector<Pair<unsigned int,WinServiceXMLParserError> > errorList;
 	if(!root)
 	{
-			System::TPrintf(_T("Parsing Command: Failed due to Invalid XML\n"));
+		System::TPrintf(_T("Parsing Command: Failed due to Invalid XML (No \"commandlist\" node)\n"));
 		return false;
 	}
 
 	if(root->GetChildCount()==0)
 	{
-		System::TPrintf(_T("Parsing Command: Failed due to No command to parse\n"));
+		System::TPrintf(_T("Parsing Command: Failed due to Invalid XML (No \"command\" node)\n"));
 		return false;
 	}
 	for(int childIdx=0;childIdx<root->GetChildCount();childIdx++)
@@ -1283,11 +1283,20 @@ bool WinServiceXMLParser::parse(XNode *root,WinServicePacketGenerator &retPacket
 bool WinServiceXMLParser::ProcessParse(XNode * root, WinServiceResult &retResult)
 {
 	if(!root)
+	{
+		System::TPrintf(_T("Parsing Command: Failed due to Invalid XML (No root node)\n"));
 		return false;
+	}
 	if(!root->GetChild(_T("hostName")))
+	{
+		System::TPrintf(_T("Parsing Command: Failed due to Invalid XML (No \"hostname\" node)\n"));
 		return false;
+	}
 	if(!root->GetChild(_T("port")))
+	{
+		System::TPrintf(_T("Parsing Command: Failed due to Invalid XML (No \"port\" node)\n"));
 		return false;
+	}
 
 	CString hostName=root->GetChild(_T("hostName"))->m_value;
 	CString port = root->GetChild(_T("port"))->m_value;
