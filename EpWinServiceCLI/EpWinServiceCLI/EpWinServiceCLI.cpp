@@ -89,6 +89,16 @@ int _tmain(int argc, _TCHAR* argv[])
 		}
 		
 	}
+	else
+	{
+		System::TPrintf(_T("Usage: EpWinServiceCLI\n\
+                 switch\n\
+                 {\n\
+                    -xmlfile <FileName>\n\
+                    -xml <XMLString>\n\
+                 }\n\
+                 -output <Optional/FileName>\n"));
+	}
 	return 0;
 }
 
