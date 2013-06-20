@@ -75,6 +75,7 @@ int _tmain(int argc, _TCHAR* argv[])
 			
 		}
 		XMLFile m_outXmlFile=XMLFile();
+		m_outXmlFile.m_name=_T("EpWinServiceCLI_Result");
 		
 		if(WinServiceReturnXMLBuilder::BuildResultXML(result, m_outXmlFile))
 		{
