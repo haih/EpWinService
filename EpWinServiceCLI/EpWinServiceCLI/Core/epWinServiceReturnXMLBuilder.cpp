@@ -515,7 +515,7 @@ void WinServiceReturnXMLBuilder::addReturnValue(const WinServiceResultInfo & res
 		break;
 	}
 }
-bool WinServiceReturnXMLBuilder::BuildResultXML(const WinServiceResult & result,XMLFile retXMLFile)
+bool WinServiceReturnXMLBuilder::BuildResultXML(const WinServiceResult & result,XMLFile &retXMLFile)
 {
 	XNode *resultListNode=retXMLFile.AppendChild(_T("resultList"),_T(""));
 	TCHAR buffer[65];

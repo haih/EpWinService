@@ -48,7 +48,7 @@ public:
 	@param[out] retXMLFile the Return XML built
 	@return true if successfully built otherwise false
 	*/
-	static bool BuildResultXML(const WinServiceResult & result,XMLFile retXMLFile);
+	static bool BuildResultXML(const WinServiceResult & result,XMLFile &retXMLFile);
 
 private:
 	/*!

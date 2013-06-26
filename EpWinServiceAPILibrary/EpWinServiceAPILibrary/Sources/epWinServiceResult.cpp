@@ -89,6 +89,5 @@ void WinServiceResult::SetResultCount(unsigned int resultCnt)
 void WinServiceResult::AddResultInfo(WinServiceResultInfo* info)
 {
 	m_resultList.push_back(info);
-	m_procCnt++;
 }
 
