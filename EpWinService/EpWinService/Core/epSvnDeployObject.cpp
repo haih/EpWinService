@@ -68,6 +68,10 @@ DeployErrCode SvnDeployObject::Update(unsigned int & retRevNum,int rev)
 	}
 	CString commandString=_T("svn update \"");
 	commandString.Append(m_localPath);
+	if(m_localPath.GetAt(m_localPath.GetLength()-1)==_T('\\'))
+	{
+		commandString.Append(_T("\\"));
+	}
 	commandString.Append(_T("\" --username "));
 	commandString.Append(m_userName);
 	commandString.Append(_T(" --password "));
@@ -126,6 +130,10 @@ DeployErrCode SvnDeployObject::GetCurrentRevision(unsigned int & retRevNum)
 
 	CString commandString=_T("svn info \"");
 	commandString.Append(m_localPath);
+	if(m_localPath.GetAt(m_localPath.GetLength()-1)==_T('\\'))
+	{
+		commandString.Append(_T("\\"));
+	}
 	commandString.Append(_T("\" --username "));
 	commandString.Append(m_userName);
 	commandString.Append(_T(" --password "));
@@ -208,6 +216,10 @@ DeployErrCode SvnDeployObject::cleanUp()
 {
 	CString commandString=_T("svn cleanup \"");
 	commandString.Append(m_localPath);
+	if(m_localPath.GetAt(m_localPath.GetLength()-1)==_T('\\'))
+	{
+		commandString.Append(_T("\\"));
+	}
 	commandString.Append(_T("\" --username "));
 	commandString.Append(m_userName);
 	commandString.Append(_T(" --password "));
