@@ -30,11 +30,12 @@ void BaseManagementObject::ParseCommand(CString cmd,  vector<CString>& retCmdLis
 	while(cmd.GetLength())
 	{
 		bool isOpen=false;
-		if(cmd.GetAt(0)==_T('\"'))
+		int stringTrav=0;
+		if(cmd.GetAt(0)==_T('\''))
 		{
 			isOpen=true;
+			stringTrav=1;
 		}
-		int stringTrav=1;
 		for(;stringTrav<cmd.GetLength();stringTrav++)	
 		{
 			if(isOpen)
