@@ -70,7 +70,9 @@ void BaseManagementObject::ParseCommand(CString cmd,  vector<CString>& retCmdLis
 	
 
 }
-bool BaseManagementObject::Start()
+
+
+ObjectStartStatus BaseManagementObject::Start()
 {
 	LockObj lock(&m_baseObjLock);
 	return start();
@@ -550,9 +552,10 @@ CString BaseManagementObject::GetObjectString()
 	return m_objectString;
 }
 
-DeployErrCode BaseManagementObject::Deploy(unsigned int & retRevNum,int rev)
+DeployErrCode BaseManagementObject::Deploy(unsigned int & retRevNum,ObjectStartStatus &retStartStatus,int rev)
 {
 	bool previouslyStarted=IsStarted();
+	retStartStatus=OBJECT_START_STATUS_STOPPED;
 	
 	LockObj lock(&m_baseObjLock);
 	if(previouslyStarted==true)
@@ -564,7 +567,7 @@ DeployErrCode BaseManagementObject::Deploy(unsigned int & retRevNum,int rev)
 
 	if(previouslyStarted)
 	{
-		start();
+		retStartStatus=start();
 	}
 	return retCode;
 

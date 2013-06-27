@@ -129,9 +129,9 @@ public:
 private:
 	/*!
 	Start the Service.
-	@return true if started, otherwise false
+	@return ObjectStartStatus
 	*/
-	virtual bool start();
+	virtual ObjectStartStatus start();
 
 	/*!
 	Stop the Service.

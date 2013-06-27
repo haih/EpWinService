@@ -52,6 +52,19 @@ typedef enum _executeCommandType{
 	EXECUTE_COMMAND_TYPE_RUNCOMMAND,
 }ExecuteCommandType;
 
+/// Object Start Status
+typedef enum _objectStartStatus{
+	/// Success
+	OBJECT_START_STATUS_SUCCESS=0,
+	/// Failed due to object started already
+	OBJECT_START_STATUS_FAILED_ALREADY_STARTED,
+	/// Failed due to log on failure
+	OBJECT_START_STATUS_FAILED_LOGON_FAILED,
+	/// Failed to start the object
+	OBJECT_START_STATUS_FAILED,
+	/// Stopped by user (for Deploy Use Only)
+	OBJECT_START_STATUS_STOPPED,
+}ObjectStartStatus;
 
 /*! 
 @class BaseManagementObject epBaseManagementObject.h
@@ -84,9 +97,9 @@ public:
 	static void ParseCommand(CString cmd, vector<CString>& retCmdList);
 	/*!
 	Start the object.
-	@return true if started, otherwise false
+	@return ObjectStartStatus
 	*/
-	bool Start();
+	ObjectStartStatus Start();
 
 	/*!
 	End the object.
@@ -294,11 +307,12 @@ public:
 	Deploy the Local path as given revision
 	@param[in] properties the properties
 	@param[out] retRevNum the revision after the update
+	@param[out] retStartStatus the start status of the object
 	@param[in] rev the revision to be updated to
 	@return the Deploy Error Code
 	@remark if rev is REVISION_UNKNOWN then Local path is updated to latest revision
 	*/
-	DeployErrCode Deploy(unsigned int & retRevNum,int rev=REVISION_UNKNOWN);
+	DeployErrCode Deploy(unsigned int & retRevNum,ObjectStartStatus &retStartStatus,int rev=REVISION_UNKNOWN);
 
 	/*!
 	Return the current revision of the local path
@@ -365,9 +379,9 @@ protected:
 
 	/*!
 	Start the object.
-	@return true if started, otherwise false
+	@return ObjectStartStatus
 	*/
-	virtual bool start()=0;
+	virtual ObjectStartStatus start()=0;
 
 	/*!
 	End the object.

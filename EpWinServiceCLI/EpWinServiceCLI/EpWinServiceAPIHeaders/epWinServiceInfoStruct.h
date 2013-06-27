@@ -37,6 +37,8 @@ An Interface for WinService Information Structure.
 
 namespace epws
 {
+
+
 	/*! 
 	@struct DeployInfo epWinServiceInfoStruct.h
 	@brief A class for Deploy Information.
@@ -50,13 +52,18 @@ namespace epws
 		DeployInfo()
 		{
 			m_errCode=DEPLOY_ERR_CODE_SUCCESS;
+			m_startStatus=OBJECT_START_STATUS_SUCCESS;
 			m_revisionNum=0;
 		}
 		/// Deploy Error Code
 		DeployErrCode m_errCode;
+		/// Object Start Status
+		ObjectStartStatus m_startStatus;
 		/// Revision Number
 		int m_revisionNum;
 	};
+
+
 
 	/*! 
 	@struct MainServiceInfo epWinServiceInfoStruct.h

@@ -609,16 +609,16 @@ CString WinServiceTypeInterpreter::GetRetrieveStatusString(RetrieveStatus status
 		retString= _T("Success");
 		break;
 	case RETRIEVE_STATUS_FAIL:
-		retString= _T("Fail");
+		retString= _T("Retrieve Fail");
 		break;
 	case RETRIEVE_STATUS_FAIL_RESULT:
-		retString= _T("Result Fail");
+		retString= _T("Retrieve Result Fail");
 		break;
 	case RETRIEVE_STATUS_FAIL_OBJECTIDX:
-		retString= _T("Object Index Fail");
+		retString= _T("Retrieve Object Index Fail");
 		break;
 	case RETRIEVE_STATUS_FAIL_ARGUMENT:
-		retString= _T("Argument Fail");
+		retString= _T("Retrieve Argument Fail");
 		break;
 	}
 	return retString;
@@ -667,6 +667,9 @@ CString WinServiceTypeInterpreter::GetReturnTypeString(ReturnType type)
 		break;
 	case RETURN_TYPE_DEPLOY_INFO:
 		retString= _T("DeployInfo");
+		break;
+	case RETURN_TYPE_OJBECT_START_STATUS:
+		retString= _T("ObjectStartStatus");
 		break;
 	}
 	return retString;

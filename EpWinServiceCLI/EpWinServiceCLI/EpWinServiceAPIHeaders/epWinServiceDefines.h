@@ -389,6 +389,20 @@ namespace epws
 		DEPLOY_ERR_CODE_FAIED_CLEANUP,
 	}DeployErrCode;
 
+	/// Object Start Status
+	typedef enum _objectStartStatus{
+		/// Success
+		OBJECT_START_STATUS_SUCCESS=0,
+		/// Failed due to object started already
+		OBJECT_START_STATUS_FAILED_ALREADY_STARTED,
+		/// Failed due to log on failure
+		OBJECT_START_STATUS_FAILED_LOGON_FAILED,
+		/// Failed to start the object
+		OBJECT_START_STATUS_FAILED,
+		/// Stopped by user (for Deploy Use Only)
+		OBJECT_START_STATUS_STOPPED,
+	}ObjectStartStatus;
+
 	/*!
 	@def REVISION_UNKNOWN
 	@brief Revision Unknown Declaration

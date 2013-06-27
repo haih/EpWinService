@@ -111,9 +111,9 @@ private:
 	
 	/*!
 	Start the Process.
-	@return true if started, otherwise false
+	@return ObjectStartStatus
 	*/
-	virtual bool start();
+	virtual ObjectStartStatus start();
 
 	/*!
 	Stop the Process.

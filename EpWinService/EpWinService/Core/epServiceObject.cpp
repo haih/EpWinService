@@ -44,7 +44,7 @@ ServiceObject::~ServiceObject()
 
 
 
-bool ServiceObject::start()
+ObjectStartStatus ServiceObject::start()
 {
 	m_isUserStopped=false;
 	SERVICE_STATUS status;
@@ -52,18 +52,18 @@ bool ServiceObject::start()
 	if(SERVICE_HANDLER_INSTANCE.ControlService(m_serviceName.GetString(),SERVICE_CONTROL_CODE_INTERROGATE,status,retCode)==SERVICE_HANDLER_ERROR_SUCCESS)
 	{
 		if(status.dwCurrentState==SERVICE_STATUS_TYPE_RUNNING)
-			return true;
+			return OBJECT_START_STATUS_FAILED_ALREADY_STARTED;
 	}
 	else
-		return false;
+		return OBJECT_START_STATUS_FAILED;
 	//Pre-Process
 	preProcess();
 	if(SERVICE_HANDLER_INSTANCE.StartService(m_serviceName.GetString(),retCode)==SERVICE_HANDLER_ERROR_SUCCESS)
 	{
 		::Sleep(m_delayStartTime);
-		return true;
+		return OBJECT_START_STATUS_SUCCESS;
 	}
-	return false;
+	return OBJECT_START_STATUS_FAILED;
 }
 
 void ServiceObject::stop()

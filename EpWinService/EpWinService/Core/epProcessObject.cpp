@@ -43,11 +43,13 @@ ProcessObject::~ProcessObject()
 
 
 
-bool ProcessObject::start()
+ObjectStartStatus ProcessObject::start()
 {
 	
 	if(m_pProcInfo.hProcess)
-		return true;
+	{
+		return OBJECT_START_STATUS_FAILED_ALREADY_STARTED;
+	}
 
 	//Pre-Process
 	preProcess();
@@ -67,7 +69,7 @@ bool ProcessObject::start()
 		if(CreateProcess(NULL, const_cast<TCHAR*>(m_commandLine.GetString()),NULL,NULL,FALSE,NORMAL_PRIORITY_CLASS, NULL,NULL,&startUpInfo,&m_pProcInfo))
 		{
 			Sleep(m_delayStartTime);
-			return true;
+			return OBJECT_START_STATUS_SUCCESS;
 		}
 		else
 		{
@@ -76,7 +78,7 @@ bool ProcessObject::start()
 
 			_stprintf(pTemp,_T("Failed to start program '%s', error code = %d"), m_commandLine.GetString(), nError); 
 			LOG_WRITER_INSTANCE.WriteLog( pTemp);
-			return false;
+			return OBJECT_START_STATUS_FAILED;
 		}
 	}
 	else
@@ -87,19 +89,19 @@ bool ProcessObject::start()
 			if(CreateProcessAsUser(hToken,NULL,const_cast<TCHAR*>(m_commandLine.GetString()),NULL,NULL,TRUE,NORMAL_PRIORITY_CLASS,NULL,NULL,&startUpInfo,&m_pProcInfo))
 			{
 				Sleep(m_delayStartTime);
-				return true;
+				return OBJECT_START_STATUS_SUCCESS;
 			}
 			long nError = GetLastError();
 			TCHAR pTemp[256];
 			_stprintf(pTemp,_T("Failed to start program '%s' as user '%s', error code = %d"), m_commandLine.GetString(), m_userName.GetString(), nError); 
 			LOG_WRITER_INSTANCE.WriteLog( pTemp);
-			return false;
+			return OBJECT_START_STATUS_FAILED;
 		}
 		long nError = GetLastError();
 		TCHAR pTemp[256];
 		_stprintf(pTemp,_T("Failed to logon as user '%s', error code = %d"), m_userName.GetString(), nError); 
 		LOG_WRITER_INSTANCE.WriteLog( pTemp);
-		return false;
+		return OBJECT_START_STATUS_FAILED_LOGON_FAILED;
 	}
 
 }

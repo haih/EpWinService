@@ -494,9 +494,51 @@ void WinServiceReturnXMLBuilder::addReturnValue(const WinServiceResultInfo & res
 			root->AppendChild(_T("deployErrCode"),_T("Failed: Clean up"));
 			break;
 		}
+
+		switch(resultInfo.ToDeployInfo().m_startStatus)
+		{
+
+		case OBJECT_START_STATUS_SUCCESS:
+			root->AppendChild(_T("startObjectStatus"),_T("Success"));
+			break;
+		case OBJECT_START_STATUS_STOPPED:
+			root->AppendChild(_T("startObjectStatus"),_T("Failed: Stopped by user"));
+			break;
+		case OBJECT_START_STATUS_FAILED_ALREADY_STARTED:
+			root->AppendChild(_T("startObjectStatus"),_T("Failed: Already started"));
+			break;
+		case OBJECT_START_STATUS_FAILED_LOGON_FAILED:
+			root->AppendChild(_T("startObjectStatus"),_T("Failed: LogOn failed"));
+			break;
+		case OBJECT_START_STATUS_FAILED:
+			root->AppendChild(_T("startObjectStatus"),_T("Failed: Unknown error"));
+			break;
+		}
+
 		_itot(resultInfo.ToDeployInfo().m_revisionNum,itotBuffer,10);
 		root->AppendChild(_T("revisionNum"),itotBuffer);
 		System::Memset(itotBuffer,0,sizeof(TCHAR)*65);
+		break;
+	case RETURN_TYPE_OJBECT_START_STATUS:
+		switch(resultInfo.ToObjectStartStatus())
+		{
+
+		case OBJECT_START_STATUS_SUCCESS:
+			root->AppendChild(_T("startObjectStatus"),_T("Success"));
+			break;
+		case OBJECT_START_STATUS_STOPPED:
+			root->AppendChild(_T("startObjectStatus"),_T("Failed: Stopped by user"));
+			break;
+		case OBJECT_START_STATUS_FAILED_ALREADY_STARTED:
+			root->AppendChild(_T("startObjectStatus"),_T("Failed: Already started"));
+			break;
+		case OBJECT_START_STATUS_FAILED_LOGON_FAILED:
+			root->AppendChild(_T("startObjectStatus"),_T("Failed: LogOn failed"));
+			break;
+		case OBJECT_START_STATUS_FAILED:
+			root->AppendChild(_T("startObjectStatus"),_T("Failed: Unknown error"));
+			break;
+		}
 		break;
 	case RETURN_TYPE_PROCESSOBJ_INFO:
 		addProcessObjInfo(resultInfo,root);

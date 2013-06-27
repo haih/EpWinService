@@ -89,6 +89,7 @@ RetrieveStatus WinServicePacketProcessor::commandProcessObject(unsigned int subP
 	unsigned int result;
 	int procIdx;
 	unsigned int errCode;
+	unsigned int startStatus;
 	int curRevision;
 	DeployInfo deployInfo;	
 
@@ -106,34 +107,50 @@ RetrieveStatus WinServicePacketProcessor::commandProcessObject(unsigned int subP
 			}
 			retInfo->m_objIdx=procIdx;
 			
-			if((ProcessObjectCommandPacketType)subPacketType==PROCESS_OBJECT_COMMAND_PACKET_TYPE_DEPLOY)
+
+
+			switch((ProcessObjectCommandPacketType)subPacketType)
 			{
+			case PROCESS_OBJECT_COMMAND_PACKET_TYPE_DEPLOY:
 				if(!stream.ReadUInt(errCode))
 				{
-					return RETRIEVE_STATUS_FAIL_OBJECTIDX;
+					return RETRIEVE_STATUS_FAIL_ARGUMENT;
+				}
+				if(!stream.ReadUInt(startStatus))
+				{
+					return RETRIEVE_STATUS_FAIL_ARGUMENT;
 				}
 				if(!stream.ReadInt(curRevision))
 				{
-					return RETRIEVE_STATUS_FAIL_OBJECTIDX;
+					return RETRIEVE_STATUS_FAIL_ARGUMENT;
 				}
 				deployInfo.m_errCode=(DeployErrCode)errCode;
+				deployInfo.m_startStatus=(ObjectStartStatus)startStatus;
 				deployInfo.m_revisionNum=curRevision;
 				*retInfo=deployInfo;
+				break;
+			case PROCESS_OBJECT_COMMAND_PACKET_TYPE_START:
+			case PROCESS_OBJECT_COMMAND_PACKET_TYPE_BOUNCE:
+				if(!stream.ReadUInt(startStatus))
+				{
+					return RETRIEVE_STATUS_FAIL_ARGUMENT;
+				}
+				*retInfo=(ObjectStartStatus)startStatus;
+				break;
 
 			}
-	
 			break;
 		case PACKET_PROCESS_STATUS_FAIL_OBJECT_IDX_OUT_OF_RANCE:
 			if(!stream.ReadInt(procIdx))
 			{
-				return RETRIEVE_STATUS_FAIL_OBJECTIDX;
+				return RETRIEVE_STATUS_FAIL_ARGUMENT;
 			}
 			retInfo->m_objIdx=procIdx;
 			break;
 		case PACKET_PROCESS_STATUS_FAIL_ARGUMENT_ERROR:
 			if(!stream.ReadInt(procIdx))
 			{
-				return RETRIEVE_STATUS_FAIL_OBJECTIDX;
+				return RETRIEVE_STATUS_FAIL_ARGUMENT;
 			}
 			retInfo->m_objIdx=procIdx;
 			break;
@@ -151,6 +168,7 @@ RetrieveStatus WinServicePacketProcessor::commandServiceObject(unsigned int subP
 	unsigned int result;
 	int procIdx;
 	unsigned int errCode;
+	unsigned int startStatus;
 	int curRevision;
 	DeployInfo deployInfo;
 	if(stream.ReadUInt(result))
@@ -166,20 +184,35 @@ RetrieveStatus WinServicePacketProcessor::commandServiceObject(unsigned int subP
 				return RETRIEVE_STATUS_FAIL_OBJECTIDX;
 			}
 			retInfo->m_objIdx=procIdx;
-			if((ServiceObjectCommandPacketType)subPacketType==SERVICE_OBJECT_COMMAND_PACKET_TYPE_DEPLOY)
+			switch((ServiceObjectCommandPacketType)subPacketType)
 			{
+			case SERVICE_OBJECT_COMMAND_PACKET_TYPE_DEPLOY:
 				if(!stream.ReadUInt(errCode))
 				{
-					return RETRIEVE_STATUS_FAIL_OBJECTIDX;
+					return RETRIEVE_STATUS_FAIL_ARGUMENT;
+				}
+				if(!stream.ReadUInt(startStatus))
+				{
+					return RETRIEVE_STATUS_FAIL_ARGUMENT;
 				}
 				if(!stream.ReadInt(curRevision))
 				{
-					return RETRIEVE_STATUS_FAIL_OBJECTIDX;
+					return RETRIEVE_STATUS_FAIL_ARGUMENT;
 				}
 
 				deployInfo.m_errCode=(DeployErrCode)errCode;
+				deployInfo.m_startStatus=(ObjectStartStatus)startStatus;
 				deployInfo.m_revisionNum=curRevision;
 				*retInfo=deployInfo;
+				break;
+			case SERVICE_OBJECT_COMMAND_PACKET_TYPE_START:
+			case SERVICE_OBJECT_COMMAND_PACKET_TYPE_BOUNCE:
+				if(!stream.ReadUInt(startStatus))
+				{
+					return RETRIEVE_STATUS_FAIL_ARGUMENT;
+				}
+				*retInfo=(ObjectStartStatus)startStatus;
+				break;
 
 			}
 			break;

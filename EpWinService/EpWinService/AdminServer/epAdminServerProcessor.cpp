@@ -103,6 +103,8 @@ void AdminServerProcessor::commandProcessObject(unsigned int subPacketType,Strea
 	int waitTime=WAITTIME_INIFINITE;
 	int rev=REVISION_UNKNOWN;
 	EpTString cmd=_T("");
+	ObjectStartStatus startStatus=OBJECT_START_STATUS_SUCCESS;
+
 	switch(subPacketType)
 	{
 	case PROCESS_OBJECT_COMMAND_PACKET_TYPE_CUSTOM_PROCESS:
@@ -169,15 +171,33 @@ void AdminServerProcessor::commandProcessObject(unsigned int subPacketType,Strea
 				PROCESS_HANDLER_INSTANCE.At(procTrav)->RunCommand(cmd.c_str(),waitTime);
 				break;
 			case PROCESS_OBJECT_COMMAND_PACKET_TYPE_DEPLOY:
-				errCode=PROCESS_HANDLER_INSTANCE.At(procTrav)->Deploy(curRev,rev);
-				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
-				retOutStream.WriteInt(objIdx);
-				retOutStream.WriteUInt(errCode);
-				retOutStream.WriteInt(curRev);
-				return;
+				PROCESS_HANDLER_INSTANCE.At(procTrav)->Deploy(curRev,startStatus,rev);
 				break;
 			}
 
+		}
+		switch(subPacketType)
+		{
+		case PROCESS_OBJECT_COMMAND_PACKET_TYPE_DEPLOY:
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+			retOutStream.WriteInt(objIdx);
+			retOutStream.WriteUInt(errCode);
+			retOutStream.WriteUInt(startStatus);
+			retOutStream.WriteInt(curRev);
+			return;
+			break;
+		case PROCESS_OBJECT_COMMAND_PACKET_TYPE_START:
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+			retOutStream.WriteInt(objIdx);
+			retOutStream.WriteUInt(startStatus);
+			return;
+			break;
+		case PROCESS_OBJECT_COMMAND_PACKET_TYPE_BOUNCE:
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+			retOutStream.WriteInt(objIdx);
+			retOutStream.WriteUInt(startStatus);
+			return;
+			break;
 		}
 	}
 	else
@@ -187,14 +207,22 @@ void AdminServerProcessor::commandProcessObject(unsigned int subPacketType,Strea
 			switch(subPacketType)
 			{
 			case PROCESS_OBJECT_COMMAND_PACKET_TYPE_START:
-				PROCESS_HANDLER_INSTANCE.At(objIdx)->Start();			
+				startStatus=PROCESS_HANDLER_INSTANCE.At(objIdx)->Start();
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+				retOutStream.WriteInt(objIdx);
+				retOutStream.WriteUInt(startStatus);
+				return;
 				break;
 			case PROCESS_OBJECT_COMMAND_PACKET_TYPE_END:
 				PROCESS_HANDLER_INSTANCE.At(objIdx)->Stop();
 				break;
 			case PROCESS_OBJECT_COMMAND_PACKET_TYPE_BOUNCE:
 				PROCESS_HANDLER_INSTANCE.At(objIdx)->Stop();
-				PROCESS_HANDLER_INSTANCE.At(objIdx)->Start();
+				startStatus=PROCESS_HANDLER_INSTANCE.At(objIdx)->Start();
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+				retOutStream.WriteInt(objIdx);
+				retOutStream.WriteUInt(startStatus);
+				return;
 				break;
 			case PROCESS_OBJECT_COMMAND_PACKET_TYPE_CUSTOM_PROCESS:
 				PROCESS_HANDLER_INSTANCE.At(objIdx)->CustomProcess(waitTime);
@@ -203,7 +231,13 @@ void AdminServerProcessor::commandProcessObject(unsigned int subPacketType,Strea
 				PROCESS_HANDLER_INSTANCE.At(objIdx)->RunCommand(cmd.c_str(),waitTime);
 				break;
 			case PROCESS_OBJECT_COMMAND_PACKET_TYPE_DEPLOY:
-				errCode=PROCESS_HANDLER_INSTANCE.At(objIdx)->Deploy(curRev,rev);
+				errCode=PROCESS_HANDLER_INSTANCE.At(objIdx)->Deploy(curRev,startStatus,rev);
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+				retOutStream.WriteInt(objIdx);
+				retOutStream.WriteUInt(errCode);
+				retOutStream.WriteUInt(startStatus);
+				retOutStream.WriteInt(curRev);
+				return;
 				break;
 			}
 		}
@@ -235,6 +269,7 @@ void AdminServerProcessor::commandServiceObject(unsigned int subPacketType,Strea
 	int waitTime=WAITTIME_INIFINITE;
 	int rev=REVISION_UNKNOWN;
 	EpTString cmd=_T("");
+	ObjectStartStatus startStatus=OBJECT_START_STATUS_SUCCESS;
 	switch(subPacketType)
 	{
 	case SERVICE_OBJECT_COMMAND_PACKET_TYPE_CUSTOM_PROCESS:
@@ -305,15 +340,33 @@ void AdminServerProcessor::commandServiceObject(unsigned int subPacketType,Strea
 				SERVICE_HANDLER_INSTANCE.At(serviceTrav)->RunCommand(cmd.c_str(),waitTime);
 				break;
 			case SERVICE_OBJECT_COMMAND_PACKET_TYPE_DEPLOY:
-				errCode=SERVICE_HANDLER_INSTANCE.At(serviceTrav)->Deploy(curRev,rev);
-				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
-				retOutStream.WriteInt(objIdx);
-				retOutStream.WriteUInt(errCode);
-				retOutStream.WriteInt(curRev);
-				return;
+				SERVICE_HANDLER_INSTANCE.At(serviceTrav)->Deploy(curRev,startStatus,rev);
 				break;
 			}
 
+		}
+		switch(subPacketType)
+		{
+		case PROCESS_OBJECT_COMMAND_PACKET_TYPE_DEPLOY:
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+			retOutStream.WriteInt(objIdx);
+			retOutStream.WriteUInt(errCode);
+			retOutStream.WriteUInt(startStatus);
+			retOutStream.WriteInt(curRev);
+			return;
+			break;
+		case PROCESS_OBJECT_COMMAND_PACKET_TYPE_START:
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+			retOutStream.WriteInt(objIdx);
+			retOutStream.WriteUInt(startStatus);
+			return;
+			break;
+		case PROCESS_OBJECT_COMMAND_PACKET_TYPE_BOUNCE:
+			retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+			retOutStream.WriteInt(objIdx);
+			retOutStream.WriteUInt(startStatus);
+			return;
+			break;
 		}
 	}
 	else
@@ -323,7 +376,11 @@ void AdminServerProcessor::commandServiceObject(unsigned int subPacketType,Strea
 			switch(subPacketType)
 			{
 			case SERVICE_OBJECT_COMMAND_PACKET_TYPE_START:
-				SERVICE_HANDLER_INSTANCE.At(objIdx)->Start();			
+				startStatus=SERVICE_HANDLER_INSTANCE.At(objIdx)->Start();
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+				retOutStream.WriteInt(objIdx);
+				retOutStream.WriteUInt(startStatus);
+				return;
 				break;
 			case SERVICE_OBJECT_COMMAND_PACKET_TYPE_END:
 				SERVICE_HANDLER_INSTANCE.At(objIdx)->SetIsUserStopped(true);
@@ -337,7 +394,11 @@ void AdminServerProcessor::commandServiceObject(unsigned int subPacketType,Strea
 				break;
 			case SERVICE_OBJECT_COMMAND_PACKET_TYPE_BOUNCE:
 				SERVICE_HANDLER_INSTANCE.At(objIdx)->Stop();
-				SERVICE_HANDLER_INSTANCE.At(objIdx)->Start();
+				startStatus=SERVICE_HANDLER_INSTANCE.At(objIdx)->Start();
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+				retOutStream.WriteInt(objIdx);
+				retOutStream.WriteUInt(startStatus);
+				return;
 				break;
 			case SERVICE_OBJECT_COMMAND_PACKET_TYPE_CUSTOM_PROCESS:
 				SERVICE_HANDLER_INSTANCE.At(objIdx)->CustomProcess(waitTime);
@@ -346,7 +407,13 @@ void AdminServerProcessor::commandServiceObject(unsigned int subPacketType,Strea
 				SERVICE_HANDLER_INSTANCE.At(objIdx)->RunCommand(cmd.c_str(),waitTime);
 				break;
 			case SERVICE_OBJECT_COMMAND_PACKET_TYPE_DEPLOY:
-				errCode=SERVICE_HANDLER_INSTANCE.At(objIdx)->Deploy(curRev,rev);
+				errCode=SERVICE_HANDLER_INSTANCE.At(objIdx)->Deploy(curRev,startStatus,rev);
+				retOutStream.WriteUInt(PACKET_PROCESS_STATUS_SUCCESS);
+				retOutStream.WriteInt(objIdx);
+				retOutStream.WriteUInt(errCode);
+				retOutStream.WriteUInt(startStatus);
+				retOutStream.WriteInt(curRev);
+				return;
 				break;
 			}
 		}

@@ -82,6 +82,12 @@ const DeployInfo &WinServiceResultInfo::ToDeployInfo() const
 	EP_ASSERT(m_retVal);
 	return *(DeployInfo*)m_retVal;
 }
+
+const ObjectStartStatus &WinServiceResultInfo::ToObjectStartStatus() const
+{
+	EP_ASSERT(m_retVal);
+	return *(ObjectStartStatus*)m_retVal;
+}
 PacketType WinServiceResultInfo::GetPacketType() const
 {
 	return m_packetType;
@@ -358,5 +364,15 @@ WinServiceResultInfo &  WinServiceResultInfo::operator=(const DeployInfo &val)
 	m_retVal=(void*)EP_NEW DeployInfo();
 	*(DeployInfo*)m_retVal=val;
 	m_retType=RETURN_TYPE_DEPLOY_INFO;
+	return *this;
+}
+
+WinServiceResultInfo &  WinServiceResultInfo::operator=(const ObjectStartStatus &val)
+{
+	if(m_retVal)
+		EP_DELETE m_retVal;
+	m_retVal=(void*)EP_NEW ObjectStartStatus();
+	*(ObjectStartStatus*)m_retVal=val;
+	m_retType=RETURN_TYPE_OJBECT_START_STATUS;
 	return *this;
 }
