@@ -1,20 +1,27 @@
 /*! 
 EpWinService for the EpWinService
-Copyright (C) 2013  Woong Gyu La <juhgiyo@gmail.com>
-		<http://github.com/juhgiyo/epWinService>
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+The MIT License (MIT)
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+Copyright (c) 2013 Woong Gyu La <juhgiyo@gmail.com>
 
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
 */
 
 // EpWinService.cpp : Defines the entry point for the console application.
@@ -37,19 +44,9 @@ int _tmain(int argc, _TCHAR* argv[])
 {
 	_tprintf(_T("\n"));
 	_tprintf(_T("*********************************************************************\n"));
-	_tprintf(_T("EpWinService is a Visual C++ framework that supports making multiple\n   custom applications as Windows Services under a GPL3.0 license.\n\n"));
+	_tprintf(_T("EpWinService is a Visual C++ framework that supports making multiple\n   custom applications as Windows Services under a MIT license.\n\n"));
 	_tprintf(_T("Copyright (C) 2013  Woong Gyu La <juhgiyo@gmail.com>\n"));
 	_tprintf(_T("            <http://github.com/juhgiyo/epWinService>\n\n"));
-	_tprintf(_T("This program is free software: you can redistribute it and/or modify\n"));
-	_tprintf(_T("it under the terms of the GNU General Public License as published by\n"));
-	_tprintf(_T("the Free Software Foundation, either version 3 of the License, or\n"));
-	_tprintf(_T("(at your option) any later version.\n\n"));
-	_tprintf(_T("This program is distributed in the hope that it will be useful,\n"));
-	_tprintf(_T("but WITHOUT ANY WARRANTY; without even the implied warranty of\n"));
-	_tprintf(_T("MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"));
-	_tprintf(_T("GNU General Public License for more details.\n\n"));
-	_tprintf(_T("You should have received a copy of the GNU General Public License\n"));
-	_tprintf(_T("along with this program.  If not, see <http://www.gnu.org/licenses/>.\n"));
 	_tprintf(_T("*********************************************************************\n"));
 	_tprintf(_T("\n\n"));
 
