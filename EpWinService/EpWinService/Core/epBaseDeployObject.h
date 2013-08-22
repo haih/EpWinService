@@ -136,7 +136,6 @@ public:
 
 	/*!
 	Update the Local path as given revision
-	@param[in] properties the properties
 	@param[out] retRevNum the revision after the update
 	@param[in] rev the revision to be updated to
 	@return the Deploy Error Code
@@ -160,7 +159,6 @@ public:
 
 	/*!
 	Clean up the local path
-	@param[in] properties the SVN properties
 	@return the Deploy Error Code
 	*/
 	virtual DeployErrCode CleanUp()=0;

@@ -312,7 +312,6 @@ public:
 	
 	/*!
 	Deploy the Local path as given revision
-	@param[in] properties the properties
 	@param[out] retRevNum the revision after the update
 	@param[out] retStartStatus the start status of the object
 	@param[in] rev the revision to be updated to
