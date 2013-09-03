@@ -195,10 +195,15 @@ ServiceHandlerError ServiceHandler::StopService(const TCHAR *serviceName, DWORD 
 			if(!::ControlService(schService,SERVICE_CONTROL_CODE_STOP,&status))
 			{
 				retErrCode = GetLastError();
-				err=SERVICE_HANDLER_ERROR_FAIL_CONTROLSERVICE;
-				TCHAR pTemp[256];
-				_stprintf(pTemp,_T("Failed to stop service '%s' (ControlService), error code = %d"), serviceName, retErrCode); 
-				LOG_WRITER_INSTANCE.WriteLog( pTemp);
+				if(retErrCode!=1062)
+				{
+					err=SERVICE_HANDLER_ERROR_FAIL_CONTROLSERVICE;
+					TCHAR pTemp[256];
+					_stprintf(pTemp,_T("Failed to stop service '%s' (ControlService), error code = %d"), serviceName, retErrCode); 
+					LOG_WRITER_INSTANCE.WriteLog( pTemp);
+				}
+				else
+					retErrCode=0;
 			}
 			CloseServiceHandle(schService); 
 		}
@@ -248,7 +253,14 @@ ServiceHandlerError ServiceHandler::PauseService(const TCHAR *serviceName, DWORD
 				retErrCode = GetLastError();
 				err=SERVICE_HANDLER_ERROR_FAIL_CONTROLSERVICE;
 				TCHAR pTemp[256];
-				_stprintf(pTemp,_T("Failed to pause service '%s' (ControlService), error code = %d"), serviceName, retErrCode); 
+				if(retErrCode==1062)
+				{
+					_stprintf(pTemp,_T("Failed to pause service '%s' (Service has not been started) "), serviceName); 
+				}
+				else
+				{
+					_stprintf(pTemp,_T("Failed to pause service '%s' (ControlService), error code = %d"), serviceName, retErrCode); 
+				}
 				LOG_WRITER_INSTANCE.WriteLog( pTemp);
 			}
 			CloseServiceHandle(schService); 
@@ -300,7 +312,15 @@ ServiceHandlerError ServiceHandler::ContinueService(const TCHAR *serviceName, DW
 				retErrCode = GetLastError();
 				err=SERVICE_HANDLER_ERROR_FAIL_CONTROLSERVICE;
 				TCHAR pTemp[256];
-				_stprintf(pTemp,_T("Failed to continue service '%s' (ControlService), error code = %d"), serviceName, retErrCode); 
+				if(retErrCode==1062)
+				{
+					_stprintf(pTemp,_T("Failed to continue service '%s' (Service has not been started) "), serviceName); 
+				}
+				else
+				{
+					_stprintf(pTemp,_T("Failed to continue service '%s' (ControlService), error code = %d"), serviceName, retErrCode); 
+				}
+				
 				LOG_WRITER_INSTANCE.WriteLog( pTemp);
 			}
 			CloseServiceHandle(schService); 

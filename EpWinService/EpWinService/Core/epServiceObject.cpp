@@ -123,10 +123,12 @@ ServiceStatusType ServiceObject::GetStatus()
 	LockObj lock(&m_baseObjLock);
 	SERVICE_STATUS status;
 	DWORD retCode;
-	if(SERVICE_HANDLER_INSTANCE.ControlService(m_serviceName.GetString(),SERVICE_CONTROL_CODE_INTERROGATE,status,retCode)==SERVICE_HANDLER_ERROR_SUCCESS)
+	if(SERVICE_HANDLER_INSTANCE.ControlService(m_serviceName.GetString(),SERVICE_CONTROL_CODE_INTERROGATE,status,retCode,false)==SERVICE_HANDLER_ERROR_SUCCESS)
 	{
 		return (ServiceStatusType)status.dwCurrentState;
 	}
+	else if(retCode==1062)
+		return (ServiceStatusType)SERVICE_STATUS_TYPE_STOPPED;
 	return SERVICE_STATUS_TYPE_UNKNOWN;
 }
 
