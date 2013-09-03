@@ -310,7 +310,7 @@ ServiceHandlerError ServiceHandler::ContinueService(const TCHAR *serviceName, DW
 	return err;
 }
 
-ServiceHandlerError ServiceHandler::ControlService(const TCHAR *serviceName,ServiceControlCode code, SERVICE_STATUS &retStatus , DWORD &retErrCode)
+ServiceHandlerError ServiceHandler::ControlService(const TCHAR *serviceName,ServiceControlCode code, SERVICE_STATUS &retStatus , DWORD &retErrCode, bool shouldLog)
 {
 	retErrCode=0;
 	if(!serviceName)
@@ -327,7 +327,8 @@ ServiceHandlerError ServiceHandler::ControlService(const TCHAR *serviceName,Serv
 			err=SERVICE_HANDLER_ERROR_FAIL_OPENSCMANAGER;
 			TCHAR pTemp[256];
 			_stprintf(pTemp,_T("Failed to control service '%s' (OpenSCManager), error code = %d"), serviceName, retErrCode); 
-			LOG_WRITER_INSTANCE.WriteLog( pTemp);
+			if(shouldLog)
+				LOG_WRITER_INSTANCE.WriteLog( pTemp);
 		}
 	}
 
@@ -341,7 +342,8 @@ ServiceHandlerError ServiceHandler::ControlService(const TCHAR *serviceName,Serv
 			err=SERVICE_HANDLER_ERROR_FAIL_OPENSERVICE;
 			TCHAR pTemp[256];
 			_stprintf(pTemp,_T("Failed to control service '%s' (OpenService), error code = %d"), serviceName, retErrCode); 
-			LOG_WRITER_INSTANCE.WriteLog( pTemp);
+			if(shouldLog)
+				LOG_WRITER_INSTANCE.WriteLog( pTemp);
 		}
 		else
 		{
@@ -353,7 +355,8 @@ ServiceHandlerError ServiceHandler::ControlService(const TCHAR *serviceName,Serv
 				err=SERVICE_HANDLER_ERROR_FAIL_CONTROLSERVICE;
 				TCHAR pTemp[256];
 				_stprintf(pTemp,_T("Failed to control service '%s' (ControlService), error code = %d"), serviceName, retErrCode); 
-				LOG_WRITER_INSTANCE.WriteLog( pTemp);
+				if(shouldLog)
+					LOG_WRITER_INSTANCE.WriteLog( pTemp);
 			}
 			CloseServiceHandle(schService); 
 		}

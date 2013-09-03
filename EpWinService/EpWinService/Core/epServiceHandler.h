@@ -141,9 +141,10 @@ public:
 	@param[in] code the control code for the service
 	@param[out] retStatus current status of the service
 	@param[out] retErrCode the error code
+	@param[in] shouldLog whether should log any error or not
 	@return Service Process Status
 	*/
-	ServiceHandlerError ControlService(const TCHAR *serviceName,ServiceControlCode code, SERVICE_STATUS &retStatus , DWORD &retErrCode);
+	ServiceHandlerError ControlService(const TCHAR *serviceName,ServiceControlCode code, SERVICE_STATUS &retStatus , DWORD &retErrCode, bool shouldLog=true);
 	
 	
 
