@@ -87,12 +87,13 @@ VOID ServiceMonitorThread(VOID *)
 		Sleep(checkServiceTime);
 		for(int serviceTrav=0;serviceTrav<serviceSize;serviceTrav++)
 		{
-			if(!SERVICE_HANDLER_INSTANCE.At(serviceTrav)->IsStarted())
+			if(!SERVICE_HANDLER_INSTANCE.At(serviceTrav)->IsStarted() && 
+				!SERVICE_HANDLER_INSTANCE.At(serviceTrav)->GetIsUserStopped())
 			{
 				SERVICE_HANDLER_INSTANCE.At(serviceTrav)->PostProcess();
 				SERVICE_HANDLER_INSTANCE.At(serviceTrav)->Reset();
 
-				if(!SERVICE_HANDLER_INSTANCE.At(serviceTrav)->GetIsUserStopped() && SERVICE_HANDLER_INSTANCE.At(serviceTrav)->GetIsRestart())
+				if(SERVICE_HANDLER_INSTANCE.At(serviceTrav)->GetIsRestart())
 				{
 					if(SERVICE_HANDLER_INSTANCE.At(serviceTrav)->Start())
 					{
@@ -101,6 +102,8 @@ VOID ServiceMonitorThread(VOID *)
 						LOG_WRITER_INSTANCE.WriteLog( pTemp);
 					}
 				}
+		
+				
 			}
 		}		
 	}
