@@ -120,6 +120,9 @@ ServiceHandlerError ServiceHandler::StartService(const TCHAR *serviceName, DWORD
 		{
 			retErrCode = GetLastError();
 			err=SERVICE_HANDLER_ERROR_FAIL_OPENSCMANAGER;
+			TCHAR pTemp[256];
+			_stprintf(pTemp,_T("Failed to start service '%s' (OpenSCManager), error code = %d"), serviceName, retErrCode); 
+			LOG_WRITER_INSTANCE.WriteLog( pTemp);
 		}
 	}
 
@@ -131,6 +134,9 @@ ServiceHandlerError ServiceHandler::StartService(const TCHAR *serviceName, DWORD
 		{
 			retErrCode = GetLastError();
 			err=SERVICE_HANDLER_ERROR_FAIL_OPENSERVICE;
+			TCHAR pTemp[256];
+			_stprintf(pTemp,_T("Failed to start service '%s' (OpenService), error code = %d"), serviceName, retErrCode); 
+			LOG_WRITER_INSTANCE.WriteLog( pTemp);
 		}
 		else
 		{
@@ -139,6 +145,9 @@ ServiceHandlerError ServiceHandler::StartService(const TCHAR *serviceName, DWORD
 			{
 				retErrCode = GetLastError();
 				err=SERVICE_HANDLER_ERROR_FAIL_STARTSERVICE;
+				TCHAR pTemp[256];
+				_stprintf(pTemp,_T("Failed to start service '%s' (StartService), error code = %d"), serviceName, retErrCode); 
+				LOG_WRITER_INSTANCE.WriteLog( pTemp);
 			}
 			CloseServiceHandle(schService); 
 		}
@@ -161,6 +170,9 @@ ServiceHandlerError ServiceHandler::StopService(const TCHAR *serviceName, DWORD 
 		{
 			retErrCode = GetLastError();
 			err=SERVICE_HANDLER_ERROR_FAIL_OPENSCMANAGER;
+			TCHAR pTemp[256];
+			_stprintf(pTemp,_T("Failed to stop service '%s' (OpenSCManager), error code = %d"), serviceName, retErrCode); 
+			LOG_WRITER_INSTANCE.WriteLog( pTemp);
 		}
 	}
 
@@ -172,6 +184,9 @@ ServiceHandlerError ServiceHandler::StopService(const TCHAR *serviceName, DWORD 
 		{
 			retErrCode = GetLastError();
 			err=SERVICE_HANDLER_ERROR_FAIL_OPENSERVICE;
+			TCHAR pTemp[256];
+			_stprintf(pTemp,_T("Failed to stop service '%s' (OpenService), error code = %d"), serviceName, retErrCode); 
+			LOG_WRITER_INSTANCE.WriteLog( pTemp);
 		}
 		else
 		{
@@ -181,6 +196,9 @@ ServiceHandlerError ServiceHandler::StopService(const TCHAR *serviceName, DWORD 
 			{
 				retErrCode = GetLastError();
 				err=SERVICE_HANDLER_ERROR_FAIL_CONTROLSERVICE;
+				TCHAR pTemp[256];
+				_stprintf(pTemp,_T("Failed to stop service '%s' (ControlService), error code = %d"), serviceName, retErrCode); 
+				LOG_WRITER_INSTANCE.WriteLog( pTemp);
 			}
 			CloseServiceHandle(schService); 
 		}
@@ -203,6 +221,9 @@ ServiceHandlerError ServiceHandler::PauseService(const TCHAR *serviceName, DWORD
 		{
 			retErrCode = GetLastError();
 			err=SERVICE_HANDLER_ERROR_FAIL_OPENSCMANAGER;
+			TCHAR pTemp[256];
+			_stprintf(pTemp,_T("Failed to pause service '%s' (OpenSCManager), error code = %d"), serviceName, retErrCode); 
+			LOG_WRITER_INSTANCE.WriteLog( pTemp);
 		}
 	}
 
@@ -214,6 +235,9 @@ ServiceHandlerError ServiceHandler::PauseService(const TCHAR *serviceName, DWORD
 		{
 			retErrCode = GetLastError();
 			err=SERVICE_HANDLER_ERROR_FAIL_OPENSERVICE;
+			TCHAR pTemp[256];
+			_stprintf(pTemp,_T("Failed to pause service '%s' (OpenService), error code = %d"), serviceName, retErrCode); 
+			LOG_WRITER_INSTANCE.WriteLog( pTemp);
 		}
 		else
 		{
@@ -223,6 +247,9 @@ ServiceHandlerError ServiceHandler::PauseService(const TCHAR *serviceName, DWORD
 			{
 				retErrCode = GetLastError();
 				err=SERVICE_HANDLER_ERROR_FAIL_CONTROLSERVICE;
+				TCHAR pTemp[256];
+				_stprintf(pTemp,_T("Failed to pause service '%s' (ControlService), error code = %d"), serviceName, retErrCode); 
+				LOG_WRITER_INSTANCE.WriteLog( pTemp);
 			}
 			CloseServiceHandle(schService); 
 		}
@@ -246,6 +273,9 @@ ServiceHandlerError ServiceHandler::ContinueService(const TCHAR *serviceName, DW
 		{
 			retErrCode = GetLastError();
 			err=SERVICE_HANDLER_ERROR_FAIL_OPENSCMANAGER;
+			TCHAR pTemp[256];
+			_stprintf(pTemp,_T("Failed to continue service '%s' (OpenSCManager), error code = %d"), serviceName, retErrCode); 
+			LOG_WRITER_INSTANCE.WriteLog( pTemp);
 		}
 	}
 
@@ -257,6 +287,9 @@ ServiceHandlerError ServiceHandler::ContinueService(const TCHAR *serviceName, DW
 		{
 			retErrCode = GetLastError();
 			err=SERVICE_HANDLER_ERROR_FAIL_OPENSERVICE;
+			TCHAR pTemp[256];
+			_stprintf(pTemp,_T("Failed to continue service '%s' (OpenService), error code = %d"), serviceName, retErrCode); 
+			LOG_WRITER_INSTANCE.WriteLog( pTemp);
 		}
 		else
 		{
@@ -266,6 +299,9 @@ ServiceHandlerError ServiceHandler::ContinueService(const TCHAR *serviceName, DW
 			{
 				retErrCode = GetLastError();
 				err=SERVICE_HANDLER_ERROR_FAIL_CONTROLSERVICE;
+				TCHAR pTemp[256];
+				_stprintf(pTemp,_T("Failed to continue service '%s' (ControlService), error code = %d"), serviceName, retErrCode); 
+				LOG_WRITER_INSTANCE.WriteLog( pTemp);
 			}
 			CloseServiceHandle(schService); 
 		}
@@ -289,6 +325,9 @@ ServiceHandlerError ServiceHandler::ControlService(const TCHAR *serviceName,Serv
 		{
 			retErrCode = GetLastError();
 			err=SERVICE_HANDLER_ERROR_FAIL_OPENSCMANAGER;
+			TCHAR pTemp[256];
+			_stprintf(pTemp,_T("Failed to control service '%s' (OpenSCManager), error code = %d"), serviceName, retErrCode); 
+			LOG_WRITER_INSTANCE.WriteLog( pTemp);
 		}
 	}
 
@@ -300,6 +339,9 @@ ServiceHandlerError ServiceHandler::ControlService(const TCHAR *serviceName,Serv
 		{
 			retErrCode = GetLastError();
 			err=SERVICE_HANDLER_ERROR_FAIL_OPENSERVICE;
+			TCHAR pTemp[256];
+			_stprintf(pTemp,_T("Failed to control service '%s' (OpenService), error code = %d"), serviceName, retErrCode); 
+			LOG_WRITER_INSTANCE.WriteLog( pTemp);
 		}
 		else
 		{
@@ -309,6 +351,9 @@ ServiceHandlerError ServiceHandler::ControlService(const TCHAR *serviceName,Serv
 			{
 				retErrCode = GetLastError();
 				err=SERVICE_HANDLER_ERROR_FAIL_CONTROLSERVICE;
+				TCHAR pTemp[256];
+				_stprintf(pTemp,_T("Failed to control service '%s' (ControlService), error code = %d"), serviceName, retErrCode); 
+				LOG_WRITER_INSTANCE.WriteLog( pTemp);
 			}
 			CloseServiceHandle(schService); 
 		}
@@ -339,6 +384,9 @@ ServiceHandlerError ServiceHandler::InstallService(const TCHAR *serviceName,Serv
 		{
 			retErrCode = GetLastError();
 			err=SERVICE_HANDLER_ERROR_FAIL_OPENSCMANAGER;
+			TCHAR pTemp[256];
+			_stprintf(pTemp,_T("Failed to install service '%s' (OpenSCManager), error code = %d"), serviceName, retErrCode); 
+			LOG_WRITER_INSTANCE.WriteLog( pTemp);
 		}
 	}
 
@@ -441,6 +489,9 @@ ServiceHandlerError ServiceHandler::InstallService(const TCHAR *serviceName,Serv
 		{
 			retErrCode = GetLastError();
 			err=SERVICE_HANDLER_ERROR_FAIL_CREATESERVICE;
+			TCHAR pTemp[256];
+			_stprintf(pTemp,_T("Failed to install service '%s' (CreateService), error code = %d"), serviceName, retErrCode); 
+			LOG_WRITER_INSTANCE.WriteLog( pTemp);
 		}
 	}	
 	return err;
@@ -461,6 +512,9 @@ ServiceHandlerError ServiceHandler::UnInstallService(const TCHAR *serviceName, D
 		{
 			retErrCode = GetLastError();
 			err=SERVICE_HANDLER_ERROR_FAIL_OPENSCMANAGER;
+			TCHAR pTemp[256];
+			_stprintf(pTemp,_T("Failed to uninstall service '%s' (OpenSCManager), error code = %d"), serviceName, retErrCode); 
+			LOG_WRITER_INSTANCE.WriteLog( pTemp);
 		}
 	}
 
@@ -471,6 +525,9 @@ ServiceHandlerError ServiceHandler::UnInstallService(const TCHAR *serviceName, D
 		{
 			retErrCode = GetLastError();
 			err=SERVICE_HANDLER_ERROR_FAIL_OPENSERVICE;
+			TCHAR pTemp[256];
+			_stprintf(pTemp,_T("Failed to uninstall service '%s' (OpenService), error code = %d"), serviceName, retErrCode); 
+			LOG_WRITER_INSTANCE.WriteLog( pTemp);
 		}
 		else
 		{
@@ -478,6 +535,9 @@ ServiceHandlerError ServiceHandler::UnInstallService(const TCHAR *serviceName, D
 			{
 				retErrCode = GetLastError();
 				err=SERVICE_HANDLER_ERROR_FAIL_DELETESERVICE;
+				TCHAR pTemp[256];
+				_stprintf(pTemp,_T("Failed to uninstall service '%s' (DeleteService), error code = %d"), serviceName, retErrCode); 
+				LOG_WRITER_INSTANCE.WriteLog( pTemp);
 			}
 			CloseServiceHandle(schService); 
 		}
@@ -501,6 +561,9 @@ ServiceHandlerError ServiceHandler::EditService(const TCHAR *serviceName,Service
 		{
 			retErrCode = GetLastError();
 			err=SERVICE_HANDLER_ERROR_FAIL_OPENSCMANAGER;
+			TCHAR pTemp[256];
+			_stprintf(pTemp,_T("Failed to edit service '%s' (OpenSCManager), error code = %d"), serviceName, retErrCode); 
+			LOG_WRITER_INSTANCE.WriteLog( pTemp);
 		}
 	}
 
@@ -511,6 +574,9 @@ ServiceHandlerError ServiceHandler::EditService(const TCHAR *serviceName,Service
 		{
 			retErrCode = GetLastError();
 			err=SERVICE_HANDLER_ERROR_FAIL_OPENSERVICE;
+			TCHAR pTemp[256];
+			_stprintf(pTemp,_T("Failed to edit service '%s' (OpenService), error code = %d"), serviceName, retErrCode); 
+			LOG_WRITER_INSTANCE.WriteLog( pTemp);
 		}
 		else
 		{
@@ -593,6 +659,9 @@ ServiceHandlerError ServiceHandler::EditService(const TCHAR *serviceName,Service
 			{
 				retErrCode = GetLastError();
 				err=SERVICE_HANDLER_ERROR_FAIL_CHANGESERVICECONFIG;
+				TCHAR pTemp[256];
+				_stprintf(pTemp,_T("Failed to edit service '%s' (ChangeServiceConfig), error code = %d"), serviceName, retErrCode); 
+				LOG_WRITER_INSTANCE.WriteLog( pTemp);
 			}
 
 
@@ -617,6 +686,9 @@ ServiceHandlerError ServiceHandler::GetServiceStatus(const TCHAR *serviceName,SE
 		{
 			retErrCode = GetLastError();
 			err=SERVICE_HANDLER_ERROR_FAIL_OPENSCMANAGER;
+			TCHAR pTemp[256];
+			_stprintf(pTemp,_T("Failed to get ServiceStatus of service '%s' (OpenSCManager), error code = %d"), serviceName, retErrCode); 
+			LOG_WRITER_INSTANCE.WriteLog( pTemp);
 		}
 	}
 
@@ -630,6 +702,9 @@ ServiceHandlerError ServiceHandler::GetServiceStatus(const TCHAR *serviceName,SE
 		{
 			retErrCode = GetLastError();
 			err=SERVICE_HANDLER_ERROR_FAIL_OPENSERVICE;
+			TCHAR pTemp[256];
+			_stprintf(pTemp,_T("Failed to get ServiceStatus of service '%s' (OpenService), error code = %d"), serviceName, retErrCode); 
+			LOG_WRITER_INSTANCE.WriteLog( pTemp);
 		}
 		else
 		{
@@ -640,6 +715,9 @@ ServiceHandlerError ServiceHandler::GetServiceStatus(const TCHAR *serviceName,SE
 			{
 				retErrCode = GetLastError();
 				err=SERVICE_HANDLER_ERROR_FAIL_CONTROLSERVICE;
+				TCHAR pTemp[256];
+				_stprintf(pTemp,_T("Failed to get ServiceStatus of service '%s' (QueryServiceStatusEx), error code = %d"), serviceName, retErrCode); 
+				LOG_WRITER_INSTANCE.WriteLog( pTemp);
 			}
 			else
 			{

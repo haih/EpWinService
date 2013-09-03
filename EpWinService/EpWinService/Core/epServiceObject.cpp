@@ -62,7 +62,7 @@ ObjectStartStatus ServiceObject::start()
 		if(status.dwCurrentState==SERVICE_STATUS_TYPE_RUNNING)
 			return OBJECT_START_STATUS_FAILED_ALREADY_STARTED;
 	}
-	else
+	else if(retCode!=1062)
 		return OBJECT_START_STATUS_FAILED;
 	//Pre-Process
 	preProcess();
@@ -107,8 +107,10 @@ bool ServiceObject::IsStarted()
 	{
 		if(status.dwCurrentState==SERVICE_STATUS_TYPE_STOPPED)
 			return false;
+		return true;
 	}
-	return true;
+	else
+		return false;
 }
 
 void ServiceObject::Reset()
