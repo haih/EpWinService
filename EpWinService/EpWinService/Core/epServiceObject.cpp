@@ -57,7 +57,7 @@ ObjectStartStatus ServiceObject::start()
 	m_isUserStopped=false;
 	SERVICE_STATUS status;
 	DWORD retCode;
-	if(SERVICE_HANDLER_INSTANCE.ControlService(m_serviceName.GetString(),SERVICE_CONTROL_CODE_INTERROGATE,status,retCode)==SERVICE_HANDLER_ERROR_SUCCESS)
+	if(SERVICE_HANDLER_INSTANCE.ControlService(m_serviceName.GetString(),SERVICE_CONTROL_CODE_INTERROGATE,status,retCode,false)==SERVICE_HANDLER_ERROR_SUCCESS)
 	{
 		if(status.dwCurrentState==SERVICE_STATUS_TYPE_RUNNING)
 			return OBJECT_START_STATUS_FAILED_ALREADY_STARTED;
