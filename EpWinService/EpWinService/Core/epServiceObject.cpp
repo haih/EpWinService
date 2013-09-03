@@ -79,6 +79,11 @@ void ServiceObject::stop()
 	DWORD retCode;
 	SERVICE_HANDLER_INSTANCE.StopService(m_serviceName.GetString(),retCode);
 	::Sleep(m_delayPauseEndTime>0?m_delayPauseEndTime:50);
+	TCHAR pTemp[121];
+	_stprintf(pTemp, _T("Service%d ended"),m_objIndex);
+	LOG_WRITER_INSTANCE.WriteLog( pTemp);
+
+	postProcess();
 }
 
 void ServiceObject::Pause()
