@@ -154,6 +154,18 @@ namespace epse
 		*/
 		unsigned int GetMaxPacketByteSize() const;
 
+		/*!
+		Get the IP of client
+		@return the IP of client in string
+		*/
+		epl::EpTString GetIP() const;
+
+		/*!
+		Get the sockaddr of client
+		@return the sockaddr of client
+		*/
+		sockaddr GetSockAddr() const;
+
 	protected:
 		/*!
 		Return the new packet parser

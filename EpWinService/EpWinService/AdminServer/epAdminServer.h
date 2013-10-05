@@ -94,7 +94,7 @@ protected:
 	Return the new server worker.
 	@return the new server worker
 	*/
-	virtual BaseServerWorker* createNewWorker();
+	virtual BaseServerWorker* createNewWorker(sockaddr sockAddrInfo);
 
 };
 

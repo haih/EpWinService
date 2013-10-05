@@ -42,7 +42,7 @@ AdminServer::~AdminServer()
 }
 
 
-BaseServerWorker* AdminServer::createNewWorker()
+BaseServerWorker* AdminServer::createNewWorker(sockaddr sockAddrInfo)
 {
 	return EP_NEW AdminServerWorker();
 }
